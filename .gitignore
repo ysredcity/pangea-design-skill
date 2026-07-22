@@ -1,0 +1,25 @@
+# OS
+.DS_Store
+
+# Node / build artifacts (e.g. when running the scaffold in templates/project-starter)
+node_modules/
+dist/
+dist-ssr/
+*.local
+.npm
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
