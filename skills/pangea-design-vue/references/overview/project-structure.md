@@ -120,18 +120,23 @@ import { IconGlobal } from '@arco-iconbox/vue-pangea-mobile';
 
 ```
 project/
+├── .kiro/
+│   └── hooks/
+│       ├── pm-dev-server.json      # SessionStart: 自动启动开发环境
+│       └── pm-compile-check.json   # PostFileSave: 自动编译检查与修复
 ├── index.html
 ├── package.json
 ├── vite.config.ts            # 接入主题包 + 图标包
 ├── tsconfig.json
 └── src/
-    ├── main.ts               # createApp + ArcoVue + router + import 主题 theme.css
+    ├── main.ts               # createApp + ArcoVue + router + import 主题 theme.css + layout-menu.less
     ├── App.vue               # 仅挂载 <router-view/>
     ├── vite-env.d.ts         # *.vue 类型 shim + vite/client + 图标包模块声明（TS 必需）
     ├── router/
     │   └── index.ts          # 路由：全局 Layout + 子路由页面
     ├── layouts/
-    │   └── GlobalLayout.vue   # 全局 Layout（后续由团队标准化提供）
+    │   ├── GlobalLayout.vue   # 全局 Layout（标准版：header + sidebar + content）
+    │   └── layout-menu.less   # 侧边栏菜单自定义样式（覆盖 Arco Menu 默认）
     └── pages/
         └── <PageName>/
             └── index.vue      # 具体页面（全局 Layout 下的子路由）
@@ -142,13 +147,15 @@ project/
 **全局 Layout 是稳定骨架，具体页面是它内部的路由子页面。**
 
 - 应用外壳 = `App.vue`（挂载路由出口）+ `layouts/GlobalLayout.vue`（页头/侧边栏/导航等骨架）。
-- **全局 Layout 后续会由团队提供标准化版本**；脚手架中的 `GlobalLayout.vue` 是**占位版**。生成页面时**不要重写/替换全局 Layout**（除非明确被要求）。
+- **全局 Layout 已标准化实现**（基于 Figma「Pangea Design PC Templates / 菜单-展开」）。结构：顶部 Header（48px）+ 左侧可折叠侧边栏（200px）+ 右侧内容区（白背景 + 左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
+- 侧边栏使用 Arco `<a-menu>` 组件 + 自定义样式覆盖（`src/layouts/layout-menu.less`），选中态为白背景 + `primary-7` 文字 + medium 字重。菜单数据通过 `GlobalLayout.vue` 的 `menuItems` ref 配置。
 - **具体页面**放在 `src/pages/<PageName>/index.vue`，作为全局 Layout 路由的**子路由**，渲染在其 `<router-view/>` 中。
 
-### 新增一个页面 = 两步
+### 新增一个页面 = 三步
 
 1. 新建页面组件 `src/pages/<PageName>/index.vue`；
-2. 在 `src/router/index.ts` 中，把它追加为全局 Layout 路由的 `children` 子路由。
+2. 在 `src/router/index.ts` 中，把它追加为全局 Layout 路由的 `children` 子路由；
+3. 在 `GlobalLayout.vue` 的 `menuItems` 中追加对应菜单项（`key` 为路由 path）。
 
 ```ts
 const routes = [

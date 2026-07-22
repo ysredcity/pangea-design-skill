@@ -22,7 +22,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
   - `references/theme/design-tokens.md`：Pangea 全量 token（含**完整基础色板** 15 色系 × 10 阶）。
   - `references/overview/`：`project-structure.md`（工程结构+生成层级）、`theming.md`、`getting-started.md`（均定制）+ `architecture.md`/`config-provider.md`/`internationalization.md`（照搬）。
   - `references/components/`（72 篇）+ `references/patterns/`（5 篇）：照搬上游。
-- ✅ **可运行脚手架**：`skills/pangea-design-vue/templates/project-starter/`，已内置并接入主题包 + 图标包（`vitePluginForArco({ theme, iconBox })`），含占位版 `GlobalLayout.vue` + `pages/Example` + 子路由示例。
+- ✅ **可运行脚手架**：`skills/pangea-design-vue/templates/project-starter/`，已内置并接入主题包 + 图标包（`vitePluginForArco({ theme, iconBox })`），含**标准化 `GlobalLayout.vue`**（基于 Figma 设计稿实现：Header 48px + 左侧可折叠侧边栏 200px + 内容区白背景左上圆角 8px）+ 自定义菜单样式 `layout-menu.less` + `pages/Example` + 子路由示例。
 - ✅ **治理框架**：`README.md`、`CONTRIBUTING.md`、`CHANGELOG.md`（根目录）。
 - ✅ **已上传 GitHub**：`main` 分支，初始提交 + README。
 - ✅ **图标引用已统一**：定制文档全部指向图标包命名导入，清理了默认 Arco 图标/iconfont 残留。
@@ -35,7 +35,8 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - **品牌主色 = 青绿 `#00aaa6`（`--primary-6`）**，不是 Arco 默认蓝；`link` 与 primary 同色。状态色（success=green / danger=red / warning=orange / info=arcoblue）沿用 Arco 标准。
 - **Figma 与主题包的 Cyan 色系（及 red-7）不一致** → 已统一以主题包为准（Figma 由 @维护者 手动对齐）。`design-tokens.md` 中已删除该差异说明。
 - **图标 = 图标包 `@arco-iconbox/vue-pangea-mobile`**（517 个命名导出组件，无默认 install 插件；继承 `currentColor`、`font-size` 控大小）；经 `@arco-plugins/vite-vue` 的 `iconBox` 替换默认 Arco 图标。**不要**用 `@arco-design/web-vue/es/icon` 或 iconfont.cn。
-- **生成层级**：具体页面是**全局 Layout 下的路由子页面**（`src/pages/<PageName>/index.vue` + 注册为 Layout 路由 children）。全局 Layout 是稳定骨架、当前为**占位版**，标准化版本待团队提供——**不要重写/替换全局 Layout**（除非明确要求）。
+- **生成层级**：具体页面是**全局 Layout 下的路由子页面**（`src/pages/<PageName>/index.vue` + 注册为 Layout 路由 children + 在 menuItems 中追加菜单项）。全局 Layout 已按 Figma 设计稿标准化（Header + 可折叠侧边栏 + 内容区），**不要重写/替换全局 Layout**（除非明确要求）。
+- **侧边栏菜单自定义样式**（`src/layouts/layout-menu.less`）：覆盖 Arco Menu 默认样式——透明背景、13px 一级 / 12px 二级、选中态白背景 + `primary-7` 文字 + medium 字重、4px 圆角、28px 二级缩进、无左侧竖条指示器。在 `main.ts` 中全局 import。
 - **照搬 vs 定制**：组件/模式文档 + architecture/config-provider/i18n 为「照搬」上游，仅上游 API 变化时才动；主题/工程结构相关为「定制」。（例外：form-patterns/table-patterns 末尾带「本地补充」小节，同步上游时保留。）
 - **脚手架可运行性三要点（勿破坏）**：① `less` 必需 devDep；② `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`（运行时 CSS 变量，只靠插件注入不可靠）；③ `src/vite-env.d.ts` 提供 `*.vue`/`vite/client`/图标包类型声明。改依赖或配置后须重跑 install/build/dev 并更新 lockfile。
 - **纯前端铁律**：产出始终是完整的 Vue 纯前端工程，只做前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及任何后端代码或服务**。demo 用 mock；开发对接既有后端接口但不实现后端。
@@ -59,7 +60,10 @@ pangea-design-skill/
     │   ├── components/ (72)  # 照搬
     │   └── patterns/   (5)   # 照搬
     └── templates/project-starter/          # 可运行脚手架（含主题包/图标包）
-        └── .kiro/hooks/                    # PM Demo 模式 Kiro hooks（随脚手架交付）
+        ├── .kiro/hooks/                    # PM Demo 模式 Kiro hooks（随脚手架交付）
+        └── src/layouts/
+            ├── GlobalLayout.vue            # 标准化全局 Layout（header+sidebar+content）
+            └── layout-menu.less            # 侧边栏菜单自定义样式
 ```
 
 ## 5. 关键约定 / 事实源速查
@@ -73,10 +77,10 @@ pangea-design-skill/
 | Git 协作 | 只改文件，提交/推送由用户手动 |
 
 ## 6. 待办 / 下一步（Next）
-- [ ] 团队提供**标准化全局 Layout** → 替换脚手架占位版 `GlobalLayout.vue`，同步更新 `project-structure.md` 与 `CHANGELOG.md`。
 - [ ] 补充**定制业务组件**文档（建议 `references/components-custom/`）。
 - [ ] 补充**页面模板**文档（建议 `references/templates/`，或脚手架内页型样例）。
 - [ ] （可选）为 `icon.md` 出一份 Pangea 专属图标使用文档（图标包 + iconBox），不动其他照搬文档。
+- [ ] 实测新 Layout 脚手架可编译运行，更新 `package-lock.json`。
 
 ---
 
@@ -100,3 +104,5 @@ pangea-design-skill/
 - 2026-07-21 脚手架可运行化（A+D+C）：修 3 处缺口并实测通过、加 lockfile、加 degit 一键起项目；补 form/table 模式文档；同步 SKILL/project-structure/README/CONTRIBUTING/CHANGELOG。（本仓 `_tests/` 效果测试材料本地保留、不入 Git。）
 - 2026-07-21 加入「纯前端铁律」（SKILL/project-structure/CONTRIBUTING）；`_tests/` 换成 2 个完整场景用例（S1 请假管理、S2 商品管理，多页+路由+共享 mock store），并升级测试法为「生成→组装进脚手架→实测编译」，实测暴露并修复了表格插槽 record 无类型的 TS7053；已把该经验回流到 `table-patterns.md`（新增「插槽 record 的类型」小节）。
 - 2026-07-22 新增 PM Demo 模式（方案 A+C）：SKILL.md 加「PM Demo 模式」章节（agent 职责清单/话术约定/初始化流程/路由提示/hooks 协作）；脚手架 `templates/project-starter/.kiro/hooks/` 新增 `pm-dev-server.json`（SessionStart 自动启动 dev server）+ `pm-compile-check.json`（PostFileSave 自动编译检查修复）；`project-structure.md` 新增「PM Demo 模式（多轮迭代体验）」章节。
+- 2026-07-22 全局 Layout 标准化：基于 Figma「Pangea Design PC Templates / 菜单-展开」重写 `GlobalLayout.vue`（Header 48px + 左侧可折叠侧边栏 200px + 内容区白背景左上圆角 8px + 折叠按钮），新增 `layout-menu.less`（覆盖 Arco Menu 样式：选中态白背景+primary-7+medium、13px/12px 字号、4px 圆角、28px 缩进），`main.ts` import 该 less，router 注释更新，SKILL.md/project-structure.md 从「占位版」改为「标准化实现」，新增页面步骤变为 3 步（加菜单项）。待办中「标准化 Layout」已完成移除。
+- 2026-07-22 新增「简单列表页」页面模板（`references/patterns/page-simple-list.md`）：基于 Figma 设计稿，适用于基础表格列表、无复杂查询条件场景。结构：页标题+操作栏(按钮组+input-group搜索)+表格(row-selection+bordered)+独立分页(small size)。SKILL.md patterns 索引已追加。

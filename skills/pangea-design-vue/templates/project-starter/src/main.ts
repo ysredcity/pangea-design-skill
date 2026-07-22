@@ -4,6 +4,8 @@ import ArcoVue from '@arco-design/web-vue';
 // 保证页面里 var(--...) / rgb(var(--primary-6)) 一定可用——不依赖插件是否注入全局变量。
 // 组件样式与主题 less 仍由 vite.config.ts 的 vitePluginForArco({ theme, iconBox }) 处理。
 import '@arco-themes/vue-pangea-3-linear/theme.css';
+// Pangea Layout 侧边栏菜单自定义样式（覆盖 Arco Menu 默认样式以匹配设计稿）
+import './layouts/layout-menu.less';
 import router from './router';
 import App from './App.vue';
 

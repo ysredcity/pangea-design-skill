@@ -1,0 +1,118 @@
+/**
+ * Pangea 侧边栏菜单自定义样式
+ * ------------------------------------------------------------------
+ * 覆盖 Arco Design Menu 组件默认样式，匹配 Figma 设计稿「Pangea Design PC Templates」。
+ *
+ * 核心差异（vs Arco 默认）：
+ * - 菜单背景透明（继承 sidebar 的 fill-2 背景）
+ * - 一级菜单文字 13px，图标 12px，padding 8px/6px，圆角 4px
+ * - 选中态：白色背景 + primary-7 文字 + medium 字重（非 Arco 默认的 primary-6 背景色块）
+ * - 二级菜单文字 12px，左缩进 28px
+ * - 菜单项间距 4px
+ * - 无边框、无底部分割线
+ */
+
+/* ═══════════ 菜单容器 ═══════════ */
+.pg-layout__menu-wrap .arco-menu {
+  background: transparent;
+  border-right: none;
+}
+
+.pg-layout__menu-wrap .arco-menu-inner {
+  padding: 0;
+}
+
+/* ═══════════ 一级菜单项 ═══════════ */
+.pg-layout__menu-wrap .arco-menu-item,
+.pg-layout__menu-wrap .arco-menu-inline-header {
+  margin-bottom: 4px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--color-text-1);
+  height: auto;
+  min-height: unset;
+}
+
+/* 菜单项图标 */
+.pg-layout__menu-wrap .arco-menu-item .arco-menu-icon,
+.pg-layout__menu-wrap .arco-menu-inline-header .arco-menu-icon {
+  font-size: 12px;
+  margin-right: 8px;
+}
+
+/* Hover */
+.pg-layout__menu-wrap .arco-menu-item:hover,
+.pg-layout__menu-wrap .arco-menu-inline-header:hover {
+  background: var(--color-fill-2);
+  color: var(--color-text-1);
+}
+
+/* ═══════════ 选中态（核心差异） ═══════════ */
+.pg-layout__menu-wrap .arco-menu-item.arco-menu-selected {
+  background: var(--color-bg-1);
+  color: rgb(var(--primary-7));
+  font-weight: 500;
+}
+
+.pg-layout__menu-wrap .arco-menu-item.arco-menu-selected:hover {
+  background: var(--color-bg-1);
+  color: rgb(var(--primary-7));
+}
+
+/* 去掉 Arco 默认的左侧竖条指示器 */
+.pg-layout__menu-wrap .arco-menu-item.arco-menu-selected::before {
+  display: none;
+}
+
+/* ═══════════ 子菜单（二级） ═══════════ */
+.pg-layout__menu-wrap .arco-menu-inline .arco-menu-item {
+  padding-left: 28px;
+  font-size: 12px;
+  line-height: 20px;
+  margin-bottom: 2px;
+  color: var(--color-text-2);
+}
+
+.pg-layout__menu-wrap .arco-menu-inline .arco-menu-item.arco-menu-selected {
+  color: rgb(var(--primary-7));
+  background: var(--color-bg-1);
+  font-weight: 500;
+}
+
+/* 子菜单展开区域 */
+.pg-layout__menu-wrap .arco-menu-inline-content {
+  padding: 4px 0;
+}
+
+/* ═══════════ 展开/折叠箭头 ═══════════ */
+.pg-layout__menu-wrap .arco-menu-icon-suffix {
+  font-size: 10px;
+  color: var(--color-text-3);
+}
+
+/* ═══════════ 去除多余装饰 ═══════════ */
+.pg-layout__menu-wrap .arco-menu-pop-header,
+.pg-layout__menu-wrap .arco-menu-has-icon {
+  /* 保持 consistent padding */
+}
+
+/* 去掉 light 模式下的底部 border */
+.pg-layout__menu-wrap .arco-menu-light {
+  border-right: none;
+}
+
+/* 滚动条美化 */
+.pg-layout__menu-wrap::-webkit-scrollbar {
+  width: 4px;
+}
+
+.pg-layout__menu-wrap::-webkit-scrollbar-thumb {
+  background: var(--color-fill-3);
+  border-radius: 2px;
+}
+
+.pg-layout__menu-wrap::-webkit-scrollbar-track {
+  background: transparent;
+}
