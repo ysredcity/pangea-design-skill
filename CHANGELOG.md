@@ -8,10 +8,13 @@
 
 ## [Unreleased]
 
+### Added
+- 新增**纯前端铁律**：产出始终是完整的 Vue 纯前端工程，范围仅限前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及后端代码或服务**；demo 用 mock，开发对接既有接口但不实现后端。写入 `SKILL.md`（核心目的 + 「纯前端铁律」小节）、`project-structure.md`、`CONTRIBUTING.md`（核心原则 #7）。
+
 ### Changed
 - 依据 skill 原型生成效果测试的发现，为两份模式文档增加「本地补充」小节（通用最佳实践，非上游照搬）：
   - `patterns/form-patterns.md`：新增「提交与校验：二选一，避免重复校验」——明确声明式（`@submit-success`）与命令式（`@click` + `validate()`）两种方式，禁止混用导致的重复校验。
-  - `patterns/table-patterns.md`：新增「分页：客户端 vs 服务端」——`total` 必须与真实数据联动（客户端由 data 长度、服务端由接口返回），不写死；筛选后复位页码；`@page-change`/`@page-size-change` 事件骨架。
+  - `patterns/table-patterns.md`：新增「分页：客户端 vs 服务端」——`total` 必须与真实数据联动（客户端由 data 长度、服务端由接口返回），不写死；筛选后复位页码；`@page-change`/`@page-size-change` 事件骨架。另新增「插槽 record 的类型（TS strict 下的坑）」——插槽 `record` 为 `any`，索引强类型映射会 TS7053，改用接受 `string` 的 helper 查表（源自场景测试 S1/S2 实测发现）。
   - `CONTRIBUTING.md`：在「照搬」分类中登记这两个文件带本地补充小节，上游同步时应保留。
 
 ### 计划中

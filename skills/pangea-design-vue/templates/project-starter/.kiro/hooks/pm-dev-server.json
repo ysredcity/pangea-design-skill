@@ -1,0 +1,13 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "PM Demo - Auto Dev Server",
+      "trigger": "SessionStart",
+      "action": {
+        "type": "agent",
+        "prompt": "你现在处于 PM Demo 模式。请按以下步骤检查并启动开发环境（PM 不需要做任何事）：\n\n1. 检查当前工程根目录是否有 package.json（确认是 Pangea Vue 工程）。\n2. 检查 node_modules/ 是否存在：\n   - 不存在 → 后台执行 `npm install`，等待完成。\n   - 存在 → 跳过。\n3. 检查是否已有 dev server 在运行（查看进程列表中是否有 `npm run dev` 或 vite 进程）：\n   - 没有 → 用 control_bash_process 后台启动 `npm run dev`。\n   - 已有 → 跳过。\n4. 等待 dev server 输出中出现 `Local:` 字样，提取预览地址。\n5. 告知用户：「开发环境已就绪，预览地址：http://localhost:xxxx」（用实际端口）。\n\n如果任何步骤失败（如 Node.js 未安装），用简洁非技术语言告知用户需要安装 Node.js，并提供安装链接 https://nodejs.org/。\n\n整个过程中不要让用户执行任何终端命令。"
+      }
+    }
+  ]
+}

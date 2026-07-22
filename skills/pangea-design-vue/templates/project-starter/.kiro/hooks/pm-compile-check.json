@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "hooks": [
+    {
+      "name": "PM Demo - Compile Check",
+      "trigger": "PostFileSave",
+      "matcher": "\\.(vue|ts|tsx|less|css)$",
+      "action": {
+        "type": "agent",
+        "prompt": "文件已保存。请检查 dev server 的终端输出是否有编译错误：\n\n1. 读取 dev server 进程的最新输出（用 get_process_output 查看 npm run dev 的终端）。\n2. 如果输出中包含 ERROR、Failed to compile、SyntaxError、TypeError、TS 错误码（如 TS2345、TS7053）等关键词：\n   - 分析错误原因，自动修复代码。\n   - 修复后再次检查输出，确认错误消失。\n   - 不要把错误信息展示给用户，直接修好。\n3. 如果没有错误（输出正常，显示 hmr update 或无新错误）：\n   - 不需要做任何事，也不需要通知用户（HMR 会自动刷新浏览器）。\n\n关键原则：\n- 编译错误是你（agent）的责任，不是用户的。\n- 只有在修复完成且需要用户手动刷新时才通知用户。\n- 如果是 Vite HMR 自动更新，用户不需要任何操作。"
+      }
+    }
+  ]
+}

@@ -19,6 +19,8 @@ user-invocable: false
 
 因此生成页面时：结构、组件、主题 token 完全一致；PM demo 用内联 mock 数据，开发交付把 mock 换成接口请求即可，**页面骨架与路由层级不变**。
 
+> **纯前端铁律**：产出**始终是一个完整的 Vue 纯前端工程**，范围仅限前端（页面 / 路由 / 组件 / 前端状态 / mock 或调用既有接口）。**不产出、不涉及任何后端代码或服务**。需要数据时：demo 用前端 mock，开发对接既有后端接口（前端 `fetch`/`axios` 调用），但不实现后端。
+
 ## 技术栈
 
 Vue 3 + Vite + TypeScript + Vue Router + `@arco-design/web-vue` + Pangea 主题包/图标包。
@@ -180,3 +182,52 @@ const routes = [
 - 视觉全部走 Pangea 主题 token（语义 token / 品牌青绿主色），不硬编码颜色；取值见 [design-tokens.md](../theme/design-tokens.md)。
 - 图标用 Pangea 图标包命名导入。
 - **PM demo**：页面内用 mock 数据（`ref`/常量）；**开发交付**：把 mock 换成接口请求，页面结构与路由不变。
+
+## PM Demo 模式（多轮迭代体验）
+
+当使用者是产品经理时，agent 全权托管工程生命周期，PM 只需**对话 + 浏览器预览**。
+
+### 脚手架内置 Kiro Hooks
+
+`templates/project-starter/` 已内置以下 hooks（位于 `.kiro/hooks/`），用 `degit` 或复制脚手架后即生效：
+
+| Hook | 触发时机 | 作用 |
+|---|---|---|
+| `pm-dev-server` | SessionStart | 会话开始时自动检查 `node_modules`、执行 `npm install`（如需）、启动 `npm run dev`、告知预览地址 |
+| `pm-compile-check` | PostFileSave（`.vue/.ts/.tsx/.less/.css`） | 文件保存后检查 dev server 输出，如有编译错误自动修复，不打扰 PM |
+
+### PM 的操作流程
+
+```
+PM 打开 Kiro → 自动启动 dev server → PM 说需求 → agent 生成/修改代码
+→ 自动编译检查 → PM 刷新浏览器看效果 → 继续下一轮
+```
+
+PM 全程不需要：
+- 执行任何终端命令
+- 理解编译错误
+- 手动启动/重启 dev server
+- 知道 npm / Node.js 的具体用法
+
+### 前提条件
+
+PM 的机器上需要提前安装 **Node.js**（≥18）。这是唯一的环境要求，安装一次即可（下载地址：https://nodejs.org/）。安装后所有后续操作均由 agent + hooks 自动完成。
+
+### 目录结构（含 hooks）
+
+```
+project/
+├── .kiro/
+│   └── hooks/
+│       ├── pm-dev-server.json      # SessionStart: 自动启动开发环境
+│       └── pm-compile-check.json   # PostFileSave: 自动编译检查与修复
+├── index.html
+├── package.json
+├── vite.config.ts
+└── src/
+    ├── main.ts
+    ├── App.vue
+    ├── router/index.ts
+    ├── layouts/GlobalLayout.vue
+    └── pages/...
+```

@@ -1,7 +1,7 @@
 # 项目上下文台账（PROJECT_CONTEXT）
 
 > **这是本项目的单一事实源（Single Source of Truth）。** 每次新会话开始时先读它；完成里程碑、做出重要决策、或新增/移动文件后**及时更新它**。
-> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-07-21。
+> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-07-22。
 
 ---
 
@@ -28,6 +28,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - ✅ **图标引用已统一**：定制文档全部指向图标包命名导入，清理了默认 Arco 图标/iconfont 残留。
 - ✅ **脚手架已实测可运行**（A+D+C）：修复 3 处缺口后 `npm install`→`vue-tsc`→`vite build`→`npm run dev` 全通过，产物 CSS 含青绿 `--primary-6: 0,170,166`；加了 `package-lock.json`；支持 `npx degit …/templates/project-starter my-app` 一键起项目。
 - ✅ **模式文档增补**：form-patterns（提交/校验二选一）、table-patterns（分页 total 联动）本地补充。
+- ✅ **PM Demo 模式**：SKILL.md 新增「PM Demo 模式」章节（agent 全托管工程生命周期），脚手架内置 2 个 Kiro hooks（`pm-dev-server` SessionStart / `pm-compile-check` PostFileSave），`project-structure.md` 新增对应说明。PM 只需对话+浏览器预览，无需接触终端或处理编译错误。
 
 ## 3. 关键结论与决策（不要重复踩坑）
 - **视觉 token 唯一事实源 = 主题包运行时**（`@arco-themes/vue-pangea-3-linear` 的 `theme.css`/`tokens.less`/`theme.less`，即 `rgb(var(--x-n))` 实际解析值）。Figma/设计稿/记忆都不是权威，**冲突以主题包为准**。
@@ -37,6 +38,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - **生成层级**：具体页面是**全局 Layout 下的路由子页面**（`src/pages/<PageName>/index.vue` + 注册为 Layout 路由 children）。全局 Layout 是稳定骨架、当前为**占位版**，标准化版本待团队提供——**不要重写/替换全局 Layout**（除非明确要求）。
 - **照搬 vs 定制**：组件/模式文档 + architecture/config-provider/i18n 为「照搬」上游，仅上游 API 变化时才动；主题/工程结构相关为「定制」。（例外：form-patterns/table-patterns 末尾带「本地补充」小节，同步上游时保留。）
 - **脚手架可运行性三要点（勿破坏）**：① `less` 必需 devDep；② `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`（运行时 CSS 变量，只靠插件注入不可靠）；③ `src/vite-env.d.ts` 提供 `*.vue`/`vite/client`/图标包类型声明。改依赖或配置后须重跑 install/build/dev 并更新 lockfile。
+- **纯前端铁律**：产出始终是完整的 Vue 纯前端工程，只做前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及任何后端代码或服务**。demo 用 mock；开发对接既有后端接口但不实现后端。
 - **协作约定**：❗**不要替用户自动 `git commit` / `git push`**，只改文件，提交推送由用户手动操作（用户 2026-07-21 明确要求）。
 
 ## 4. 文件地图（File Map）
@@ -57,6 +59,7 @@ pangea-design-skill/
     │   ├── components/ (72)  # 照搬
     │   └── patterns/   (5)   # 照搬
     └── templates/project-starter/          # 可运行脚手架（含主题包/图标包）
+        └── .kiro/hooks/                    # PM Demo 模式 Kiro hooks（随脚手架交付）
 ```
 
 ## 5. 关键约定 / 事实源速查
@@ -95,3 +98,5 @@ pangea-design-skill/
 ## 变更日志（Changelog）
 - 2026-07-21 建立台账 + `.kiro` 上下文管理机制；记录 skill 主体、脚手架、治理框架、GitHub 上传、图标统一等状态与关键决策（主题包为事实源、青绿主色、生成层级、不自动提交等）。
 - 2026-07-21 脚手架可运行化（A+D+C）：修 3 处缺口并实测通过、加 lockfile、加 degit 一键起项目；补 form/table 模式文档；同步 SKILL/project-structure/README/CONTRIBUTING/CHANGELOG。（本仓 `_tests/` 效果测试材料本地保留、不入 Git。）
+- 2026-07-21 加入「纯前端铁律」（SKILL/project-structure/CONTRIBUTING）；`_tests/` 换成 2 个完整场景用例（S1 请假管理、S2 商品管理，多页+路由+共享 mock store），并升级测试法为「生成→组装进脚手架→实测编译」，实测暴露并修复了表格插槽 record 无类型的 TS7053；已把该经验回流到 `table-patterns.md`（新增「插槽 record 的类型」小节）。
+- 2026-07-22 新增 PM Demo 模式（方案 A+C）：SKILL.md 加「PM Demo 模式」章节（agent 职责清单/话术约定/初始化流程/路由提示/hooks 协作）；脚手架 `templates/project-starter/.kiro/hooks/` 新增 `pm-dev-server.json`（SessionStart 自动启动 dev server）+ `pm-compile-check.json`（PostFileSave 自动编译检查修复）；`project-structure.md` 新增「PM Demo 模式（多轮迭代体验）」章节。

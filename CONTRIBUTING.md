@@ -17,6 +17,7 @@
    - **定制（Pangea 专属）**：`SKILL.md`、`references/theme/design-tokens.md`、`references/overview/theming.md`、`references/overview/getting-started.md`、`references/overview/project-structure.md`、`templates/project-starter/`（工程脚手架）。
 5. **双受众目的不变**：产物是一个 Vue 工程，同时服务 PM 出高保真 demo（mock 数据）与开发基于 PRD 产出 UI（真实接口）；两者结构/组件/主题一致，仅数据来源不同。改动不得破坏这一双受众定位。
 6. **生成层级不可乱**：具体页面是全局 Layout 下的路由子页面；全局 Layout 是稳定骨架（后续团队标准化提供），不得在生成页面时重写/替换。
+7. **纯前端边界**：产出始终是完整的 Vue 纯前端工程，范围仅限前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及后端代码或服务**。demo 用前端 mock；开发对接既有后端接口但不实现后端。
 
 ---
 
