@@ -44,3 +44,82 @@ const data = [
 - 用一个请求函数统一拉取数据，在 `onMounted` 和表格变更事件中复用。
 - 请求中给表格设置加载状态，避免重复操作和空白反馈。
 - 不要在每次渲染时重新创建列配置；列应定义一次，或由稳定输入计算得到。
+
+## 分页：客户端 vs 服务端
+
+> Pangea 本地补充（非上游照搬）：明确两种分页方式，`total` 必须与真实数据联动，不要写死。
+
+### 客户端分页（数据量小、一次性拉全量）
+
+数据全部在前端，交给 `a-table` 自带分页即可；不要手写固定 `total`。
+
+```vue
+<script setup lang="ts">
+import { computed, ref } from 'vue';
+
+const keyword = ref('');
+const all = ref<Row[]>([/* ... */]);
+// 过滤后的数据；total 跟随它的长度，翻页由 a-table 内部处理
+const filtered = computed(() => all.value.filter((r) => r.name.includes(keyword.value)));
+</script>
+
+<template>
+  <!-- 传 pageSize；total 不写死，交由表格按 data 长度分页 -->
+  <a-table :columns="columns" :data="filtered" row-key="id" :pagination="{ pageSize: 10 }" />
+</template>
+```
+
+### 服务端分页（数据量大、按页请求）
+
+分页状态（`current`/`pageSize`/`total`）放本地响应式对象；`total` **来自接口返回**，不要写死。监听翻页/改页大小事件 → 更新状态 → 重新请求；用 `loading` 包裹请求。
+
+```vue
+<script setup lang="ts">
+import { onMounted, reactive, ref } from 'vue';
+
+const loading = ref(false);
+const data = ref<Row[]>([]);
+const pagination = reactive({ current: 1, pageSize: 10, total: 0 });
+
+async function fetchList() {
+  loading.value = true;
+  try {
+    // demo：mock；交付时替换为接口，例如 api.list({ page, pageSize, keyword })
+    const res = await mockApi(pagination.current, pagination.pageSize);
+    data.value = res.list;
+    pagination.total = res.total; // total 来自服务端
+  } finally {
+    loading.value = false;
+  }
+}
+
+function onPageChange(current: number) {
+  pagination.current = current;
+  fetchList();
+}
+function onPageSizeChange(pageSize: number) {
+  pagination.pageSize = pageSize;
+  pagination.current = 1; // 改页大小回到第 1 页
+  fetchList();
+}
+
+onMounted(fetchList);
+</script>
+
+<template>
+  <a-table
+    :columns="columns"
+    :data="data"
+    :loading="loading"
+    :pagination="pagination"
+    row-key="id"
+    @page-change="onPageChange"
+    @page-size-change="onPageSizeChange"
+  />
+</template>
+```
+
+### 要点
+- `total` 必须与真实数据一致：客户端分页由 `data` 长度决定（不传 `total`），服务端分页由接口返回。**不要写死 `total`**。
+- 筛选/搜索变化后把 `current` 复位到第 1 页，避免停留在越界页码。
+- 请求期间 `:loading`；避免每次渲染重建 `columns`（应定义一次或由稳定输入计算）。

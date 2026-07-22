@@ -16,15 +16,24 @@ Pangea 前端工程脚手架样例：Vue 3 + Vite + TypeScript + Vue Router + Ar
 | `@arco-themes/vue-pangea-3-linear` | **Pangea 主题包**（品牌青绿主色等全部视觉 token） |
 | `@arco-iconbox/vue-pangea-mobile` | **Pangea 图标包**（命名导入的图标组件） |
 | `@arco-plugins/vite-vue` | 注入主题包 + 图标包 + 组件样式按需加载 |
+| `less`（devDep） | arco 组件/主题为 less，Vite 处理 `.less` 必需 |
 
-主题包与图标包已在 `vite.config.ts` 通过 `vitePluginForArco({ theme, iconBox })` 接入，开箱即用。
+主题包与图标包已在 `vite.config.ts` 通过 `vitePluginForArco({ theme, iconBox })` 接入；`main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'` 以保证运行时 CSS 变量。开箱即用。
 
-## 运行
+## 起步
+
+一键起项目（degit）：
 
 ```bash
+npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
+cd my-pangea-app
 npm install
-npm run dev
+npm run dev        # 本地预览；npm run build 产出生产包
 ```
+
+或直接复制本目录后 `npm install && npm run dev`。
+
+> 已实测：`npm install` → `vue-tsc` 类型检查 → `vite build` 通过，产物含 Pangea 青绿主题变量。
 
 ## 生成层级约定（重要）
 

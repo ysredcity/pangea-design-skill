@@ -42,12 +42,14 @@ pangea-design-skill/
 ### 作为 skill 使用
 把 `skills/pangea-design-vue/SKILL.md` 作为入口交给支持 skill 的 agent；agent 按需加载 `references/` 下的文档。不支持 skill 的工具，可把 `SKILL.md` + `references/theme/design-tokens.md` 喂进上下文。
 
-### 运行脚手架样例
+### 一键起一个可运行工程（degit）
 ```bash
-cd skills/pangea-design-vue/templates/project-starter
-npm install
-npm run dev
+npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
+cd my-pangea-app && npm install && npm run dev
 ```
+或直接进入 `skills/pangea-design-vue/templates/project-starter` 后 `npm install && npm run dev`。
+
+> 脚手架已实测 `npm install`（含 `less`）→ `vue-tsc` 类型检查 → `vite build` 通过，产物 CSS 含 Pangea 青绿主题变量。
 
 ## 技术基线
 

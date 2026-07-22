@@ -13,6 +13,7 @@
 3. **不臆造取值。** 所有 token 数值必须能在主题包源文件中找到出处；拿不准就回到主题包核对，不要近似或猜测。
 4. **区分「照搬」与「定制」**：
    - **照搬（verbatim）**：组件文档、模式文档、`architecture.md`、`config-provider.md`、`internationalization.md`（纯开发用法，无主题内容）。
+     - 例外：`patterns/form-patterns.md`、`patterns/table-patterns.md` 末尾带有明确标注的「本地补充」小节（提交/校验二选一、分页 total 联动等通用最佳实践），非上游内容。上游同步这两个文件时，保留这些本地补充小节。
    - **定制（Pangea 专属）**：`SKILL.md`、`references/theme/design-tokens.md`、`references/overview/theming.md`、`references/overview/getting-started.md`、`references/overview/project-structure.md`、`templates/project-starter/`（工程脚手架）。
 5. **双受众目的不变**：产物是一个 Vue 工程，同时服务 PM 出高保真 demo（mock 数据）与开发基于 PRD 产出 UI（真实接口）；两者结构/组件/主题一致，仅数据来源不同。改动不得破坏这一双受众定位。
 6. **生成层级不可乱**：具体页面是全局 Layout 下的路由子页面；全局 Layout 是稳定骨架（后续团队标准化提供），不得在生成页面时重写/替换。
@@ -83,6 +84,8 @@ pangea-design-skill/
 
 - **脚手架 `templates/project-starter/` 与 `references/overview/project-structure.md` 必须保持一致**：改依赖版本、主题/图标包接入方式、目录结构或生成层级时，两处同步更新。
 - 依赖引用固定为：主题包 `@arco-themes/vue-pangea-3-linear`、图标包 `@arco-iconbox/vue-pangea-mobile`，经 `@arco-plugins/vite-vue` 的 `theme` / `iconBox` 选项接入。
+- **脚手架是「已验证可运行」基线**，必须保持 `npm install && npm run build && npm run dev` 通过。改依赖/配置后**必须重新跑通这三步**，并更新 `package-lock.json`（随仓库提交，保证可复现）。
+- 可运行性依赖三个易漏点，勿破坏：① `less` 为必需 devDep；② `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`（运行时 CSS 变量）；③ `src/vite-env.d.ts` 提供 `*.vue` / `vite/client` / 图标包的类型声明。
 - 脚手架内的 `src/layouts/GlobalLayout.vue` 是**占位版**：团队后续会提供标准化全局 Layout 来替换。替换时同步更新脚手架、`project-structure.md` 与 `CHANGELOG.md`，并保持「页面是 Layout 路由子页面」的层级约定不变。
 - 图标包为**命名导出**（无默认 install 插件），文档示例用命名导入；升级图标包时留意图标名增删。
 

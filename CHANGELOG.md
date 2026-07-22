@@ -8,10 +8,36 @@
 
 ## [Unreleased]
 
+### Changed
+- 依据 skill 原型生成效果测试的发现，为两份模式文档增加「本地补充」小节（通用最佳实践，非上游照搬）：
+  - `patterns/form-patterns.md`：新增「提交与校验：二选一，避免重复校验」——明确声明式（`@submit-success`）与命令式（`@click` + `validate()`）两种方式，禁止混用导致的重复校验。
+  - `patterns/table-patterns.md`：新增「分页：客户端 vs 服务端」——`total` 必须与真实数据联动（客户端由 data 长度、服务端由接口返回），不写死；筛选后复位页码；`@page-change`/`@page-size-change` 事件骨架。
+  - `CONTRIBUTING.md`：在「照搬」分类中登记这两个文件带本地补充小节，上游同步时应保留。
+
 ### 计划中
 - 提供**标准化全局 Layout** 替换脚手架中的占位版 `GlobalLayout.vue`。
 - 新增定制业务组件文档（`references/components-custom/`）。
 - 新增页面模板文档（`references/templates/`）。
+
+---
+
+## 2026-07-21 — 脚手架可运行化 + 一键起项目
+
+### Fixed
+- 修复脚手架 `templates/project-starter/` 三处导致「跑不起来 / 样式不生效」的缺口（经 `npm install` + `vue-tsc` + `vite build` + `npm run dev` 实测通过）：
+  - 新增 `src/vite-env.d.ts`：`*.vue` 类型 shim + `vite/client` 引用 + 图标包 `declare module`，解决 `vue-tsc` 找不到模块类型导致的 build 失败。
+  - `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`：保证运行时 CSS 变量（`--primary-6` 等）一定存在，不再依赖插件是否注入全局变量。已验证产物 CSS 含 `--primary-6: 0, 170, 166`（青绿）。
+  - `package.json` 补 `less` devDep：缺失时 `vite build` 报 `Preprocessor dependency "less" not found`。
+
+### Added
+- 脚手架加入 `package-lock.json`（D：锁定依赖，保证跨机器可复现安装）。
+- **一键起项目（degit）**：`npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app`，写入 README / starter README / `project-structure.md`。
+- `project-structure.md` 新增「快速开始（从零到可运行）」与「接入既有工程（最小清单）」两节。
+
+### Changed
+- `project-structure.md`：更正「无需手动 import 主题 CSS」的旧说法为「main.ts 显式引入 theme.css」；依赖清单补 `less`；目录树补 `vite-env.d.ts`。
+- `SKILL.md` 工程铁律：强调产出页面须落在完整工程、始终基于脚手架起步（含 degit），并列明 `less` / theme.css / vite-env.d.ts 三个可运行性要点。
+- `CONTRIBUTING.md` E 节：脚手架列为「已验证可运行」基线，改依赖/配置后须重跑 install/build/dev 并更新 lockfile。
 
 ---
 
