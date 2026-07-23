@@ -42,6 +42,9 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - **照搬 vs 定制**：组件/模式文档 + architecture/config-provider/i18n 为「照搬」上游，仅上游 API 变化时才动；主题/工程结构相关为「定制」。（例外：form-patterns/table-patterns 末尾带「本地补充」小节，同步上游时保留。）
 - **脚手架可运行性三要点（勿破坏）**：① `less` 必需 devDep；② `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`（运行时 CSS 变量，只靠插件注入不可靠）；③ `src/vite-env.d.ts` 提供 `*.vue`/`vite/client`/图标包类型声明。改依赖或配置后须重跑 install/build/dev 并更新 lockfile。
 - **纯前端铁律**：产出始终是完整的 Vue 纯前端工程，只做前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及任何后端代码或服务**。demo 用 mock；开发对接既有后端接口但不实现后端。
+- **skill 定位 = 海信集团 B 端 / 中后台产品**（管理后台、业务系统、数据平台、内部工具），以「规范执行」为先，不做规范外自由发挥。SKILL.md 开头有「定位与适用范围」章节。
+- **页面生成决策树**（SKILL.md「页面生成决策树」章节）：先判断场景与现有页面模板匹配度——高匹配直接套模板、部分匹配以模板为骨架增补、低匹配才 AI 自主设计；但自主设计也必须只用 Arco Vue 组件 + Pangea token（颜色/圆角变量、字号字重间距落档位），不自造组件、不引其它 UI 库。
+- **图表 = VChart**（VisActor，https://github.com/VisActor/VChart ，`@visactor/vchart`）：需数据可视化时优先用；系列配色接入 Pangea 调色板（主色 primary-6），容器用 a-card 承载，数据 mock 或对接既有接口。
 - **协作约定**：❗**不要替用户自动 `git commit` / `git push`**，只改文件，提交推送由用户手动操作（用户 2026-07-21 明确要求）。
 
 ## 4. 文件地图（File Map）
@@ -115,3 +118,5 @@ pangea-design-skill/
 - 2026-07-23 Layout/菜单细节修正：① Header 左图标改 IconGeneral、Logo 用 IconHisense（108px 完整文字）、去掉右侧搜索框、平台名改 appName 变量（生成时替换）；② 侧边栏展开/折叠按钮（折叠后 sidebar 宽 0，按钮浮在内容区左缘）；③ 全局 Layout 固定视口高度（`height:100vh`+`overflow:hidden`），只内容区滚动，顶部导航不参与；④ 菜单各状态对齐组件设计稿（默认透明/hover `rgba(0,0,0,0.06)`/选中白底+primary-7+medium，选中+hover 保持白色），去掉 `.arco-menu-inner` padding；因 Arco 懒加载注入需用 `!important` 覆盖。
 - 2026-07-23 新增「分组表单页」页面模板（`references/patterns/page-grouped-form.md`）：基于 Figma 设计稿，适用于字段极多、需分组+锚点定位的长表单。结构：顶部操作栏 + 左侧折叠分组(a-collapse，隐藏 header 边框线、组间 16px 间距、content 去左右 padding、header-left padding-left 20px、caret 图标 left:0) + 右侧锚点导航(a-anchor 绑定 scroll-container)。SKILL.md patterns 索引已追加。脚手架加 GroupedForm 示例页 + 路由 + 菜单。
 - 2026-07-23 非颜色 token 化检查：确认主题包只把**颜色 + 圆角**注入为运行时 CSS 变量，字号/字重/间距仅 Less 变量。已把 `GlobalLayout.vue` 和 `layout-menu.less` 中所有硬编码圆角改为 `var(--border-radius-small/medium/large)`；在 `design-tokens.md` 补「哪些 token 是运行时 CSS 变量」说明，明确 scoped 样式中圆角用 var()、字号字重优先走组件或写档位字面值。
+- 2026-07-23 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`（会议室预约系统）：综合检验三个页面模板的选型与组装（会议室列表=简单列表页、快速预约=基础表单页、发起会议申请=分组表单页、我的预约=简单列表页复用），延续多页+路由+共享 mock store + 纯前端考察点。
+- 2026-07-23 SKILL.md 三处刷新：① 明确 skill 定位为**海信集团 B 端/中后台产品**（新增「定位与适用范围」章节 + frontmatter description 更新）；② 新增「页面生成决策树」章节（高/部分/低匹配 → 套模板/增补/AI 自主设计，自主设计也须用设计系统组件+token）；③ 新增「图表（VChart）」章节（优先 VChart，配色接入 Pangea 调色板）。
