@@ -216,6 +216,8 @@ app.mount('#app');
 | 主题 | 文件 | 适用场景 |
 |---|---|---|
 | 简单列表页 | [page-simple-list.md](references/patterns/page-simple-list.md) | 基础表格列表页：标题 + 操作栏（按钮组+简单搜索）+ 表格（行选择）+ 分页；无复杂查询条件 |
+| 基础表单页 | [page-form.md](references/patterns/page-form.md) | 字段较多的独立数据录入/编辑页：顶部操作栏（返回+标题+提交）+ 可选提示 + 垂直表单（多列栅格，含 input/select/switch/datepicker/radio/子表单） |
+| 分组表单页 | [page-grouped-form.md](references/patterns/page-grouped-form.md) | 字段极多的长表单：折叠分组（a-collapse）+ 右侧锚点导航（a-anchor）快速定位 + 多样表单形态；分组多、表单长时使用 |
 | 表单模式 | [form-patterns.md](references/patterns/form-patterns.md) | 复杂表单、校验、动态字段、表单提交 |
 | 表格模式 | [table-patterns.md](references/patterns/table-patterns.md) | 远程表格、插槽、行选择、分页 |
 | 弹窗模式 | [modal-patterns.md](references/patterns/modal-patterns.md) | 弹窗表单、确认、全局反馈 |

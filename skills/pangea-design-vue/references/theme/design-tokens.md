@@ -39,6 +39,15 @@ background: @color-bg-2;
 border-radius: @border-radius-medium;
 ```
 
+### ⚠️ 哪些 token 是运行时 CSS 变量（关键区别）
+主题包**只把以下两类 token 注入为运行时 CSS 变量**，可在 `.vue` 的 `<style>`（含 scoped）里直接 `var()` 引用：
+- **颜色**：`--color-*`、`--primary-*`、`--gray-*` 等全部色板/语义色。
+- **圆角**：`--border-radius-none/small/medium/large/circle`。
+
+**字号、字重、行高、间距、尺寸只有 Less 变量**（`@font-size-*`、`@font-weight-*`、`@line-height-*`、`@spacing-*`、`@size-*`），**不存在对应的运行时 CSS 变量**（`var(--font-size-*)` 取不到值）。因此：
+- 组件自身字号/字重/间距由主题包内部管控，**优先用组件（`a-typography`、`a-form` 等）而非自定义 CSS**。
+- 页面自定义 `<style>` 中：**圆角一律用 `var(--border-radius-*)`**；字号/字重/间距若无法走组件，只能写字面值，且**必须落在 Pangea 档位上**（字号 12/13/14/16/20/24…，字重 400/500/600/700，间距 4 的倍数），不要自造非档位值。
+
 ---
 
 ## 二、品牌主色（Primary）

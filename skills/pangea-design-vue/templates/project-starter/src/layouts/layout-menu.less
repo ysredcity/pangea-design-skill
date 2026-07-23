@@ -18,19 +18,23 @@
   border-right: none;
 }
 
-.pg-layout__menu-wrap .arco-menu-inner {
+/* 去掉 arco 默认内边距（含 vertical 变体） */
+.pg-layout__menu-wrap .arco-menu-inner,
+.pg-layout__menu-wrap .arco-menu-vertical .arco-menu-inner {
   padding: 0;
 }
 
 /* ═══════════ 一级菜单项 ═══════════ */
+/* 默认态：透明背景（用 !important 覆盖 arco 懒加载注入的组件样式） */
 .pg-layout__menu-wrap .arco-menu-item,
 .pg-layout__menu-wrap .arco-menu-inline-header {
   margin-bottom: 4px;
   padding: 6px 8px;
-  border-radius: 4px;
+  border-radius: var(--border-radius-medium);
   font-size: 13px;
   line-height: 20px;
   color: var(--color-text-1);
+  background: transparent !important;
   height: auto;
   min-height: unset;
 }
@@ -42,22 +46,29 @@
   margin-right: 8px;
 }
 
-/* Hover */
-.pg-layout__menu-wrap .arco-menu-item:hover,
+/* Hover（未选中）：浅灰遮罩 rgba(0,0,0,0.06） */
+.pg-layout__menu-wrap .arco-menu-item:not(.arco-menu-selected):hover,
 .pg-layout__menu-wrap .arco-menu-inline-header:hover {
-  background: var(--color-fill-2);
+  background: rgba(0, 0, 0, 0.06) !important;
   color: var(--color-text-1);
 }
 
 /* ═══════════ 选中态（核心差异） ═══════════ */
+/* 选中：白色背景 + primary-7 文字 + medium 字重 */
 .pg-layout__menu-wrap .arco-menu-item.arco-menu-selected {
-  background: var(--color-bg-1);
+  background: var(--color-bg-1) !important;
   color: rgb(var(--primary-7));
   font-weight: 500;
 }
 
+/* 选中 + hover：保持白色背景不变 */
 .pg-layout__menu-wrap .arco-menu-item.arco-menu-selected:hover {
-  background: var(--color-bg-1);
+  background: var(--color-bg-1) !important;
+  color: rgb(var(--primary-7));
+}
+
+/* 选中项图标同步 primary-7 */
+.pg-layout__menu-wrap .arco-menu-item.arco-menu-selected .arco-menu-icon {
   color: rgb(var(--primary-7));
 }
 
@@ -68,16 +79,22 @@
 
 /* ═══════════ 子菜单（二级） ═══════════ */
 .pg-layout__menu-wrap .arco-menu-inline .arco-menu-item {
-  padding-left: 28px;
+  padding: 4px 8px 4px 28px;
   font-size: 12px;
   line-height: 20px;
   margin-bottom: 2px;
   color: var(--color-text-2);
 }
 
-.pg-layout__menu-wrap .arco-menu-inline .arco-menu-item.arco-menu-selected {
+.pg-layout__menu-wrap .arco-menu-inline .arco-menu-item:not(.arco-menu-selected):hover {
+  background: rgba(0, 0, 0, 0.06) !important;
+  color: var(--color-text-2);
+}
+
+.pg-layout__menu-wrap .arco-menu-inline .arco-menu-item.arco-menu-selected,
+.pg-layout__menu-wrap .arco-menu-inline .arco-menu-item.arco-menu-selected:hover {
   color: rgb(var(--primary-7));
-  background: var(--color-bg-1);
+  background: var(--color-bg-1) !important;
   font-weight: 500;
 }
 
@@ -110,7 +127,7 @@
 
 .pg-layout__menu-wrap::-webkit-scrollbar-thumb {
   background: var(--color-fill-3);
-  border-radius: 2px;
+  border-radius: var(--border-radius-small);
 }
 
 .pg-layout__menu-wrap::-webkit-scrollbar-track {

@@ -18,15 +18,21 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: 'example',
         component: () => import('@/pages/Example/index.vue'),
-        meta: { title: '示例页面' },
+        meta: { title: '简单列表页' },
       },
-      // 👇 新页面在此追加为子路由，例如：
-      // {
-      //   path: 'orders',
-      //   name: 'orders',
-      //   component: () => import('@/pages/Orders/index.vue'),
-      //   meta: { title: '订单列表' },
-      // },
+      {
+        path: 'contract-form',
+        name: 'contract-form',
+        component: () => import('@/pages/ContractForm/index.vue'),
+        meta: { title: '基础表单页' },
+      },
+      {
+        path: 'grouped-form',
+        name: 'grouped-form',
+        component: () => import('@/pages/GroupedForm/index.vue'),
+        meta: { title: '分组表单页' },
+      },
+      // 👇 新页面在此追加为子路由
     ],
   },
 ];

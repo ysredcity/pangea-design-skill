@@ -34,7 +34,9 @@ interface MenuItem {
 }
 
 const menuItems = ref<MenuItem[]>([
-  { key: '/', title: '示例页面' },
+  { key: '/', title: '简单列表页' },
+  { key: '/contract-form', title: '基础表单页' },
+  { key: '/grouped-form', title: '分组表单页' },
 ]);
 
 // 菜单选中
@@ -136,7 +138,8 @@ function onMenuItemClick(key: string) {
 .pg-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: var(--color-fill-2);
 }
 
@@ -267,7 +270,7 @@ function onMenuItemClick(key: string) {
   width: 14px;
   padding: 24px 0;
   background: var(--color-fill-2);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
   box-shadow: 1px 0 1px rgba(0, 0, 0, 0.08);
   cursor: pointer;
   z-index: 10;
@@ -277,7 +280,7 @@ function onMenuItemClick(key: string) {
   right: auto;
   left: 0;
   transform: translateY(-50%);
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
 }
 
 /* ═══════════ Content ═══════════ */
@@ -285,7 +288,7 @@ function onMenuItemClick(key: string) {
   flex: 1;
   min-width: 0;
   background: var(--color-bg-1);
-  border-top-left-radius: 8px;
+  border-top-left-radius: var(--border-radius-large);
   overflow-y: auto;
   position: relative;
   z-index: 1;

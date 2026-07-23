@@ -1,7 +1,7 @@
 # 项目上下文台账（PROJECT_CONTEXT）
 
 > **这是本项目的单一事实源（Single Source of Truth）。** 每次新会话开始时先读它；完成里程碑、做出重要决策、或新增/移动文件后**及时更新它**。
-> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-07-22。
+> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-07-23。
 
 ---
 
@@ -29,6 +29,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - ✅ **脚手架已实测可运行**（A+D+C）：修复 3 处缺口后 `npm install`→`vue-tsc`→`vite build`→`npm run dev` 全通过，产物 CSS 含青绿 `--primary-6: 0,170,166`；加了 `package-lock.json`；支持 `npx degit …/templates/project-starter my-app` 一键起项目。
 - ✅ **模式文档增补**：form-patterns（提交/校验二选一）、table-patterns（分页 total 联动）本地补充。
 - ✅ **PM Demo 模式**：SKILL.md 新增「PM Demo 模式」章节（agent 全托管工程生命周期），脚手架内置 2 个 Kiro hooks（`pm-dev-server` SessionStart / `pm-compile-check` PostFileSave），`project-structure.md` 新增对应说明。PM 只需对话+浏览器预览，无需接触终端或处理编译错误。
+- ✅ **3 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿，实测在脚手架中可运行。脚手架 `src/pages/` 内有对应示例页（Example=简单列表 / ContractForm / GroupedForm），已注册路由 + 菜单。
 
 ## 3. 关键结论与决策（不要重复踩坑）
 - **视觉 token 唯一事实源 = 主题包运行时**（`@arco-themes/vue-pangea-3-linear` 的 `theme.css`/`tokens.less`/`theme.less`，即 `rgb(var(--x-n))` 实际解析值）。Figma/设计稿/记忆都不是权威，**冲突以主题包为准**。
@@ -36,7 +37,8 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - **Figma 与主题包的 Cyan 色系（及 red-7）不一致** → 已统一以主题包为准（Figma 由 @维护者 手动对齐）。`design-tokens.md` 中已删除该差异说明。
 - **图标 = 图标包 `@arco-iconbox/vue-pangea-mobile`**（517 个命名导出组件，无默认 install 插件；继承 `currentColor`、`font-size` 控大小）；经 `@arco-plugins/vite-vue` 的 `iconBox` 替换默认 Arco 图标。**不要**用 `@arco-design/web-vue/es/icon` 或 iconfont.cn。
 - **生成层级**：具体页面是**全局 Layout 下的路由子页面**（`src/pages/<PageName>/index.vue` + 注册为 Layout 路由 children + 在 menuItems 中追加菜单项）。全局 Layout 已按 Figma 设计稿标准化（Header + 可折叠侧边栏 + 内容区），**不要重写/替换全局 Layout**（除非明确要求）。
-- **侧边栏菜单自定义样式**（`src/layouts/layout-menu.less`）：覆盖 Arco Menu 默认样式——透明背景、13px 一级 / 12px 二级、选中态白背景 + `primary-7` 文字 + medium 字重、4px 圆角、28px 二级缩进、无左侧竖条指示器。在 `main.ts` 中全局 import。
+- **侧边栏菜单自定义样式**（`src/layouts/layout-menu.less`）：覆盖 Arco Menu 默认样式——透明背景、13px 一级 / 12px 二级、**默认态透明 / 选中态白背景 + `primary-7` 文字 + medium 字重（选中+hover 仍保持白色）**、hover 用 `rgba(0,0,0,0.06)`、圆角用 `var(--border-radius-*)`、28px 二级缩进、无左侧竖条指示器。在 `main.ts` 中全局 import。⚠️ Arco 组件样式**懒加载注入在全局 less 之后**，覆盖选中态背景等需加 `!important` 才生效。
+- **非颜色 token 的 CSS 变量可用性**：主题包**只把颜色 + 圆角注入为运行时 CSS 变量**（`var(--color-*)`、`var(--border-radius-*)`）；字号/字重/行高/间距/尺寸**只有 Less 变量**（`@font-size-*` 等），无对应 CSS 变量。故 scoped `<style>` 里：圆角一律用 `var(--border-radius-*)`；字号/字重优先走组件，确需自定义只能写字面值且必须落在 Pangea 档位（字号 12/13/14/16/20、字重 400/500/600、间距 4 的倍数）。详见 design-tokens.md「哪些 token 是运行时 CSS 变量」。
 - **照搬 vs 定制**：组件/模式文档 + architecture/config-provider/i18n 为「照搬」上游，仅上游 API 变化时才动；主题/工程结构相关为「定制」。（例外：form-patterns/table-patterns 末尾带「本地补充」小节，同步上游时保留。）
 - **脚手架可运行性三要点（勿破坏）**：① `less` 必需 devDep；② `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`（运行时 CSS 变量，只靠插件注入不可靠）；③ `src/vite-env.d.ts` 提供 `*.vue`/`vite/client`/图标包类型声明。改依赖或配置后须重跑 install/build/dev 并更新 lockfile。
 - **纯前端铁律**：产出始终是完整的 Vue 纯前端工程，只做前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及任何后端代码或服务**。demo 用 mock；开发对接既有后端接口但不实现后端。
@@ -59,11 +61,14 @@ pangea-design-skill/
     │   ├── overview/architecture.md · config-provider.md · internationalization.md  # 照搬
     │   ├── components/ (72)  # 照搬
     │   └── patterns/   (5)   # 照搬
+    ├── references/patterns/     # 5 照搬 + 3 页面模板（simple-list / form / grouped-form）
     └── templates/project-starter/          # 可运行脚手架（含主题包/图标包）
         ├── .kiro/hooks/                    # PM Demo 模式 Kiro hooks（随脚手架交付）
-        └── src/layouts/
-            ├── GlobalLayout.vue            # 标准化全局 Layout（header+sidebar+content）
-            └── layout-menu.less            # 侧边栏菜单自定义样式
+        └── src/
+            ├── layouts/
+            │   ├── GlobalLayout.vue        # 标准化全局 Layout（header+sidebar+content）
+            │   └── layout-menu.less        # 侧边栏菜单自定义样式
+            └── pages/                      # 示例页：Example(简单列表)/ContractForm/GroupedForm
 ```
 
 ## 5. 关键约定 / 事实源速查
@@ -78,9 +83,9 @@ pangea-design-skill/
 
 ## 6. 待办 / 下一步（Next）
 - [ ] 补充**定制业务组件**文档（建议 `references/components-custom/`）。
-- [ ] 补充**页面模板**文档（建议 `references/templates/`，或脚手架内页型样例）。
+- [ ] 继续补充**更多页面模板**（详情页、仪表盘、高级列表页/多条件筛选等）。
 - [ ] （可选）为 `icon.md` 出一份 Pangea 专属图标使用文档（图标包 + iconBox），不动其他照搬文档。
-- [ ] 实测新 Layout 脚手架可编译运行，更新 `package-lock.json`。
+- [ ] 清理脚手架 `src/pages/` 里的示例页（Example/ContractForm/GroupedForm）——它们是本轮预览调试用，是否保留为脚手架自带示例需定夺；保留则更新 router/menu 说明，移除则恢复单 Example。
 
 ---
 
@@ -105,4 +110,8 @@ pangea-design-skill/
 - 2026-07-21 加入「纯前端铁律」（SKILL/project-structure/CONTRIBUTING）；`_tests/` 换成 2 个完整场景用例（S1 请假管理、S2 商品管理，多页+路由+共享 mock store），并升级测试法为「生成→组装进脚手架→实测编译」，实测暴露并修复了表格插槽 record 无类型的 TS7053；已把该经验回流到 `table-patterns.md`（新增「插槽 record 的类型」小节）。
 - 2026-07-22 新增 PM Demo 模式（方案 A+C）：SKILL.md 加「PM Demo 模式」章节（agent 职责清单/话术约定/初始化流程/路由提示/hooks 协作）；脚手架 `templates/project-starter/.kiro/hooks/` 新增 `pm-dev-server.json`（SessionStart 自动启动 dev server）+ `pm-compile-check.json`（PostFileSave 自动编译检查修复）；`project-structure.md` 新增「PM Demo 模式（多轮迭代体验）」章节。
 - 2026-07-22 全局 Layout 标准化：基于 Figma「Pangea Design PC Templates / 菜单-展开」重写 `GlobalLayout.vue`（Header 48px + 左侧可折叠侧边栏 200px + 内容区白背景左上圆角 8px + 折叠按钮），新增 `layout-menu.less`（覆盖 Arco Menu 样式：选中态白背景+primary-7+medium、13px/12px 字号、4px 圆角、28px 缩进），`main.ts` import 该 less，router 注释更新，SKILL.md/project-structure.md 从「占位版」改为「标准化实现」，新增页面步骤变为 3 步（加菜单项）。待办中「标准化 Layout」已完成移除。
-- 2026-07-22 新增「简单列表页」页面模板（`references/patterns/page-simple-list.md`）：基于 Figma 设计稿，适用于基础表格列表、无复杂查询条件场景。结构：页标题+操作栏(按钮组+input-group搜索)+表格(row-selection+bordered)+独立分页(small size)。SKILL.md patterns 索引已追加。
+- 2026-07-22 新增「简单列表页」页面模板（`references/patterns/page-simple-list.md`）：基于 Figma 设计稿，适用于基础表格列表、无复杂查询条件场景。结构：页标题+操作栏(按钮组+input-group搜索)+表格(row-selection+bordered)+独立分页(small size)。SKILL.md patterns 索引已追加。经实测修正：控件 small 尺寸、分页总数左对齐+翻页器右对齐、表格撑满高度、Layout content 去 padding、状态列用 a-badge。
+- 2026-07-22 新增「基础表单页」页面模板（`references/patterns/page-form.md`）：基于 Figma 设计稿（创建合同），适用于字段多、需独立页面录入/编辑场景。结构：顶部操作栏(返回icon+标题+帮助文档link+返回+提交)+可选Alert+垂直表单(a-form layout=vertical，a-row/a-col 3列栅格，含 input/select/switch/date-picker/radio-group)+子表单(可编辑a-table+新增一项)。SKILL.md patterns 索引已追加。后续微调：返回按钮改 text 类型+图标自定义 text-1 色、帮助文档改 text 按钮+IconFile 图标、头部按钮定稿为默认尺寸。
+- 2026-07-23 Layout/菜单细节修正：① Header 左图标改 IconGeneral、Logo 用 IconHisense（108px 完整文字）、去掉右侧搜索框、平台名改 appName 变量（生成时替换）；② 侧边栏展开/折叠按钮（折叠后 sidebar 宽 0，按钮浮在内容区左缘）；③ 全局 Layout 固定视口高度（`height:100vh`+`overflow:hidden`），只内容区滚动，顶部导航不参与；④ 菜单各状态对齐组件设计稿（默认透明/hover `rgba(0,0,0,0.06)`/选中白底+primary-7+medium，选中+hover 保持白色），去掉 `.arco-menu-inner` padding；因 Arco 懒加载注入需用 `!important` 覆盖。
+- 2026-07-23 新增「分组表单页」页面模板（`references/patterns/page-grouped-form.md`）：基于 Figma 设计稿，适用于字段极多、需分组+锚点定位的长表单。结构：顶部操作栏 + 左侧折叠分组(a-collapse，隐藏 header 边框线、组间 16px 间距、content 去左右 padding、header-left padding-left 20px、caret 图标 left:0) + 右侧锚点导航(a-anchor 绑定 scroll-container)。SKILL.md patterns 索引已追加。脚手架加 GroupedForm 示例页 + 路由 + 菜单。
+- 2026-07-23 非颜色 token 化检查：确认主题包只把**颜色 + 圆角**注入为运行时 CSS 变量，字号/字重/间距仅 Less 变量。已把 `GlobalLayout.vue` 和 `layout-menu.less` 中所有硬编码圆角改为 `var(--border-radius-small/medium/large)`；在 `design-tokens.md` 补「哪些 token 是运行时 CSS 变量」说明，明确 scoped 样式中圆角用 var()、字号字重优先走组件或写档位字面值。
