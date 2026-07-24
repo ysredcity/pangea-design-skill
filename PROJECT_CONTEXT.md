@@ -22,20 +22,20 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
   - `references/theme/design-tokens.md`：Pangea 全量 token（含**完整基础色板** 15 色系 × 10 阶）。
   - `references/overview/`：`project-structure.md`（工程结构+生成层级）、`theming.md`、`getting-started.md`（均定制）+ `architecture.md`/`config-provider.md`/`internationalization.md`（照搬）。
   - `references/components/`（72 篇）+ `references/patterns/`（5 篇）：照搬上游。
-- ✅ **可运行脚手架**：`skills/pangea-design-vue/templates/project-starter/`，已内置并接入主题包 + 图标包（`vitePluginForArco({ theme, iconBox })`），含**标准化 `GlobalLayout.vue`**（基于 Figma 设计稿实现：Header 48px + 左侧可折叠侧边栏 200px + 内容区白背景左上圆角 8px）+ 自定义菜单样式 `layout-menu.less` + `pages/Example` + 子路由示例。
+- ✅ **可运行脚手架**：`skills/pangea-design-vue/templates/project-starter/`，已内置并接入主题包（`vitePluginForArco({ theme })`，**不再启用 `iconBox` 全局替换**，图标改命名导入），含**标准化 `GlobalLayout.vue`**（基于 Figma 设计稿实现：Header 48px + 左侧可折叠侧边栏 200px + 内容区白背景左上圆角 8px）+ 自定义菜单样式 `layout-menu.less` + `pages/Example` + 子路由示例。
 - ✅ **治理框架**：`README.md`、`CONTRIBUTING.md`、`CHANGELOG.md`（根目录）。
 - ✅ **已上传 GitHub**：`main` 分支，初始提交 + README。
 - ✅ **图标引用已统一**：定制文档全部指向图标包命名导入，清理了默认 Arco 图标/iconfont 残留。
 - ✅ **脚手架已实测可运行**（A+D+C）：修复 3 处缺口后 `npm install`→`vue-tsc`→`vite build`→`npm run dev` 全通过，产物 CSS 含青绿 `--primary-6: 0,170,166`；加了 `package-lock.json`；支持 `npx degit …/templates/project-starter my-app` 一键起项目。
 - ✅ **模式文档增补**：form-patterns（提交/校验二选一）、table-patterns（分页 total 联动）本地补充。
 - ✅ **PM Demo 模式**：SKILL.md 新增「PM Demo 模式」章节（agent 全托管工程生命周期），脚手架内置 2 个 Kiro hooks（`pm-dev-server` SessionStart / `pm-compile-check` PostFileSave），`project-structure.md` 新增对应说明。PM 只需对话+浏览器预览，无需接触终端或处理编译错误。
-- ✅ **4 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-modal-form.md`（对话框表单）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿。脚手架 `src/pages/` 内有部分示例页（Example=简单列表 / ContractForm / GroupedForm），已注册路由 + 菜单。
+- ✅ **5 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-card-list.md`（卡片列表页，a-card 网格）、`page-modal-form.md`（对话框表单）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿。脚手架 `src/pages/` 内有部分示例页（Example=简单列表 / ContractForm / GroupedForm），已注册路由 + 菜单。
 
 ## 3. 关键结论与决策（不要重复踩坑）
 - **视觉 token 唯一事实源 = 主题包运行时**（`@arco-themes/vue-pangea-3-linear` 的 `theme.css`/`tokens.less`/`theme.less`，即 `rgb(var(--x-n))` 实际解析值）。Figma/设计稿/记忆都不是权威，**冲突以主题包为准**。
 - **品牌主色 = 青绿 `#00aaa6`（`--primary-6`）**，不是 Arco 默认蓝；`link` 与 primary 同色。状态色（success=green / danger=red / warning=orange / info=arcoblue）沿用 Arco 标准。
 - **Figma 与主题包的 Cyan 色系（及 red-7）不一致** → 已统一以主题包为准（Figma 由 @维护者 手动对齐）。`design-tokens.md` 中已删除该差异说明。
-- **图标 = 图标包 `@arco-iconbox/vue-pangea-mobile`**（517 个命名导出组件，无默认 install 插件；继承 `currentColor`、`font-size` 控大小）；经 `@arco-plugins/vite-vue` 的 `iconBox` 替换默认 Arco 图标。**不要**用 `@arco-design/web-vue/es/icon` 或 iconfont.cn。
+- **图标分工（重要，勿再走 iconBox 全局替换）**：① **功能性/组件内建图标**（Modal 关闭、Select 箭头、DatePicker 日历、Collapse caret 等）用 **Arco 默认，不替换**——**已移除 `@arco-plugins/vite-vue` 的 `iconBox` 全局替换选项**，因为它会连带替换 Arco 组件内建图标、破坏组件内部样式（根因）。② **业务/内容图标**从图标包 `@arco-iconbox/vue-pangea-mobile` **命名导入**（如 `import { IconGlobal } from '@arco-iconbox/vue-pangea-mobile'`，517 个命名导出，继承 `currentColor`、`font-size` 控大小）。**不要**用 `@arco-design/web-vue/es/icon` 或 iconfont.cn，不启用 iconBox。（曾用 `src/styles/arco-fixes.less` 全局 CSS 修 hover 变白问题，属治标——已删除，根因是 iconBox。）
 - **生成层级**：具体页面是**全局 Layout 下的路由子页面**（`src/pages/<PageName>/index.vue` + 注册为 Layout 路由 children + 在 menuItems 中追加菜单项）。全局 Layout 已按 Figma 设计稿标准化（Header + 可折叠侧边栏 + 内容区），**不要重写/替换全局 Layout**（除非明确要求）。
 - **侧边栏菜单自定义样式**（`src/layouts/layout-menu.less`）：覆盖 Arco Menu 默认样式——透明背景、13px 一级 / 12px 二级、**默认态透明 / 选中态白背景 + `primary-7` 文字 + medium 字重（选中+hover 仍保持白色）**、hover 用 `rgba(0,0,0,0.06)`、圆角用 `var(--border-radius-*)`、28px 二级缩进、无左侧竖条指示器。在 `main.ts` 中全局 import。⚠️ Arco 组件样式**懒加载注入在全局 less 之后**，覆盖选中态背景等需加 `!important` 才生效。
 - **非颜色 token 的 CSS 变量可用性**：主题包**只把颜色 + 圆角注入为运行时 CSS 变量**（`var(--color-*)`、`var(--border-radius-*)`）；字号/字重/行高/间距/尺寸**只有 Less 变量**（`@font-size-*` 等），无对应 CSS 变量。故 scoped `<style>` 里：圆角一律用 `var(--border-radius-*)`；字号/字重优先走组件，确需自定义只能写字面值且必须落在 Pangea 档位（字号 12/13/14/16/20、字重 400/500/600、间距 4 的倍数）。详见 design-tokens.md「哪些 token 是运行时 CSS 变量」。
@@ -63,8 +63,8 @@ pangea-design-skill/
     │   ├── overview/theming.md · getting-started.md   # 定制
     │   ├── overview/architecture.md · config-provider.md · internationalization.md  # 照搬
     │   ├── components/ (72)  # 照搬
-    │   └── patterns/   (5)   # 照搬
-    ├── references/patterns/     # 5 照搬 + 3 页面模板（simple-list / form / grouped-form）
+    │   └── patterns/  (10)   # 5 照搬 + 5 页面模板
+    ├── references/patterns/     # 5 照搬 + 5 页面模板（simple-list / card-list / modal-form / form / grouped-form）
     └── templates/project-starter/          # 可运行脚手架（含主题包/图标包）
         ├── .kiro/hooks/                    # PM Demo 模式 Kiro hooks（随脚手架交付）
         └── src/
@@ -121,3 +121,6 @@ pangea-design-skill/
 - 2026-07-23 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`（会议室预约系统）：综合检验三个页面模板的选型与组装（会议室列表=简单列表页、快速预约=基础表单页、发起会议申请=分组表单页、我的预约=简单列表页复用），延续多页+路由+共享 mock store + 纯前端考察点。
 - 2026-07-23 SKILL.md 三处刷新：① 明确 skill 定位为**海信集团 B 端/中后台产品**（新增「定位与适用范围」章节 + frontmatter description 更新）；② 新增「页面生成决策树」章节（高/部分/低匹配 → 套模板/增补/AI 自主设计，自主设计也须用设计系统组件+token）；③ 新增「图表（VChart）」章节（优先 VChart，配色接入 Pangea 调色板）。
 - 2026-07-23 新增「对话框表单」页面模板（`references/patterns/page-modal-form.md`）：基于 Figma 设计稿（创建合同弹窗），适用于字段少、轻量、弹窗内录入/编辑（不跳转独立页）。结构：a-modal（宽 520–712px）+ 2 列栅格垂直表单（input/select/switch/textarea）+ 取消/确定；用 `on-before-ok` 返回 Promise<boolean> 控制校验后关闭、`ok-loading` 提交态、`unmount-on-close`。SKILL.md patterns 索引 + 决策树已同步追加。至此页面模板共 4 个。
+- 2026-07-23 图标分工根因修复：**移除 `vite.config.ts` 中 `vitePluginForArco` 的 `iconBox` 全局替换选项**——iconBox 会连带替换 Arco 组件内建功能性图标（如 Modal 关闭按钮），破坏组件内部样式（表现为关闭图标 hover 变白看不清）。删除了治标的 `src/styles/arco-fixes.less` workaround 及 `main.ts` 中其 import。确立图标分工：功能性/组件内建图标用 Arco 默认（不替换）、业务/内容图标从图标包命名导入。已同步 project-structure.md、SKILL.md（3 处）、README.md、getting-started.md、theming.md。
+- 2026-07-23 新增「卡片列表页」页面模板（`references/patterns/page-card-list.md`）：基于 Figma 设计稿（node 57:4916），适用于以卡片形式呈现数据列表（图文/资源/应用墙）。结构：页标题 + 操作栏（按钮组+搜索/筛选）+ 卡片网格（**统一用 a-card**，CSS grid `repeat(auto-fill, minmax(260px,1fr))` 自适应换行，卡片 header `#title`+`#extra` More 链接、body 描述+footer 头像/操作图标）+ 分页（复用简单列表页规范）。控件 small、圆角用 `var(--border-radius-large)`、卡片内操作图标走业务图标命名导入。SKILL.md patterns 索引 + 决策树已同步追加。至此页面模板共 5 个。
+- 2026-07-23 卡片列表页细节打磨（核对设计稿 node 57:4916 / 689:35304，脚手架示例页 `src/pages/CardList/index.vue` + 模板文档同步）：① 筛选方案 placeholder 改「筛选方案」；② 页头底部加通栏 1px 下边框 `--color-border-2`（像素核对 rgb(229,230,235)），下内边距补 12px；③ 卡片右下角操作图标改为可点击 icon-hover 样式——用 `<a-button type="text" shape="circle" size="small">` 包裹图标（悬停浅灰圆背景）；④ 筛选行右上角新增展开/折叠按钮（`IconDown`/`IconUp` 切换）控制**高级筛选面板**：面板在筛选行与按钮组间插入，3 列 label+input 栅格、右下角保存(`IconSave`)/重置(`IconUndo`)/查询；⑤ 高级筛选面板加灰底 `--color-fill-1`(#F7F8FA) + 四边 1px 边框 `--color-border-3`(#C9CDD4) + `--border-radius-medium` 圆角 + 16px 内边距（均像素核对设计稿）。图标 `IconUp/IconDown/IconSave/IconUndo` 均图标包命名导入。

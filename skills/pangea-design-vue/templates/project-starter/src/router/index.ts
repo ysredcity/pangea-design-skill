@@ -21,6 +21,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '简单列表页' },
       },
       {
+        path: 'card-list',
+        name: 'card-list',
+        component: () => import('@/pages/CardList/index.vue'),
+        meta: { title: '卡片列表页' },
+      },
+      {
         path: 'contract-form',
         name: 'contract-form',
         component: () => import('@/pages/ContractForm/index.vue'),

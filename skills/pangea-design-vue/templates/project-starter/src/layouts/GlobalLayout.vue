@@ -35,6 +35,7 @@ interface MenuItem {
 
 const menuItems = ref<MenuItem[]>([
   { key: '/', title: '简单列表页' },
+  { key: '/card-list', title: '卡片列表页' },
   { key: '/contract-form', title: '基础表单页' },
   { key: '/grouped-form', title: '分组表单页' },
 ]);
