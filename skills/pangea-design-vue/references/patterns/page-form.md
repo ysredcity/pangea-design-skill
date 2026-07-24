@@ -47,7 +47,7 @@ user-invocable: true
 - 内边距：`24px`
 - Alert 提示（可选）：整宽，`type="warning"`，与表单间距 `12px`
 - **表单采用垂直布局**（label 在字段上方）：`layout="vertical"`
-- **多列栅格**：默认 3 列，字段间距 `24px`（水平+垂直 gutter）
+- **多列栅格（响应式）**：桌面 3 列，字段间距 `24px`（水平+垂直 gutter）；`a-col` 用断点 `:xs="24" :sm="12" :lg="8"`（窄屏 1 列 / 平板 2 列 / 桌面 3 列）随宽度收敛，不写死 `:span`；整行字段（子表单等）保持 `:span="24"`
 - 每个字段宽度自适应（栅格 `span`），单字段约 `381px`
 - **必填标记**：label 前红色星号（Arco Form 的 required 自动渲染）
 - 字段类型齐全：`a-input`、`a-select`、`a-switch`、`a-date-picker`、`a-radio-group`、`a-input-number` 等
@@ -202,33 +202,33 @@ function handleBack() {
         layout="vertical"
       >
         <a-row :gutter="24">
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="contractNo" label="合同编号">
               <a-input v-model="form.contractNo" placeholder="请输入" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="contractName" label="合同名称">
               <a-input v-model="form.contractName" placeholder="请输入" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="contractType" label="合同类型">
               <a-select v-model="form.contractType" placeholder="请选择" :options="contractTypeOptions" />
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="secretLevel" label="合同密级">
               <a-select v-model="form.secretLevel" placeholder="请选择" :options="secretOptions" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="draftMethod" label="合同拟定方式">
               <a-select v-model="form.draftMethod" placeholder="请选择" :options="contractTypeOptions" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="openContract" label="开口合同">
               <template #label>
                 开口合同
@@ -240,12 +240,12 @@ function handleBack() {
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="isElectronic" label="是否电签">
               <a-switch v-model="form.isElectronic" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="sealType" label="实体盖章类型">
               <a-select v-model="form.sealType" placeholder="请选择">
                 <a-option value="合同章">合同章</a-option>
@@ -253,7 +253,7 @@ function handleBack() {
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="legalSeal" label="加盖法人章">
               <a-switch v-model="form.legalSeal" />
             </a-form-item>
@@ -300,28 +300,28 @@ function handleBack() {
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="startDate" label="合同起始日期">
               <a-date-picker v-model="form.startDate" placeholder="请选择日期" style="width: 100%" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="endDate" label="合同终止日期">
               <a-date-picker v-model="form.endDate" placeholder="请选择日期" style="width: 100%" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="signDate" label="签约日期">
               <a-date-picker v-model="form.signDate" placeholder="请选择日期" style="width: 100%" />
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="totalAmount" label="税价合计总金额">
               <a-input v-model="form.totalAmount" placeholder="请输入" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="payMethod" label="付款方式">
               <a-radio-group v-model="form.payMethod">
                 <a-radio value="A">A</a-radio>
@@ -391,7 +391,7 @@ function handleBack() {
 
 1. **复制到 `src/pages/<PageName>/index.vue`**，修改 `pageTitle`、`form` 数据模型、`rules` 校验规则、字段定义。
 2. **垂直表单**：`<a-form layout="vertical">` — label 在字段上方，适合字段多的录入页。
-3. **多列栅格**：用 `<a-row :gutter="24">` + `<a-col :span="8">` 实现 3 列布局。字段较少时可用 `:span="12"`（2列）。
+3. **多列栅格（响应式，全局准则）**：用 `<a-row :gutter="24">` + `<a-col :xs="24" :sm="12" :lg="8">` 实现随宽度收敛的 3 列布局（窄屏 1 列 / 平板 2 列 / 桌面 3 列），**不要写死 `:span="8"`**；整行字段用 `:span="24"`。字段本就少的表单可用 `:xs="24" :sm="12"`（最多 2 列）。
 4. **必填标记**：在 `rules` 中定义 `required: true`，Arco Form 会自动在 label 前渲染红色星号，不要手动加。
 5. **顶部操作栏固定**：header `flex-shrink: 0`，content `overflow-y: auto`，长表单滚动时操作栏保持可见。
 6. **提交校验**：`formRef.value.validate()` 校验通过后再提交。

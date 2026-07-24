@@ -135,33 +135,33 @@ function handleBack() {
         layout="vertical"
       >
         <a-row :gutter="24">
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="contractNo" label="合同编号">
               <a-input v-model="form.contractNo" placeholder="请输入" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="contractName" label="合同名称">
               <a-input v-model="form.contractName" placeholder="请输入" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="contractType" label="合同类型">
               <a-select v-model="form.contractType" placeholder="请选择" :options="contractTypeOptions" />
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="secretLevel" label="合同密级">
               <a-select v-model="form.secretLevel" placeholder="请选择" :options="secretOptions" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="draftMethod" label="合同拟定方式">
               <a-select v-model="form.draftMethod" placeholder="请选择" :options="contractTypeOptions" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="openContract">
               <template #label>
                 开口合同
@@ -173,12 +173,12 @@ function handleBack() {
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="isElectronic" label="是否电签">
               <a-switch v-model="form.isElectronic" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="sealType" label="实体盖章类型">
               <a-select v-model="form.sealType" placeholder="请选择">
                 <a-option value="合同章">合同章</a-option>
@@ -186,7 +186,7 @@ function handleBack() {
               </a-select>
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="legalSeal" label="加盖法人章">
               <a-switch v-model="form.legalSeal" />
             </a-form-item>
@@ -233,28 +233,28 @@ function handleBack() {
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="startDate" label="合同起始日期">
               <a-date-picker v-model="form.startDate" placeholder="请选择日期" style="width: 100%" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="endDate" label="合同终止日期">
               <a-date-picker v-model="form.endDate" placeholder="请选择日期" style="width: 100%" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="signDate" label="签约日期">
               <a-date-picker v-model="form.signDate" placeholder="请选择日期" style="width: 100%" />
             </a-form-item>
           </a-col>
 
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="totalAmount" label="税价合计总金额">
               <a-input v-model="form.totalAmount" placeholder="请输入" />
             </a-form-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :xs="24" :sm="12" :lg="8">
             <a-form-item field="payMethod" label="付款方式">
               <a-radio-group v-model="form.payMethod">
                 <a-radio value="A">A</a-radio>

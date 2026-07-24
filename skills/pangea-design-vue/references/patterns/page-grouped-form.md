@@ -53,7 +53,7 @@ user-invocable: true
 - 分组内容区：表单字段 `flex-wrap` 排列，`gap: 16px`
 
 ### 表单字段
-- 垂直布局（label 在上），字段宽度 `316px`（比基础表单页的 3 列略窄，因右侧被锚点占用）
+- 垂直布局（label 在上）；**多列栅格用响应式断点** `:xs="24" :sm="12" :lg="8"`（窄屏 1 列 / 平板 2 列 / 桌面 3 列），不写死 `:span`，整行字段（textarea/子表单）用 `:span="24"`
 - 必填红星（Arco Form 自动渲染）
 - 形态多样：`a-input`、`a-select`、`a-switch`、`a-date-picker`、`a-radio-group`、`a-textarea`、子表单表格
 - 整行字段（如 textarea、子表单）宽度 `100%`
@@ -63,6 +63,7 @@ user-invocable: true
 - 链接项对应各分组：选中项 `semibold` + `color-text-1` + primary 轴线指示；默认项 `color-text-2`
 - 点击链接平滑滚动到对应分组
 - **需绑定滚动容器**：`:scroll-container` 指向左侧主区的滚动元素
+- **响应式**：锚点是辅助导航，窄屏（`≤992px`）用媒体查询隐藏（`display: none`），主表单纵向铺满；折叠面板与字段栅格在窄屏自动收敛
 
 ## Vue 代码模板
 
@@ -179,42 +180,42 @@ function handleBack() {
             <!-- 分组 1：合同基本信息 -->
             <a-collapse-item key="basic" :header="'合同基本信息'" id="group-basic">
               <a-row :gutter="16">
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="contractNo" label="合同编号">
                     <a-input v-model="form.contractNo" placeholder="请输入" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="contractName" label="合同名称">
                     <a-input v-model="form.contractName" placeholder="请输入" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="contractType" label="合同类型">
                     <a-select v-model="form.contractType" placeholder="请选择" :options="typeOptions" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="secretLevel" label="合同密级">
                     <a-select v-model="form.secretLevel" placeholder="请选择" :options="typeOptions" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="draftMethod" label="合同拟定方式">
                     <a-select v-model="form.draftMethod" placeholder="请选择" :options="typeOptions" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="openContract" label="开口合同">
                     <a-switch v-model="form.openContract" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="isElectronic" label="是否电签">
                     <a-switch v-model="form.isElectronic" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="sealType" label="实体盖章类型">
                     <a-select v-model="form.sealType" placeholder="请选择">
                       <a-option value="合同章">合同章</a-option>
@@ -222,17 +223,17 @@ function handleBack() {
                     </a-select>
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="legalSeal" label="加盖法人章">
                     <a-switch v-model="form.legalSeal" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="paperNo" label="纸质合同编号">
                     <a-input v-model="form.paperNo" placeholder="请输入" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="counterpartNo" label="对方合同编号">
                     <a-input v-model="form.counterpartNo" placeholder="请输入" />
                   </a-form-item>
@@ -264,27 +265,27 @@ function handleBack() {
             <!-- 分组 3：合同详情 -->
             <a-collapse-item key="detail" :header="'合同详情'" id="group-detail">
               <a-row :gutter="16">
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="startDate" label="合同起始日期">
                     <a-date-picker v-model="form.startDate" placeholder="请选择日期" style="width: 100%" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="endDate" label="合同终止日期">
                     <a-date-picker v-model="form.endDate" placeholder="请选择日期" style="width: 100%" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="signDate" label="签约日期">
                     <a-date-picker v-model="form.signDate" placeholder="请选择日期" style="width: 100%" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="totalAmount" label="税价合计总金额">
                     <a-input v-model="form.totalAmount" placeholder="请输入" />
                   </a-form-item>
                 </a-col>
-                <a-col :span="8">
+                <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="payMethod" label="付款方式">
                     <a-radio-group v-model="form.payMethod">
                       <a-radio value="A">A</a-radio>
@@ -408,6 +409,13 @@ function handleBack() {
   width: 150px;
   flex-shrink: 0;
 }
+
+/* 窄屏隐藏锚点导航（辅助导航，主表单纵向铺满） */
+@media (max-width: 992px) {
+  .pg-grouped-form__anchor {
+    display: none;
+  }
+}
 </style>
 ```
 
@@ -417,7 +425,7 @@ function handleBack() {
 2. **折叠分组**：用 `<a-collapse>` + `<a-collapse-item>`，`v-model:active-key` 控制展开，默认全部展开。每个 `a-collapse-item` 必须有唯一 `id`（锚点目标）。
 3. **锚点导航**：`<a-anchor :scroll-container="scrollContainer">` 绑定左侧滚动容器的 ref；`<a-anchor-link href="#group-xxx">` 的 href 对应分组的 id。**必须绑定 scroll-container**，否则锚点滚动/高亮会失效。
 4. **滚动容器**：左侧主区 `overflow-y: auto` 且用 `ref` 引用；锚点区 `flex-shrink: 0` 固定不滚动。
-5. **字段宽度**：因右侧被锚点占用，字段用 3 列（`:span="8"`），整行字段（textarea/子表单）用 `:span="24"`。
+5. **字段栅格（响应式，全局准则）**：字段用 `:xs="24" :sm="12" :lg="8"` 随宽度收敛（窄屏 1 列 / 平板 2 列 / 桌面 3 列），整行字段（textarea/子表单）用 `:span="24"`；窄屏（`≤992px`）用媒体查询隐藏右侧锚点，主表单占满宽度。
 6. **多样表单形态**：input/select/switch/datepicker/radio/textarea/子表单表格按需混用，与[基础表单页](page-form.md)一致。
 7. **mock 数据**：PM demo 用内存数据；开发交付时 `handleSubmit` 换接口、选项换接口拉取。
 8. **Layout 无 padding**：全局 Layout 的 content 区不自带 padding，本页通过 header + content 自控内边距。

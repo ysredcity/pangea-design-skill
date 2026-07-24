@@ -67,32 +67,32 @@ async function handleBeforeOk(): Promise<boolean> {
   >
     <a-form ref="formRef" :model="form" :rules="rules" layout="vertical">
       <a-row :gutter="24">
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="contractNo" label="合同编号">
             <a-input v-model="form.contractNo" placeholder="请输入" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="contractName" label="合同名称">
             <a-input v-model="form.contractName" placeholder="请输入" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="contractType" label="合同类型">
             <a-select v-model="form.contractType" placeholder="请选择" :options="typeOptions" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="secretLevel" label="合同密级">
             <a-select v-model="form.secretLevel" placeholder="请选择" :options="secretOptions" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="openContract" label="开口合同">
             <a-switch v-model="form.openContract" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="isElectronic" label="是否电签">
             <a-switch v-model="form.isElectronic" />
           </a-form-item>

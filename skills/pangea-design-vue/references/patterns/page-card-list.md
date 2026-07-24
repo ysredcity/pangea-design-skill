@@ -46,7 +46,7 @@ user-invocable: true
 ### 高级筛选面板（可选，条件多时用）
 - 由筛选行右上角的**展开/折叠按钮**控制显隐（`advancedVisible`）；折叠时只显示基础搜索，展开时在筛选行与按钮组之间插入面板
 - 面板样式（贴合设计稿）：灰底 `background: var(--color-fill-1)` + 边框 `1px solid var(--color-border-3)` + 圆角 `var(--border-radius-medium)` + 内边距 `16px`，通栏（与内容区同宽）
-- 面板为 **3 列栅格**（`grid-template-columns: repeat(3, 1fr)`，`gap: 12px 24px`），每个字段为 `label + input`（label 右对齐、`color-text-2`）
+- 面板为**响应式栅格**（`grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))`，`gap: 12px 24px`）：宽屏约 3 列、随宽度自动收敛减列；每个字段为 `label + input`（label 右对齐、`color-text-2`）；动作组 `grid-column: 1 / -1` 独占整行右对齐
 - 右下角动作组（落在栅格最后一格，右下对齐）：保存筛选方案（`IconSave` 图标按钮）+ 重置（`IconUndo` 图标按钮）+ 查询（`type="primary"`）
 - 控件统一 `size="small"`；字段与列数按业务增减（超过 3 个自动换行到下一栅格行）
 
@@ -331,7 +331,8 @@ function handleCreate() {
 /* 高级筛选面板：灰底 + 边框，3 列栅格，字段 label + input；右下角保存/重置/查询 */
 .pg-card-list__filter-panel {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* 响应式：列随宽度自适应收敛，窄屏自动减列 */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px 24px;
   padding: 16px;
   background: var(--color-fill-1);
@@ -357,8 +358,9 @@ function handleCreate() {
   flex: 1;
 }
 
-/* 动作组：落在栅格最后一格，右下对齐 */
+/* 动作组：独占整行、右对齐（窄屏收列时仍稳定落在最后一行右下） */
 .pg-card-list__adv-actions {
+  grid-column: 1 / -1;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;

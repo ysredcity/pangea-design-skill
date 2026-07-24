@@ -37,9 +37,10 @@ user-invocable: true
 - **控件尺寸**：弹窗内表单控件用默认尺寸。
 
 ### 宽度与列数（按字段量动态调整，但守以下原则）
-- **列数不超过 3 列**：字段少 → 1 列；中等 → 2 列；较多 → 3 列。`a-col :span` 取 `24 / 列数`（1 列=24、2 列=12、3 列=8）。
+- **列数不超过 3 列**：字段少 → 1 列；中等 → 2 列；较多 → 3 列。**列用响应式断点**而非写死 `:span`：2 列用 `:xs="24" :sm="12"`、3 列用 `:xs="24" :sm="12" :lg="8"`（窄屏自动降为 1 列），整行字段（textarea）用 `:span="24"`。
 - **宽度不超过 1000px**：随列数增长，参考 1 列≈`520px`、2 列≈`720px`、3 列≈`960px`，**上限 `1000px`**。
 - **弹窗需有最大高度，保证底部按钮始终可见**：给 body 设 `max-height`（如 `60vh`）+ `overflow-y: auto`，内容多时**body 内联滚动**，header/footer 固定不动。用 `:body-style="{ maxHeight: '60vh', overflowY: 'auto' }"` 实现（Arco Modal 的 header/footer 本就在 body 外，不随滚动）。
+- **窄屏防溢出（响应式）**：固定 `width` 不能超过视口；窄屏（如 `≤768px`）改用更小宽度或 `fullscreen`。可绑定动态宽度，如 `:width="isNarrow ? '100%' : 712"`（配合窗口宽度监听），或直接用 `fullscreen` 属性。
 - 参考选型（可据实际微调）：
 
   | 字段数 | 列数 | 宽度 |
@@ -125,32 +126,32 @@ async function handleBeforeOk(): Promise<boolean> {
   >
     <a-form ref="formRef" :model="form" :rules="rules" layout="vertical">
       <a-row :gutter="24">
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="contractNo" label="合同编号">
             <a-input v-model="form.contractNo" placeholder="请输入" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="contractName" label="合同名称">
             <a-input v-model="form.contractName" placeholder="请输入" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="contractType" label="合同类型">
             <a-select v-model="form.contractType" placeholder="请选择" :options="typeOptions" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="secretLevel" label="合同密级">
             <a-select v-model="form.secretLevel" placeholder="请选择" :options="typeOptions" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="openContract" label="开口合同">
             <a-switch v-model="form.openContract" />
           </a-form-item>
         </a-col>
-        <a-col :span="12">
+        <a-col :xs="24" :sm="12">
           <a-form-item field="isElectronic" label="是否电签">
             <a-switch v-model="form.isElectronic" />
           </a-form-item>
@@ -170,7 +171,7 @@ async function handleBeforeOk(): Promise<boolean> {
 
 1. **触发方式**：通常由列表页「新建 / 编辑」按钮触发，父组件用 `v-model:visible` 控制显隐；编辑时通过 `record` prop 传入初始数据，在 `watch(visible)` 或 `record` 变化时回填 `form`。
 2. **标题左对齐**：Arco Modal 标题默认居中，务必设 `title-align="start"`。
-3. **宽度/列数动态但有上限**：列数 ≤ 3、宽度 ≤ 1000px（见上「宽度与列数」表）；`a-col :span` = `24 / 列数`。
+3. **宽度/列数动态但有上限**：列数 ≤ 3、宽度 ≤ 1000px（见上「宽度与列数」表）；列用响应式断点（2 列 `:xs="24" :sm="12"`、3 列 `:xs="24" :sm="12" :lg="8"`），不写死 `:span`。窄屏 modal 宽度不超视口，必要时改小宽或 `fullscreen`。
 4. **底部按钮始终可见**：`:body-style="{ maxHeight: '60vh', overflowY: 'auto' }"` 让内容多时 body 内联滚动，header/footer 不动。
 5. **关闭按钮**：用 Arco 标准（`IconHover` 圆形 hover，背景 `--color-fill-2`），**不要自定义覆盖**关闭按钮样式。
 6. **校验 + 关闭时机**：用 `:on-before-ok="handleBeforeOk"` 返回 `Promise<boolean>`——校验/提交成功返回 `true` 关闭，失败返回 `false` 阻止关闭。不要在校验未过时就关弹窗。

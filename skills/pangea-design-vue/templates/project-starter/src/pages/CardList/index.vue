@@ -269,7 +269,8 @@ function handleCreate() {
 /* 高级筛选面板：灰底 + 边框，3 列栅格，字段 label + input；右下角保存/重置/查询 */
 .pg-card-list__filter-panel {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* 响应式：列随宽度自适应收敛，窄屏自动减列 */
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 12px 24px;
   padding: 16px;
   background: var(--color-fill-1);
@@ -295,8 +296,9 @@ function handleCreate() {
   flex: 1;
 }
 
-/* 动作组：落在栅格最后一格，右下对齐 */
+/* 动作组：独占整行、右对齐（窄屏收列时仍稳定落在最后一行右下） */
 .pg-card-list__adv-actions {
+  grid-column: 1 / -1;
   display: flex;
   align-items: flex-end;
   justify-content: flex-end;
