@@ -14,11 +14,13 @@ Pangea 前端工程脚手架样例：Vue 3 + Vite + TypeScript + Vue Router + Ar
 |---|---|
 | `@arco-design/web-vue` | 组件库（组件 API） |
 | `@arco-themes/vue-pangea-3-linear` | **Pangea 主题包**（品牌青绿主色等全部视觉 token） |
-| `@arco-iconbox/vue-pangea-mobile` | **Pangea 图标包**（命名导入的图标组件） |
-| `@arco-plugins/vite-vue` | 注入主题包 + 图标包 + 组件样式按需加载 |
+| `@arco-iconbox/vue-pangea-mobile` | **Pangea 图标包**（业务/内容图标，命名导入） |
+| `@arco-plugins/vite-vue` | 注入主题包 + 组件样式按需加载 |
 | `less`（devDep） | arco 组件/主题为 less，Vite 处理 `.less` 必需 |
 
-主题包与图标包已在 `vite.config.ts` 通过 `vitePluginForArco({ theme, iconBox })` 接入；`main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'` 以保证运行时 CSS 变量。开箱即用。
+主题包已在 `vite.config.ts` 通过 `vitePluginForArco({ theme })` 接入；`main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'` 以保证运行时 CSS 变量。开箱即用。
+
+> **图标分工**：组件内建的功能性图标（Modal 关闭、Select 箭头、DatePicker 日历等）用 Arco 默认，**不启用 iconBox 全局替换**（会破坏组件内部样式）；业务/内容图标从 Pangea 图标包命名导入。
 
 ## 起步
 

@@ -53,7 +53,7 @@ app.use(ArcoVue);
 app.mount('#app');
 ```
 
-> 图标不再注册默认的 `ArcoVueIcon`：`iconBox` 选项已把默认 Arco 图标替换为 Pangea 图标包 `@arco-iconbox/vue-pangea-mobile`。业务图标从该包**命名导入**使用（见 [project-structure.md](project-structure.md)）。
+> **图标分工**：组件内建的**功能性图标**（Modal 关闭、Select 下拉箭头、DatePicker 日历等）用 Arco 默认，**不启用 `iconBox` 全局替换**（会替换组件内建图标、破坏其内部样式）；**业务/内容图标**从 Pangea 图标包 `@arco-iconbox/vue-pangea-mobile` **命名导入**（不依赖 `iconBox` 选项）。详见 [project-structure.md](project-structure.md)。
 
 `vitePluginForArco` 常用选项：
 
@@ -62,7 +62,7 @@ app.mount('#app');
 | `theme` | string | 主题包名，此处填 `@arco-themes/vue-pangea-3-linear` |
 | `modifyVars` | object | 额外覆盖的 Less 变量（在主题包之上再定制） |
 | `style` | `'css' \| boolean` | 样式引入方式，默认 `true`（引入 less）；`'css'` 引入编译后的 css；`false` 不引入 |
-| `iconBox` | string | 图标库包名 |
+| `iconBox` | string | 图标库包名——**本项目不启用**（会全局替换 Arco 内建功能性图标、破坏组件内部样式）；业务图标改用命名导入 |
 | `componentPrefix` | string | 组件前缀，默认 `a` |
 
 Webpack 项目可用等价的 `@arco-plugins/webpack-vue`，同样通过 `theme` 选项指定主题包名。

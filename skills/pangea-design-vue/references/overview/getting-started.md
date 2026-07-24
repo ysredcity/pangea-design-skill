@@ -151,13 +151,13 @@ export default defineConfig({
 import { Button, Table, Form, Message, Modal } from '@arco-design/web-vue';
 ```
 
-图标从 **Pangea 图标包**命名导入（tree-shakable），`font-size` 控制大小、`color` 控制颜色（默认继承 `currentColor`）。
+**业务/内容图标**从 **Pangea 图标包**命名导入（tree-shakable），`font-size` 控制大小、`color` 控制颜色（默认继承 `currentColor`）。
 
 ```ts
 import { IconGlobal, IconPieChart } from '@arco-iconbox/vue-pangea-mobile';
 ```
 
-配置了 `@arco-plugins/vite-vue` 的 `iconBox` 选项后，默认 Arco 图标会被替换为 Pangea 图标集，无需再从 `@arco-design/web-vue/es/icon` 引入。图标接入详见 [project-structure.md](project-structure.md)。
+**组件内建的功能性图标**（Modal 关闭、Select 下拉箭头、DatePicker 日历等）用 Arco 默认即可，**不启用 `iconBox` 全局替换**（会破坏组件内部样式，如 icon-hover 圆形背景定位）。图标分工详见 [project-structure.md](project-structure.md)。
 
 ## TypeScript
 

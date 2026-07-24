@@ -5,6 +5,7 @@
  * 基础表格列表：操作栏（按钮组 + 简单搜索）+ 表格（行选择）+ 分页。
  */
 import { ref, reactive } from 'vue';
+import ContractModal from './ContractModal.vue';
 
 // ====== 页面标题 ======
 const pageTitle = '简单列表页';
@@ -82,9 +83,13 @@ function onSearch() {
   fetchData();
 }
 
-// ====== 操作 ======
+// ====== 对话框表单 ======
+const modalVisible = ref(false);
 function handleCreate() {
-  // TODO
+  modalVisible.value = true;
+}
+function onModalSuccess() {
+  fetchData();
 }
 </script>
 
@@ -174,6 +179,9 @@ function handleCreate() {
         />
       </div>
     </div>
+
+    <!-- 对话框表单：点「创建」弹出 -->
+    <ContractModal v-model:visible="modalVisible" @success="onModalSuccess" />
   </div>
 </template>
 

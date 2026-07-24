@@ -29,7 +29,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - ✅ **脚手架已实测可运行**（A+D+C）：修复 3 处缺口后 `npm install`→`vue-tsc`→`vite build`→`npm run dev` 全通过，产物 CSS 含青绿 `--primary-6: 0,170,166`；加了 `package-lock.json`；支持 `npx degit …/templates/project-starter my-app` 一键起项目。
 - ✅ **模式文档增补**：form-patterns（提交/校验二选一）、table-patterns（分页 total 联动）本地补充。
 - ✅ **PM Demo 模式**：SKILL.md 新增「PM Demo 模式」章节（agent 全托管工程生命周期），脚手架内置 2 个 Kiro hooks（`pm-dev-server` SessionStart / `pm-compile-check` PostFileSave），`project-structure.md` 新增对应说明。PM 只需对话+浏览器预览，无需接触终端或处理编译错误。
-- ✅ **3 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿，实测在脚手架中可运行。脚手架 `src/pages/` 内有对应示例页（Example=简单列表 / ContractForm / GroupedForm），已注册路由 + 菜单。
+- ✅ **4 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-modal-form.md`（对话框表单）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿。脚手架 `src/pages/` 内有部分示例页（Example=简单列表 / ContractForm / GroupedForm），已注册路由 + 菜单。
 
 ## 3. 关键结论与决策（不要重复踩坑）
 - **视觉 token 唯一事实源 = 主题包运行时**（`@arco-themes/vue-pangea-3-linear` 的 `theme.css`/`tokens.less`/`theme.less`，即 `rgb(var(--x-n))` 实际解析值）。Figma/设计稿/记忆都不是权威，**冲突以主题包为准**。
@@ -120,3 +120,4 @@ pangea-design-skill/
 - 2026-07-23 非颜色 token 化检查：确认主题包只把**颜色 + 圆角**注入为运行时 CSS 变量，字号/字重/间距仅 Less 变量。已把 `GlobalLayout.vue` 和 `layout-menu.less` 中所有硬编码圆角改为 `var(--border-radius-small/medium/large)`；在 `design-tokens.md` 补「哪些 token 是运行时 CSS 变量」说明，明确 scoped 样式中圆角用 var()、字号字重优先走组件或写档位字面值。
 - 2026-07-23 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`（会议室预约系统）：综合检验三个页面模板的选型与组装（会议室列表=简单列表页、快速预约=基础表单页、发起会议申请=分组表单页、我的预约=简单列表页复用），延续多页+路由+共享 mock store + 纯前端考察点。
 - 2026-07-23 SKILL.md 三处刷新：① 明确 skill 定位为**海信集团 B 端/中后台产品**（新增「定位与适用范围」章节 + frontmatter description 更新）；② 新增「页面生成决策树」章节（高/部分/低匹配 → 套模板/增补/AI 自主设计，自主设计也须用设计系统组件+token）；③ 新增「图表（VChart）」章节（优先 VChart，配色接入 Pangea 调色板）。
+- 2026-07-23 新增「对话框表单」页面模板（`references/patterns/page-modal-form.md`）：基于 Figma 设计稿（创建合同弹窗），适用于字段少、轻量、弹窗内录入/编辑（不跳转独立页）。结构：a-modal（宽 520–712px）+ 2 列栅格垂直表单（input/select/switch/textarea）+ 取消/确定；用 `on-before-ok` 返回 Promise<boolean> 控制校验后关闭、`ok-loading` 提交态、`unmount-on-close`。SKILL.md patterns 索引 + 决策树已同步追加。至此页面模板共 4 个。
