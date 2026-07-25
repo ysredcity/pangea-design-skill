@@ -243,6 +243,8 @@ function handleCreate() {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  /* 本页背景：白底（Layout 内容区默认透明，背景由页面自己设置） */
+  background: var(--color-bg-1);
 }
 
 .pg-simple-list__header {

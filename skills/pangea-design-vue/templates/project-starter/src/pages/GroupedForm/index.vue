@@ -246,6 +246,8 @@ function handleBack() {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  /* 本页背景：白底（内容区默认透明，需页面自己设置） */
+  background: var(--color-bg-1);
 }
 
 /* 顶部操作栏 */

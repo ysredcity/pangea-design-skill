@@ -36,6 +36,7 @@ interface MenuItem {
 const menuItems = ref<MenuItem[]>([
   { key: '/', title: '简单列表页' },
   { key: '/card-list', title: '卡片列表页' },
+  { key: '/dashboard', title: '仪表板（示例）' },
   { key: '/contract-form', title: '基础表单页' },
   { key: '/grouped-form', title: '分组表单页' },
 ]);
@@ -288,7 +289,10 @@ function onMenuItemClick(key: string) {
 .pg-layout__content {
   flex: 1;
   min-width: 0;
-  background: var(--color-bg-1);
+  /* 内容区默认不设背景，漏出 body 层灰色（--color-fill-2）；
+     具体背景由各页面自己决定：常规内容页设白底、仪表板类页保持透明用白卡区隔。
+     左上圆角 + overflow 会把页面白底裁出圆角，自动复现「白面板悬浮在灰底」的观感。 */
+  background: transparent;
   border-top-left-radius: var(--border-radius-large);
   overflow-y: auto;
   position: relative;

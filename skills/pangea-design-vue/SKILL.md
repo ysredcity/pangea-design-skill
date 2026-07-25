@@ -83,10 +83,12 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 
 需要数据可视化（折线、柱状、饼图、仪表盘指标图等）时，**优先使用 VChart 图表库**（VisActor 出品，开源）：仓库 https://github.com/VisActor/VChart 。
 
-- Vue 场景用 `@visactor/vchart`（或其 Vue 封装），按需引入，避免与 Arco 组件职责重叠。
-- **图表配色接入 Pangea token**：系列色优先取 Pangea 调色板（`rgb(var(--primary-6))`、`rgb(var(--cyan-6))`、`rgb(var(--purple-6))` 等，见 design-tokens.md「基础色板」），不自造色板；主色系列用品牌青绿 `primary-6`。
-- 图表容器、卡片外框仍用 Arco 组件（`a-card` 等）+ Pangea token 承载。
-- 不确定 VChart 具体 API 时，参考其官方文档；图表**数据用 mock**（demo）或对接既有接口（开发交付），不实现后端。
+- **按需引入，不进基础依赖**：`@visactor/vchart` **不在脚手架基础依赖里**（体积约 2MB，保持 base 轻量）。需要图表时才安装：`npm i @visactor/vchart`。
+- **用脚手架的 `LazyChart` 封装**（`src/components/LazyChart.vue`）：它**动态 import** vchart——装了就渲染，没装显示占位提示且**不影响 dev/build**。`vite.config.ts` 已把该包按可选依赖处理（未装时 `external` + `optimizeDeps.exclude`，保证「没装图表库也能构建」）。用法：`<LazyChart :spec="chartSpec" height="240px" />`，`spec` 为 VChart 配置对象。
+- **图表配色接入 Pangea 调色板**：系列色取 Pangea 色板；但注意 **VChart 在 canvas 上渲染，需要字面色值**（不能用 CSS 变量 `var(--x)`）——从 design-tokens.md 基础色板取对应 `-6` 阶 hex（primary `#00aaa6`、arcoblue `#165dff`、gold `#f7ba1e`、purple `#722ed1` 等）定义系列色数组；主色系列用品牌青绿 `#00aaa6`。
+- 图表容器、卡片外框仍用 Arco 组件（`a-card` 等）+ Pangea token 承载；环形图中心文字用绝对定位 div 覆盖更稳。
+- 不确定 VChart 具体 API 时参考其官方文档；图表**数据用 mock**（demo）或对接既有接口（开发交付），不实现后端。
+- **完整可运行示例见脚手架 `templates/project-starter/src/pages/Dashboard/index.vue`**（工作台/仪表板：KPI 卡 + 表格 + 分段占比条 + 经 LazyChart 的 VChart 环形图，灰底 + 无边框白卡 + 响应式），可作为仪表板类页面的组装参考。
 
 ## 关键约定
 
@@ -139,6 +141,14 @@ app.mount('#app');
 - **操作栏 / 筛选行允许换行**：工具栏用 `flex-wrap`，避免按钮组与搜索框在窄屏互相挤压溢出。
 - **固定像素宽度需设上限并防溢出**：弹窗、面板等固定宽度必须 `≤` 视口宽度（如 modal 在窄屏改用更小宽度或全屏）；侧栏、锚点等辅助区在窄屏可隐藏或下移。
 - 优先用 Arco Grid 的断点属性表达响应式，能不写媒体查询就不写；确需媒体查询时放在组件 scoped 样式里。详见 [responsive-design.md](references/patterns/responsive-design.md)。
+
+### 页面背景（全局准则）
+
+全局 Layout 的**内容区默认透明**，漏出 body 层灰色（`--color-fill-2`）。**具体背景色由每个页面自己决定**，不要依赖 Layout 提供背景——新页面务必显式设置自己的背景：
+
+- **常规内容页**（列表页、表单页、详情页等，页面本身是一整块内容）：页面根元素设白底 `background: var(--color-bg-1)`，铺满内容区。内容区的左上圆角 + overflow 会把白底裁出圆角，自动复现「白面板悬浮在灰底」的观感。
+- **仪表板 / 工作台类聚合页**（多个独立区块拼合）：页面根**保持透明**（露出灰底），页内每个区块用**白底卡片**承载（`a-card` 白底、**去边框** `:bordered="false"`）——灰底 + 无边框白卡是这类页的标准做法，靠底色差异而非边框线区隔区块。卡片建议用**大圆角** `var(--border-radius-large)` + **极轻阴影**（如 `box-shadow: 0 1px 4px rgba(0,0,0,0.05)`）增强区隔与层次；卡内强调图标可用「浅底色芯片」（强调色 10% 透明度做底、同色图标）提升设计感。
+- 灰底取 `--color-fill-2`（与 Layout body 一致），白底取 `--color-bg-1`，均用变量，不写死 hex。
 
 ## Skill 索引
 

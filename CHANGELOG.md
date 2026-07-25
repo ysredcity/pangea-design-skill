@@ -4,84 +4,61 @@
 
 事实源与版本约定见 [CONTRIBUTING.md](./CONTRIBUTING.md)。当前基线：主题包 `@arco-themes/vue-pangea-3-linear` **v1.0.11**，peer `@arco-design/web-vue ^2.57.0`。
 
+> 逐日细粒度流水见 `PROJECT_CONTEXT.md` 台账；本文件按版本归组「重要变更」。
+
 ---
 
 ## [Unreleased]
 
-### Added
-- 新增**纯前端铁律**：产出始终是完整的 Vue 纯前端工程，范围仅限前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及后端代码或服务**；demo 用 mock，开发对接既有接口但不实现后端。写入 `SKILL.md`（核心目的 + 「纯前端铁律」小节）、`project-structure.md`、`CONTRIBUTING.md`（核心原则 #7）。
-
-### Changed
-- 依据 skill 原型生成效果测试的发现，为两份模式文档增加「本地补充」小节（通用最佳实践，非上游照搬）：
-  - `patterns/form-patterns.md`：新增「提交与校验：二选一，避免重复校验」——明确声明式（`@submit-success`）与命令式（`@click` + `validate()`）两种方式，禁止混用导致的重复校验。
-  - `patterns/table-patterns.md`：新增「分页：客户端 vs 服务端」——`total` 必须与真实数据联动（客户端由 data 长度、服务端由接口返回），不写死；筛选后复位页码；`@page-change`/`@page-size-change` 事件骨架。另新增「插槽 record 的类型（TS strict 下的坑）」——插槽 `record` 为 `any`，索引强类型映射会 TS7053，改用接受 `string` 的 helper 查表（源自场景测试 S1/S2 实测发现）。
-  - `CONTRIBUTING.md`：在「照搬」分类中登记这两个文件带本地补充小节，上游同步时应保留。
-
 ### 计划中
-- 提供**标准化全局 Layout** 替换脚手架中的占位版 `GlobalLayout.vue`。
 - 新增定制业务组件文档（`references/components-custom/`）。
-- 新增页面模板文档（`references/templates/`）。
+- 继续补充更多页面模板（详情页、仪表盘固化模板、多条件高级列表页等）。
+- 定夺脚手架 `src/pages/` 内示例页（Example/CardList/ContractForm/GroupedForm/Dashboard）是否保留为自带示例。
 
 ---
 
-## 2026-07-21 — 脚手架可运行化 + 一键起项目
+## [1.0.1] - 2026-07-23
+
+> 定位刷新为海信集团 B 端 / 中后台产品；补齐页面模板体系、仪表板示例、图表（按需引入）、响应式与背景分层全局准则。
+
+### Added
+- **页面模板**（`references/patterns/page-*.md`，基于 Figma 设计稿；脚手架含示例页 + 路由 + 菜单）：卡片列表页（a-card 网格 + 高级筛选面板）、对话框表单、分组表单页（折叠分组 + 锚点导航）。
+- **仪表板示例页（非固化模板）** `src/pages/Dashboard/index.vue`：KPI 指标卡 + 流程中心/我的项目表格 + 分段占比条 + VChart 环形图；灰底 + 无边框白卡 + 响应式。
+- **页面生成决策树**（`SKILL.md`）：按场景与模板匹配度决定「套模板 / 增补 / AI 自主设计」，自主设计也须用设计系统组件 + token。
+- **图表（VChart）章节 + 按需引入机制**：图表库 `@visactor/vchart` **不进基础依赖**，通过 `src/components/LazyChart.vue`（动态 import + 优雅降级）+ `vite.config.ts` 可选依赖处理（未装时 external，保证没装也能 build）；需要时 `npm i @visactor/vchart`。
+- **响应式适配（全局准则）**（`SKILL.md`）：表单多列栅格用 Arco Grid 断点（`:xs/:sm/:lg`）不写死 `:span`、卡片网格用 CSS `auto-fill/fit minmax`、表格横滚/隐列、工具栏 `flex-wrap`、固定宽防溢出；5 个模板已落地。
+- **页面背景（全局准则）**（`SKILL.md`）：Layout 内容区默认透明（漏出 body 灰底），背景由各页面自设——常规内容页白底、仪表板类页透明 + 无边框白卡区隔。
+- 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`（会议室预约系统，综合检验多个页面模板选型与组装）。
+
+### Changed
+- **skill 定位刷新为「海信集团 B 端 / 中后台产品」**（管理后台、业务系统、数据平台、内部工具）：`SKILL.md` 新增「定位与适用范围」章节，frontmatter description 更新。
+- **图标分工根因修复**：移除 `vite.config.ts` 中 `vitePluginForArco` 的 `iconBox` 全局替换选项（它会连带替换 Arco 组件内建功能性图标、破坏组件内部样式）；确立分工「功能性/组件内建图标用 Arco 默认，业务/内容图标从图标包命名导入」；删除治标的 `arco-fixes.less`；同步 `project-structure.md`/`SKILL.md`/`README.md`/`getting-started.md`/`theming.md`。
+- **非颜色 token 化**：确认主题包只把**颜色 + 圆角**注入为运行时 CSS 变量；`GlobalLayout.vue`/`layout-menu.less` 硬编码圆角改 `var(--border-radius-*)`；`design-tokens.md` 补「哪些 token 是运行时 CSS 变量」。
+- **背景分层调整**：`GlobalLayout` 内容区背景由白改**透明**，背景责任下放到各页面（4 个内容页加白底、仪表板示例改透明 + 无边框白卡）。
+- **全局 Layout / 菜单细节修正**：菜单各状态样式对齐组件设计稿（默认透明 / hover / 选中白底 + `primary-7` + medium）、Header 图标/Logo/平台名调整、侧边栏展开/折叠按钮、固定视口高度仅内容区滚动等。
+
+---
+
+## [1.0.0] - 2026-07-22
+
+> 首个成型版本：从 skill 初始化到可运行脚手架、标准化全局 Layout、首批页面模板与 PM Demo 模式。
+
+### Added
+- 初始化 `skills/pangea-design-vue/` skill（派生自官方 arco-design-vue skill）：`SKILL.md`（品牌说明 / 关键约定 / 主题取值铁律 / 完整组件索引）、`references/theme/design-tokens.md`（Pangea 全量设计 token + 完整基础色板 15 色系 × 10 阶）、`references/overview/`（`theming.md`/`getting-started.md`/`project-structure.md` 定制 + `architecture.md`/`config-provider.md`/`internationalization.md` 照搬）、72 篇组件文档 + 模式文档（API 照搬上游）。
+- 建立治理框架：`CONTRIBUTING.md`（贡献/维护规则、事实源约定、提交检查）+ `CHANGELOG.md`。
+- **可运行脚手架** `templates/project-starter/`：Vue 3 + Vite + TS + Vue Router + Arco Vue，已内置并接入主题包 `@arco-themes/vue-pangea-3-linear` 与图标包 `@arco-iconbox/vue-pangea-mobile`；含 `package-lock.json`；支持 `npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app` 一键起项目。
+- **PM Demo 模式**：`SKILL.md` 新增章节（agent 全托管工程生命周期，PM 只需对话 + 浏览器预览）；脚手架 `.kiro/hooks/` 内置 `pm-dev-server`（SessionStart 自动起 dev server）+ `pm-compile-check`（PostFileSave 自动编译检查）。
+- **标准化全局 Layout**：基于 Figma「Pangea Design PC Templates / 菜单-展开」重写 `GlobalLayout.vue`（Header 48px + 可折叠侧边栏 200px + 内容区）+ 侧边栏自定义样式 `layout-menu.less`。
+- **页面模板**：简单列表页、基础表单页（`references/patterns/page-simple-list.md`、`page-form.md`），基于 Figma；脚手架含示例页 + 路由 + 菜单。
+- **纯前端铁律**：产出始终是完整 Vue 纯前端工程，范围仅限前端，不产出/不涉及后端代码或服务；demo 用 mock、开发对接既有接口但不实现后端。写入 `SKILL.md`/`project-structure.md`/`CONTRIBUTING.md`。
+- 模式文档「本地补充」（通用最佳实践，非上游照搬）：`patterns/form-patterns.md`（提交与校验二选一，避免重复校验）、`patterns/table-patterns.md`（分页 `total` 与真实数据联动；插槽 `record` 为 `any` 的 TS7053 规避——改用接受 `string` 的 helper 查表）。源自场景测试 S1/S2 实测。
+- 效果测试材料 `_tests/`（S1 请假管理、S2 商品管理，多页 + 路由 + 共享 mock store；本地保留、不入 Git）。
+
+### Changed
+- `design-tokens.md` 补全**基础色板**（15 色系 × 10 阶）并明确以主题包运行时（`theme.css`/`tokens.less`）为唯一事实源；Figma 与主题包在 Cyan 色系及 `red-7` 的差异统一以主题包为准。
+- 图标引用统一到 Pangea 图标包命名导入，清理定制文档中默认 Arco 图标 / iconfont 残留。
+- `project-structure.md`/`SKILL.md`/`CONTRIBUTING.md`：登记生成层级（页面为全局 Layout 子路由）与脚手架可运行性要点（`less` 必需、`main.ts` 显式引 `theme.css`、`vite-env.d.ts`）。
 
 ### Fixed
-- 修复脚手架 `templates/project-starter/` 三处导致「跑不起来 / 样式不生效」的缺口（经 `npm install` + `vue-tsc` + `vite build` + `npm run dev` 实测通过）：
-  - 新增 `src/vite-env.d.ts`：`*.vue` 类型 shim + `vite/client` 引用 + 图标包 `declare module`，解决 `vue-tsc` 找不到模块类型导致的 build 失败。
-  - `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`：保证运行时 CSS 变量（`--primary-6` 等）一定存在，不再依赖插件是否注入全局变量。已验证产物 CSS 含 `--primary-6: 0, 170, 166`（青绿）。
-  - `package.json` 补 `less` devDep：缺失时 `vite build` 报 `Preprocessor dependency "less" not found`。
-
-### Added
-- 脚手架加入 `package-lock.json`（D：锁定依赖，保证跨机器可复现安装）。
-- **一键起项目（degit）**：`npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app`，写入 README / starter README / `project-structure.md`。
-- `project-structure.md` 新增「快速开始（从零到可运行）」与「接入既有工程（最小清单）」两节。
-
-### Changed
-- `project-structure.md`：更正「无需手动 import 主题 CSS」的旧说法为「main.ts 显式引入 theme.css」；依赖清单补 `less`；目录树补 `vite-env.d.ts`。
-- `SKILL.md` 工程铁律：强调产出页面须落在完整工程、始终基于脚手架起步（含 degit），并列明 `less` / theme.css / vite-env.d.ts 三个可运行性要点。
-- `CONTRIBUTING.md` E 节：脚手架列为「已验证可运行」基线，改依赖/配置后须重跑 install/build/dev 并更新 lockfile。
-
----
-
-## 2026-07-21 — 工程结构与目的定义
-
-### Added
-- 明确 skill **核心目的与双受众**：同时服务 PM 出高保真 demo 原型（mock 数据）与开发基于 PRD 产出符合规范的 UI（真实接口），产物结构一致、仅数据来源不同。写入 `SKILL.md`。
-- 新增 `references/overview/project-structure.md`：工程技术栈、依赖与引用约定、主题包/图标包接入、目录结构、**生成层级约定**（页面为全局 Layout 下的路由子页面）。
-- 新增可运行脚手架 `templates/project-starter/`：Vue 3 + Vite + TS + Vue Router + Arco Vue，已内置并接入**主题包** `@arco-themes/vue-pangea-3-linear` 与**图标包** `@arco-iconbox/vue-pangea-mobile`（经 `@arco-plugins/vite-vue` 的 `theme` / `iconBox` 选项）。含 `GlobalLayout.vue` 占位版、`pages/Example` 示例页与子路由注册示例。
-
-### Changed
-- `SKILL.md`：新增「核心目的与受众」「工程结构与生成层级铁律」，并在索引中登记 `project-structure.md`。
-- `CONTRIBUTING.md`：目录结构补充 `project-structure.md` 与 `templates/project-starter/`；新增「E. 工程脚手架与全局 Layout」治理条款；事实源速查表补充图标包与生成层级基线（图标包 v1.0.24）。
-
-### Fixed
-- 清理定制文档中残留的默认 Arco 图标引用，统一到 Pangea 图标包：
-  - `SKILL.md` 关键约定改为从 `@arco-iconbox/vue-pangea-mobile` 命名导入，并明确「不要用 `@arco-design/web-vue/es/icon` 或 iconfont.cn」；Icon 索引行改为标注 icon.md 为 Arco 通用机制参考、业务图标走图标包。
-  - `theming.md` 插件版 `main.ts` 示例移除 `ArcoVueIcon` 默认图标注册（由 `iconBox` 替换）。
-  - `getting-started.md` 图标导入段改为 Pangea 图标包命名导入。
-  - 注：`references/components/` 下的组件文档为「照搬」上游，其中图标示例保持原样；实际使用以 SKILL.md 全局图标规则为准。
-
-### Notes
-- 图标包 `@arco-iconbox/vue-pangea-mobile` 为命名导出（517 个图标组件，无默认 install 插件），图标继承 `currentColor`、以 `font-size` 控制大小。
-- 全局 Layout 当前为占位版，标准化版本待团队提供后替换。
-
----
-
-## 2026-07-21
-
-### Added
-- 初始化 `skills/pangea-design-vue/` skill，基于官方 arco-design-vue skill 派生。
-  - `SKILL.md`：Pangea 品牌说明、关键约定、主题取值铁律、完整组件索引，并预留「后续补充」（定制业务组件 / 页面模板）。
-  - `references/theme/design-tokens.md`：Pangea 全量设计 token（品牌青绿主色 `#00aaa6`、语义色、字体、间距、尺寸、圆角、阴影、过渡、层级、组件级 token、暗黑模式、CSS 变量速查）。
-  - `references/overview/theming.md`：主题包 `@arco-themes/vue-pangea-3-linear` 接入（`@arco-plugins/vite-vue` 的 `theme` 选项 / 直接引入 CSS·Less、Less 变量定制、暗黑模式）。
-  - `references/overview/getting-started.md`：安装组件库 + 接入 Pangea 主题包。
-- 逐字照搬开源 Arco 的开发用法文档：`architecture.md`、`config-provider.md`、`internationalization.md`，以及 72 篇组件文档、5 篇模式文档（组件 API 与上游一致）。
-- 建立治理框架：`CONTRIBUTING.md`（贡献与维护规则、事实源约定、提交检查）、`CHANGELOG.md`（本文件）。
-
-### Changed
-- `design-tokens.md` 补充**完整基础色板**：15 个色系 × 10 级色阶（品牌/中性、状态色、扩展色），结合 Figma 导出（Mode 1）整理，并新增「场景扩展用法建议」（数据可视化、多色分类等）。
-- 明确取值以主题包运行时（`theme.css`/`tokens.less`）为唯一事实源。经比对，Figma 导出与主题包在 Cyan 色系及 `red-7` 上存在差异，统一以主题包为准（Figma 侧由维护者手动对齐）。
-
-### Notes
-- 组件 API 相关文档为「照搬」上游，非 Pangea 定制内容；仅在上游组件库 API 变化时更新。
+- 修复脚手架三处「跑不起来 / 样式不生效」缺口：新增 `src/vite-env.d.ts`（`*.vue` shim + 图标包 `declare module`）、`main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`、`package.json` 补 `less` devDep。经 `npm install` + `vue-tsc` + `vite build` + `npm run dev` 实测通过，产物 CSS 含青绿 `--primary-6: 0, 170, 166`。
+- 修复场景测试暴露的表格插槽 `record` 无类型导致的 TS7053，并把经验回流到 `table-patterns.md`。

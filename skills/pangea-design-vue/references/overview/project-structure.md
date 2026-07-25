@@ -70,6 +70,8 @@ npm run dev        # 本地预览；npm run build 产出生产包
 
 > ⚠️ `less` 是**必需**的 devDependency：`@arco-plugins/vite-vue`（默认 `style: true`）会加载 `.less`，缺 `less` 时 `vite build` 会报 `Preprocessor dependency "less" not found`。
 
+> **可选：图表库 `@visactor/vchart`（按需引入，不在基础依赖里）。** 保持 base 轻量，需要图表时才装：`npm i @visactor/vchart`。脚手架已提供 `src/components/LazyChart.vue`（动态 import vchart，装了渲染、没装占位），并在 `vite.config.ts` 把它按可选依赖处理（未装时 `external` + `optimizeDeps.exclude`，保证「没装也能 build」）。用法 `<LazyChart :spec="spec" height="240px" />`。详见 SKILL.md「图表（VChart）」。
+
 ### 主题包 + 图标包接入（推荐：Vite 插件）
 
 在 `vite.config.ts` 用 `@arco-plugins/vite-vue` 一次性接入主题包与图标包：
@@ -152,7 +154,8 @@ project/
 **全局 Layout 是稳定骨架，具体页面是它内部的路由子页面。**
 
 - 应用外壳 = `App.vue`（挂载路由出口）+ `layouts/GlobalLayout.vue`（页头/侧边栏/导航等骨架）。
-- **全局 Layout 已标准化实现**（基于 Figma「Pangea Design PC Templates / 菜单-展开」）。结构：顶部 Header（48px）+ 左侧可折叠侧边栏（200px）+ 右侧内容区（白背景 + 左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
+- **全局 Layout 已标准化实现**（基于 Figma「Pangea Design PC Templates / 菜单-展开」）。结构：顶部 Header（48px）+ 左侧可折叠侧边栏（200px）+ 右侧内容区（左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
+- **页面背景由页面自己设置**：内容区默认**透明**，漏出 body 层灰底（`--color-fill-2`）。常规内容页（列表/表单/详情）在页面根设白底 `background: var(--color-bg-1)`（内容区左上圆角会自动把白底裁成圆角，复现「白面板浮在灰底」）；仪表板/工作台类聚合页保持透明、用白底无边框卡片区隔区块。详见 SKILL.md「页面背景（全局准则）」。
 - 侧边栏使用 Arco `<a-menu>` 组件 + 自定义样式覆盖（`src/layouts/layout-menu.less`），选中态为白背景 + `primary-7` 文字 + medium 字重。菜单数据通过 `GlobalLayout.vue` 的 `menuItems` ref 配置。
 - **具体页面**放在 `src/pages/<PageName>/index.vue`，作为全局 Layout 路由的**子路由**，渲染在其 `<router-view/>` 中。
 

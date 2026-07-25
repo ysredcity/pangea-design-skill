@@ -27,6 +27,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '卡片列表页' },
       },
       {
+        path: 'dashboard',
+        name: 'dashboard',
+        component: () => import('@/pages/Dashboard/index.vue'),
+        meta: { title: '仪表板（示例）' },
+      },
+      {
         path: 'contract-form',
         name: 'contract-form',
         component: () => import('@/pages/ContractForm/index.vue'),

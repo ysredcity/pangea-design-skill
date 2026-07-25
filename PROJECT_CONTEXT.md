@@ -22,14 +22,15 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
   - `references/theme/design-tokens.md`：Pangea 全量 token（含**完整基础色板** 15 色系 × 10 阶）。
   - `references/overview/`：`project-structure.md`（工程结构+生成层级）、`theming.md`、`getting-started.md`（均定制）+ `architecture.md`/`config-provider.md`/`internationalization.md`（照搬）。
   - `references/components/`（72 篇）+ `references/patterns/`（5 篇）：照搬上游。
-- ✅ **可运行脚手架**：`skills/pangea-design-vue/templates/project-starter/`，已内置并接入主题包（`vitePluginForArco({ theme })`，**不再启用 `iconBox` 全局替换**，图标改命名导入），含**标准化 `GlobalLayout.vue`**（基于 Figma 设计稿实现：Header 48px + 左侧可折叠侧边栏 200px + 内容区白背景左上圆角 8px）+ 自定义菜单样式 `layout-menu.less` + `pages/Example` + 子路由示例。
+- ✅ **可运行脚手架**：`skills/pangea-design-vue/templates/project-starter/`，已内置并接入主题包（`vitePluginForArco({ theme })`，**不再启用 `iconBox` 全局替换**，图标改命名导入），含**标准化 `GlobalLayout.vue`**（基于 Figma 设计稿实现：Header 48px + 左侧可折叠侧边栏 200px + 内容区**透明**+左上圆角 8px，背景由各页面自行设置）+ 自定义菜单样式 `layout-menu.less` + `pages/Example` + 子路由示例。
 - ✅ **治理框架**：`README.md`、`CONTRIBUTING.md`、`CHANGELOG.md`（根目录）。
 - ✅ **已上传 GitHub**：`main` 分支，初始提交 + README。
 - ✅ **图标引用已统一**：定制文档全部指向图标包命名导入，清理了默认 Arco 图标/iconfont 残留。
 - ✅ **脚手架已实测可运行**（A+D+C）：修复 3 处缺口后 `npm install`→`vue-tsc`→`vite build`→`npm run dev` 全通过，产物 CSS 含青绿 `--primary-6: 0,170,166`；加了 `package-lock.json`；支持 `npx degit …/templates/project-starter my-app` 一键起项目。
 - ✅ **模式文档增补**：form-patterns（提交/校验二选一）、table-patterns（分页 total 联动）本地补充。
 - ✅ **PM Demo 模式**：SKILL.md 新增「PM Demo 模式」章节（agent 全托管工程生命周期），脚手架内置 2 个 Kiro hooks（`pm-dev-server` SessionStart / `pm-compile-check` PostFileSave），`project-structure.md` 新增对应说明。PM 只需对话+浏览器预览，无需接触终端或处理编译错误。
-- ✅ **5 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-card-list.md`（卡片列表页，a-card 网格）、`page-modal-form.md`（对话框表单）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿。脚手架 `src/pages/` 内有部分示例页（Example=简单列表 / ContractForm / GroupedForm），已注册路由 + 菜单。
+- ✅ **5 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-card-list.md`（卡片列表页，a-card 网格）、`page-modal-form.md`（对话框表单）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿。脚手架 `src/pages/` 内有示例页（Example=简单列表 / CardList / ContractForm / GroupedForm / **Dashboard=仪表板示例**），均已注册路由 + 菜单。
+- ✅ **仪表板示例（非固化模板）**：`src/pages/Dashboard/index.vue`——工作台/仪表板示例（KPI 卡 + 流程中心/我的项目表格 + 分段占比条 + VChart 环形图），白底 + 边框卡片 + 响应式。是「示例」不是模板，未进 patterns 索引；作为图表/仪表板类页面的组装参考（SKILL.md 图表章节已指向它）。图表库 `@visactor/vchart` **按需引入、不在基础依赖里**（见下 2026-07-23 方案 B）——脚手架用 `src/components/LazyChart.vue` 动态 import + 优雅降级，`vite.config.ts` 把它按可选依赖处理。
 
 ## 3. 关键结论与决策（不要重复踩坑）
 - **视觉 token 唯一事实源 = 主题包运行时**（`@arco-themes/vue-pangea-3-linear` 的 `theme.css`/`tokens.less`/`theme.less`，即 `rgb(var(--x-n))` 实际解析值）。Figma/设计稿/记忆都不是权威，**冲突以主题包为准**。
@@ -45,6 +46,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - **skill 定位 = 海信集团 B 端 / 中后台产品**（管理后台、业务系统、数据平台、内部工具），以「规范执行」为先，不做规范外自由发挥。SKILL.md 开头有「定位与适用范围」章节。
 - **页面生成决策树**（SKILL.md「页面生成决策树」章节）：先判断场景与现有页面模板匹配度——高匹配直接套模板、部分匹配以模板为骨架增补、低匹配才 AI 自主设计；但自主设计也必须只用 Arco Vue 组件 + Pangea token（颜色/圆角变量、字号字重间距落档位），不自造组件、不引其它 UI 库。
 - **图表 = VChart**（VisActor，https://github.com/VisActor/VChart ，`@visactor/vchart`）：需数据可视化时优先用；系列配色接入 Pangea 调色板（主色 primary-6），容器用 a-card 承载，数据 mock 或对接既有接口。
+- **页面背景分层 = 全局准则**（SKILL.md「页面背景（全局准则）」）：Layout 内容区默认**透明**（漏出 body 灰底 `--color-fill-2`），**背景色由每个页面自己设置**，不依赖 Layout。常规内容页（列表/表单/详情）在页面根设白底 `var(--color-bg-1)`（内容区左上圆角 + overflow 自动把白底裁成圆角，复现「白面板浮灰底」）；仪表板/工作台类聚合页页面根保持透明、用白底**无边框**卡片（`:bordered="false"`）靠底色差异区隔区块。均用变量不写死 hex。
 - **响应式适配 = 全局准则**（SKILL.md「响应式适配（全局准则）」+ 各页面模板已落地）：每个页面都必须响应式，内容区宽度会随侧边栏折叠/分屏/小屏变化。铁律——**表单多列栅格用 Arco Grid 断点、不写死 `:span`**：3 列表单 `:xs="24" :sm="12" :lg="8"`、2 列 `:xs="24" :sm="12"`，整行字段保持 `:span="24"`（断点 xs<576/sm≥576/md≥768/lg≥992/xl≥1200/xxl≥1600）；卡片/磁贴网格用 CSS `repeat(auto-fill|auto-fit, minmax(...))`；表格窄屏用 `:scroll={x}`/隐藏次要列；工具栏/筛选行 `flex-wrap`；固定像素宽度（modal/面板）不超视口、辅助区（锚点/侧栏）窄屏隐藏。优先用 Grid 断点，能不写媒体查询就不写。详见 responsive-design.md。
 - **协作约定**：❗**不要替用户自动 `git commit` / `git push`**，只改文件，提交推送由用户手动操作（用户 2026-07-21 明确要求）。
 
@@ -89,7 +91,7 @@ pangea-design-skill/
 - [ ] 补充**定制业务组件**文档（建议 `references/components-custom/`）。
 - [ ] 继续补充**更多页面模板**（详情页、仪表盘、高级列表页/多条件筛选等）。
 - [ ] （可选）为 `icon.md` 出一份 Pangea 专属图标使用文档（图标包 + iconBox），不动其他照搬文档。
-- [ ] 清理脚手架 `src/pages/` 里的示例页（Example/ContractForm/GroupedForm）——它们是本轮预览调试用，是否保留为脚手架自带示例需定夺；保留则更新 router/menu 说明，移除则恢复单 Example。
+- [ ] 清理脚手架 `src/pages/` 里的示例页（Example/CardList/ContractForm/GroupedForm/Dashboard）——它们是预览调试/示例用，是否保留为脚手架自带示例需定夺；保留则更新 router/menu 说明，移除则恢复单 Example。若移除 Dashboard，一并评估是否卸载 `@visactor/vchart` 依赖。
 
 ---
 
@@ -126,3 +128,10 @@ pangea-design-skill/
 - 2026-07-23 新增「卡片列表页」页面模板（`references/patterns/page-card-list.md`）：基于 Figma 设计稿（node 57:4916），适用于以卡片形式呈现数据列表（图文/资源/应用墙）。结构：页标题 + 操作栏（按钮组+搜索/筛选）+ 卡片网格（**统一用 a-card**，CSS grid `repeat(auto-fill, minmax(260px,1fr))` 自适应换行，卡片 header `#title`+`#extra` More 链接、body 描述+footer 头像/操作图标）+ 分页（复用简单列表页规范）。控件 small、圆角用 `var(--border-radius-large)`、卡片内操作图标走业务图标命名导入。SKILL.md patterns 索引 + 决策树已同步追加。至此页面模板共 5 个。
 - 2026-07-23 卡片列表页细节打磨（核对设计稿 node 57:4916 / 689:35304，脚手架示例页 `src/pages/CardList/index.vue` + 模板文档同步）：① 筛选方案 placeholder 改「筛选方案」；② 页头底部加通栏 1px 下边框 `--color-border-2`（像素核对 rgb(229,230,235)），下内边距补 12px；③ 卡片右下角操作图标改为可点击 icon-hover 样式——用 `<a-button type="text" shape="circle" size="small">` 包裹图标（悬停浅灰圆背景）；④ 筛选行右上角新增展开/折叠按钮（`IconDown`/`IconUp` 切换）控制**高级筛选面板**：面板在筛选行与按钮组间插入，3 列 label+input 栅格、右下角保存(`IconSave`)/重置(`IconUndo`)/查询；⑤ 高级筛选面板加灰底 `--color-fill-1`(#F7F8FA) + 四边 1px 边框 `--color-border-3`(#C9CDD4) + `--border-radius-medium` 圆角 + 16px 内边距（均像素核对设计稿）。图标 `IconUp/IconDown/IconSave/IconUndo` 均图标包命名导入。
 - 2026-07-23 响应式适配纳入全局准则 + 各模板落地：① SKILL.md「关键约定」新增「响应式适配（全局准则）」章节（表单栅格用断点不写死 span、卡片网格 auto-fill/fit、表格横滚/隐列、工具栏 wrap、固定宽防溢出、辅助区窄屏隐藏）；② 三个表单模板去掉写死列宽改响应式断点——基础表单页/分组表单页 `:span="8"`→`:xs="24" :sm="12" :lg="8"`、对话框表单 `:span="12"`→`:xs="24" :sm="12"`，整行字段仍 `:span="24"`；③ 分组表单页窄屏（≤992px）媒体查询隐藏右侧锚点；④ 卡片列表页高级筛选面板栅格 `repeat(3,1fr)`→`repeat(auto-fit, minmax(220px,1fr))`、动作组 `grid-column:1/-1` 独占整行右对齐（卡片主网格原本已是 auto-fill 响应式）。脚手架示例页（ContractForm/GroupedForm/Example.ContractModal/CardList）与对应模板文档同步，四条路由实测编译通过。
+- 2026-07-23 新增仪表板示例页（非固化模板）`src/pages/Dashboard/index.vue`：参考用户提供的工作台截图组装——顶部欢迎信息、4 个 KPI 指标卡、左栏（流程中心 a-tabs+a-table、我的项目 a-table）、右栏（项目总体情况 分段占比条+统计、组织资产库统计 VChart 环形图）。**约束**：全部 Arco 组件 + Pangea token；页面白底、卡片区块一律用**边框线**（a-card bordered、无阴影/无灰底）；图表按 skill 约定用 **VChart**（新增依赖 `@visactor/vchart`），系列色取 Pangea 调色板 -6 阶 hex（canvas 需字面色值）；KPI 自适应网格 + 主区窄屏（≤1100px）堆叠。已注册 `/dashboard` 路由 + 菜单「仪表板（示例）」。`npm run build`（vue-tsc + vite build）实测通过。SKILL.md 图表章节补充 VChart 用法要点并指向该示例。因是示例非模板，未加入 patterns 索引/决策树。
+- 2026-07-23 背景分层逻辑调整（全局准则）：① 全局 Layout 内容区 `.pg-layout__content` 背景由白色 `--color-bg-1` 改为 **透明**（漏出 body 灰底 `--color-fill-2`），保留左上圆角 + overflow（会把页面白底裁成圆角）；② 背景色改由**各页面自己设**——4 个内容页（简单列表/卡片列表/基础表单/分组表单）页面根加 `background: var(--color-bg-1)`；③ 仪表板示例页 `.pg-dash` 根改透明、所有 `a-card` 由 `:bordered="true"` 改 `:bordered="false"`（灰底 + 无边框白卡区隔）。SKILL.md 新增「页面背景（全局准则）」章节、project-structure.md 同步更新、4 个页面模板文档根样式同步加白底。脚手架 5 条路由实测编译通过、HMR 无报错。
+- 2026-07-23 仪表板示例视觉打磨：① 白卡加**极轻阴影** `0 1px 4px rgba(0,0,0,0.05)` + **大圆角** `var(--border-radius-large)`（KPI 卡与面板）；② 流程中心 tabs 改**胶囊型** `type="capsule"`，数字用 `a-badge`（`:count`+`:max-count`）并用 inline-flex 水平居中；③ KPI 卡重设计——图标改「浅底色芯片」（各卡不同强调色，取 Pangea 调色板蓝/青绿/紫/金，10% 透明度做底 + 同色图标）、数值加大到 30px、底部趋势标签与描述之间加分隔线，提升层次与设计感。SKILL.md「页面背景」准则补充大圆角+极轻阴影+图标芯片做法。`npm run build` 通过。
+- 2026-07-23 仪表板细节微调：流程中心 tabs 恢复默认尺寸（去 `size="small"`，仍 capsule）、去掉「待我审批」的数字徽标；我的项目表格——「我的角色」列改普通文本、「项目状态」列改用 `a-badge`（status 徽标：进行中=processing、已上线=success）、「进入」操作去掉右侧箭头图标。清理了对应的 role/status/tab 冗余样式。`npm run build` 通过。
+- 2026-07-23 修流程中心 tabs 对齐：Arco 胶囊型 tabs 默认 `.arco-tabs-nav-type-capsule .arco-tabs-nav-tab { justify-content: flex-end }`（右对齐），在 Dashboard 用 `:deep()` 覆盖为 `flex-start` 改左对齐。
+- 2026-07-23 VChart 依赖轻量化（方案 B：按需引入 + 懒加载 + 优雅降级）：① 从脚手架基础依赖**移除 `@visactor/vchart`**（`npm uninstall`，package.json/lockfile 已清干净，base 不再背 ~2MB）；② 新增通用封装 `src/components/LazyChart.vue`——`onMounted` 里**动态 import** vchart，装了渲染、没装显示占位提示（用 `// @ts-ignore` 抑制可选依赖的类型解析）；③ `vite.config.ts` 用 `createRequire().resolve` 检测是否安装，未装时把该包加入 `build.rollupOptions.external` + `optimizeDeps.exclude`，**保证没装图表库也能 `vite build`**；④ Dashboard 改用 `<LazyChart :spec="donutSpec" />`，移除直接 `import VChart`。两条路径都实测：**无 vchart 时 build 通过（7.5s，未打包）**、`npm i @visactor/vchart` 后 build 通过（14.4s，正常打包）。SKILL.md 图表章节 + project-structure.md 依赖章节同步「按需安装 + LazyChart + vite 可选依赖」写法。本地预览用 `npm i @visactor/vchart --no-save` 装着（不污染 package.json/lockfile）。
+- 2026-07-23 CHANGELOG 版本化归组：确立版本划分——**≤ 2026-07-22 的全部改动归 `v1.0.0`（首个成型版本）、2026-07-23 起归 `v1.0.1`**；`[Unreleased]` 只保留「计划中」路线图。把原三段 `## 2026-07-21` 明细整合进 v1.0.0（按 Added/Changed/Fixed 分组），逐日细粒度流水仍以本台账为准。今后新改动累加到 v1.0.1 或按需开新版本号。
