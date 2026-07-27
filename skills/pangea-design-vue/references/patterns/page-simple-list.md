@@ -2,6 +2,22 @@
 name: pangea-page-simple-list
 description: "简单列表页模板。适用于基础的表格列表场景，无复杂查询条件。结构：页标题 + 操作栏（按钮组 + 简单搜索） + 表格（带行选择） + 分页。当页面是基础 CRUD 列表、没有多条件筛选需求时使用此模板。"
 user-invocable: true
+meta:
+  id: page-simple-list
+  kind: page-template
+  title: 简单列表页
+  status: stable
+  whenToUse: [基础表格列表页, 只需单关键词或单字段筛选, 基础 CRUD 列表]
+  whenNotToUse: [图文卡片呈现→卡片列表页, 需录入/编辑→表单页]
+  keyStructure: [页标题, 操作栏(按钮组+简单搜索), 表格(行选择+撑满高度), 分页]
+  variants: [基础列表, 带状态列(a-badge)]
+  composeWith: [a-table, a-pagination, a-input-group, a-badge]
+  composeBoundary: [控件统一 small, 分页 total 与真实数据联动, 状态列用 a-badge 不只靠颜色]
+  controls: { size: small }
+  pitfalls: [表格高度撑满父容器需 scroll y 100%, 分页总数左对齐翻页器右对齐]
+  previewRoute: /
+  source: src/pages/Example/index.vue
+  tags: [列表, 表格]
 ---
 
 # 简单列表页模板

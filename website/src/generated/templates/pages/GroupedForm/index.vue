@@ -1,95 +1,8 @@
----
-name: pangea-page-grouped-form
-description: "分组表单页模板。适用于字段极多、需要划分多个分组填写的长表单场景。特征：折叠分组（a-collapse）+ 右侧锚点导航（a-anchor）快速定位 + 多样表单形态（input/select/switch/datepicker/radio/textarea/子表单表格）。当表单很长、需要分组和锚点定位时使用此模板。"
-user-invocable: true
-meta:
-  id: page-grouped-form
-  kind: page-template
-  title: 分组表单页
-  status: stable
-  whenToUse: [字段极多的长表单, 需划分多个分组填写, 需锚点快速定位]
-  whenNotToUse: [字段较少→基础表单页, 弹窗轻量→对话框表单]
-  keyStructure: [顶部操作栏, 左侧折叠分组(a-collapse), 右侧锚点导航(a-anchor), 多样表单形态]
-  variants: [折叠分组+锚点]
-  composeWith: [a-collapse, a-anchor, a-form, a-grid, a-table]
-  composeBoundary: [a-anchor 绑定 scroll-container, 分组间 16px 间距, 栅格响应式, 窄屏(≤992px)隐藏锚点]
-  controls: { size: default }
-  pitfalls: [隐藏 collapse header 边框线, content 去左右 padding, caret 图标 left:0]
-  previewRoute: /grouped-form
-  source: src/pages/GroupedForm/index.vue
-  tags: [表单, 分组, 长表单]
----
-
-# 分组表单页模板
-
-适用场景：字段**极多**、需要划分成**多个分组**填写的长表单（如复杂业务单据的创建/编辑）。表单较长，通过**右侧锚点导航**快速定位到各分组。
-
-与[基础表单页](page-form.md)的区别：基础表单页是单一表单；本模板把字段拆成多个**折叠分组**，并提供**锚点导航**。
-
-## 页面结构
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│ ‹ 创建合同                    📄帮助文档  [返回]  [提交]         │  ← 顶部操作栏
-├──────────────────────────────────────────────────────┬───────┤
-│ ▾ 合同基本信息                                          │┃合同基本信息│  ← 锚点(选中)
-│   合同编号        * 合同名称       * 合同类型            ││ 签订依据   │
-│   [请输入]        [请输入]         [请选择▾]            ││ 合同详情   │
-│   * 合同密级      * 合同拟定方式     开口合同 ⓘ          ││           │
-│   [请选择▾]       [请选择▾]         ( ○)                ││           │
-│   ...                                                  ││           │
-│ ────────────────────────────────────────────────      ││           │
-│ ▾ 签订依据                                              ││           │
-│   ┌──────────────────────────────────────────┐        ││           │
-│   │ 输入框    单选     开关                     │        ││           │
-│   │ Pangea    1        开启                    │        ││           │
-│   └──────────────────────────────────────────┘        ││           │
-│ ────────────────────────────────────────────────      ││           │
-│ ▾ 合同详情                                              ││           │
-│   * 合同起始日期  * 合同终止日期   * 签约日期            ││           │
-│   [请选择日期📅]  [请选择日期📅]   [请选择日期📅]       ││           │
-└──────────────────────────────────────────────────────┴───────┘
-```
-
-## 设计规范
-
-### 顶部操作栏
-与[基础表单页](page-form.md)完全一致：返回文本按钮 + 标题（18px semibold）+ 帮助文档（text 按钮 + IconFile）+ 返回 + 提交（primary）。
-
-### 内容区布局
-- 内边距 `24px`，主区与锚点区 `gap: 24px`
-- **左侧主区**（`flex: 1`）：折叠分组容器
-- **右侧锚点区**（宽约 `150px`，固定不滚动）：锚点导航
-
-### 折叠分组（a-collapse）
-- 每个分组是一个 `<a-collapse-item>`，默认全部展开
-- 分组标题：`16px semibold`、`color-text-1`，前置 caret 展开/收起图标
-- 隐藏分组头部（`.arco-collapse-item-header`）下方的边框线
-- 分组之间用 `16px` 间距分隔（`margin-bottom`，最后一组不加）
-- 分组内容区：表单字段 `flex-wrap` 排列，`gap: 16px`
-
-### 表单字段
-- 垂直布局（label 在上）；**多列栅格用响应式断点** `:xs="24" :sm="12" :lg="8"`（窄屏 1 列 / 平板 2 列 / 桌面 3 列），不写死 `:span`，整行字段（textarea/子表单）用 `:span="24"`
-- 必填红星（Arco Form 自动渲染）
-- 形态多样：`a-input`、`a-select`、`a-switch`、`a-date-picker`、`a-radio-group`、`a-textarea`、子表单表格
-- 整行字段（如 textarea、子表单）宽度 `100%`
-
-### 锚点导航（a-anchor）
-- 带轴线（track），`line-less={false}`
-- 链接项对应各分组：选中项 `semibold` + `color-text-1` + primary 轴线指示；默认项 `color-text-2`
-- 点击链接平滑滚动到对应分组
-- **需绑定滚动容器**：`:scroll-container` 指向左侧主区的滚动元素
-- **响应式**：锚点是辅助导航，窄屏（`≤992px`）用媒体查询隐藏（`display: none`），主表单纵向铺满；折叠面板与字段栅格在窄屏自动收敛
-
-## Vue 代码模板
-
-```vue
 <script setup lang="ts">
 /**
- * 分组表单页
+ * 分组表单页（示例）
  * ------------------------------------------------------------------
  * 字段极多的长表单：折叠分组 + 右侧锚点导航 + 多样表单形态。
- * 复制此模板到 src/pages/<PageName>/index.vue，按分组修改字段定义。
  */
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
@@ -154,7 +67,7 @@ const subColumns = [
   { title: '开关', slotName: 'switch' },
 ];
 
-// ====== 分组（展开状态 + 锚点） ======
+// ====== 分组展开状态 ======
 const activeKeys = ref(['basic', 'basis', 'detail']);
 
 function handleSubmit() {
@@ -194,7 +107,7 @@ function handleBack() {
         <a-form ref="formRef" :model="form" :rules="rules" layout="vertical">
           <a-collapse v-model:active-key="activeKeys" :bordered="false" expand-icon-position="left">
             <!-- 分组 1：合同基本信息 -->
-            <a-collapse-item key="basic" :header="'合同基本信息'" id="group-basic">
+            <a-collapse-item key="basic" header="合同基本信息" id="group-basic">
               <a-row :gutter="16">
                 <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="contractNo" label="合同编号">
@@ -263,7 +176,7 @@ function handleBack() {
             </a-collapse-item>
 
             <!-- 分组 2：签订依据（子表单表格） -->
-            <a-collapse-item key="basis" :header="'签订依据'" id="group-basis">
+            <a-collapse-item key="basis" header="签订依据" id="group-basis">
               <a-table
                 :columns="subColumns"
                 :data="subRows"
@@ -279,7 +192,7 @@ function handleBack() {
             </a-collapse-item>
 
             <!-- 分组 3：合同详情 -->
-            <a-collapse-item key="detail" :header="'合同详情'" id="group-detail">
+            <a-collapse-item key="detail" header="合同详情" id="group-detail">
               <a-row :gutter="16">
                 <a-col :xs="24" :sm="12" :lg="8">
                   <a-form-item field="startDate" label="合同起始日期">
@@ -333,7 +246,7 @@ function handleBack() {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  /* 本页背景：白底（Layout 内容区默认透明，背景由页面自己设置） */
+  /* 本页背景：白底（内容区默认透明，需页面自己设置） */
   background: var(--color-bg-1);
 }
 
@@ -435,23 +348,3 @@ function handleBack() {
   }
 }
 </style>
-```
-
-## 使用要点
-
-1. **复制到 `src/pages/<PageName>/index.vue`**，按业务把字段拆成多个分组，修改 `form`、`rules`、分组标题和 `a-anchor-link`。
-2. **折叠分组**：用 `<a-collapse>` + `<a-collapse-item>`，`v-model:active-key` 控制展开，默认全部展开。每个 `a-collapse-item` 必须有唯一 `id`（锚点目标）。
-3. **锚点导航**：`<a-anchor :scroll-container="scrollContainer">` 绑定左侧滚动容器的 ref；`<a-anchor-link href="#group-xxx">` 的 href 对应分组的 id。**必须绑定 scroll-container**，否则锚点滚动/高亮会失效。
-4. **滚动容器**：左侧主区 `overflow-y: auto` 且用 `ref` 引用；锚点区 `flex-shrink: 0` 固定不滚动。
-5. **字段栅格（响应式，全局准则）**：字段用 `:xs="24" :sm="12" :lg="8"` 随宽度收敛（窄屏 1 列 / 平板 2 列 / 桌面 3 列），整行字段（textarea/子表单）用 `:span="24"`；窄屏（`≤992px`）用媒体查询隐藏右侧锚点，主表单占满宽度。
-6. **多样表单形态**：input/select/switch/datepicker/radio/textarea/子表单表格按需混用，与[基础表单页](page-form.md)一致。
-7. **mock 数据**：PM demo 用内存数据；开发交付时 `handleSubmit` 换接口、选项换接口拉取。
-8. **Layout 无 padding**：全局 Layout 的 content 区不自带 padding，本页通过 header + content 自控内边距。
-
-## 与其他页面模板的区别
-
-| 场景 | 用什么模板 |
-|---|---|
-| 基础列表，单关键词搜索 | [简单列表页](page-simple-list.md) |
-| 字段多、单一表单录入/编辑 | [基础表单页](page-form.md) |
-| **字段极多、需分组 + 锚点定位的长表单** | **本模板（分组表单页）** |

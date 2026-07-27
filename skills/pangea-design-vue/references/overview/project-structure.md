@@ -72,6 +72,8 @@ npm run dev        # 本地预览；npm run build 产出生产包
 
 > **可选：图表库 `@visactor/vchart`（按需引入，不在基础依赖里）。** 保持 base 轻量，需要图表时才装：`npm i @visactor/vchart`。脚手架已提供 `src/components/LazyChart.vue`（动态 import vchart，装了渲染、没装占位），并在 `vite.config.ts` 把它按可选依赖处理（未装时 `external` + `optimizeDeps.exclude`，保证「没装也能 build」）。用法 `<LazyChart :spec="spec" height="240px" />`。详见 SKILL.md「图表（VChart）」。
 
+> **质量门禁命令**：生成/定稿页面后运行 `npm run gate`（= `check-tokens` 裸值机检 + `vue-tsc --noEmit` + `vite build`），并对照 [quality-gates.md](quality-gates.md) 的 G1–G8 自检；`npm run check:tokens` 可单跑裸 hex / 写死圆角机检。
+
 ### 主题包 + 图标包接入（推荐：Vite 插件）
 
 在 `vite.config.ts` 用 `@arco-plugins/vite-vue` 一次性接入主题包与图标包：

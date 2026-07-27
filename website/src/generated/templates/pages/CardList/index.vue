@@ -1,88 +1,6 @@
----
-name: pangea-page-card-list
-description: "卡片列表页模板。适用于以卡片形式呈现数据列表的场景（如应用/项目/资源卡片墙）。卡片统一用 Arco a-card 组件，网格自适应换行排列。结构：页标题 + 操作栏（按钮组+搜索/筛选）+ 卡片网格（a-card）+ 分页。当数据更适合卡片而非表格呈现时使用此模板。"
-user-invocable: true
-meta:
-  id: page-card-list
-  kind: page-template
-  title: 卡片列表页
-  status: stable
-  whenToUse: [以卡片形式呈现数据列表, 应用/项目/资源卡片墙, 图文混合每条信息较丰富]
-  whenNotToUse: [规整多列数据→简单列表页, 需录入/编辑→表单页]
-  keyStructure: [页头, 操作栏(按钮组+搜索/筛选), 卡片网格(a-card), 分页, 高级筛选面板(可选)]
-  variants: [基础卡片, 带高级筛选面板]
-  composeWith: [a-card, a-pagination, a-input-group, a-tabs]
-  composeBoundary: [卡片统一用 a-card 不自造, 网格用 auto-fill 不写死列数]
-  controls: { size: small }
-  pitfalls: [卡片操作图标用 icon-hover 文本按钮而非裸 Icon, 高级筛选面板栅格用 auto-fit 收敛]
-  previewRoute: /card-list
-  source: src/pages/CardList/index.vue
-  tags: [列表, 卡片, 展示]
----
-
-# 卡片列表页模板
-
-适用场景：以**卡片形式**呈现的数据列表（应用墙、项目卡片、资源/设备卡片、内容卡片等），比表格更适合展示图文混合、每条信息较丰富的列表项。
-
-与[简单列表页](page-simple-list.md)的区别：数据呈现载体不同——列表页用表格，本模板用**卡片网格**（Arco `a-card`）。操作栏、搜索、分页等外围结构基本一致。
-
-## 页面结构
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│ 此处为页面名称           [筛选方案▾] [名称▾ 请输入搜索]  [⌄]  │  ← 标题 + 筛选/搜索 + 展开钮
-│ ┌── 高级筛选面板（点 [⌄] 展开，条件多时用）───────────────┐  │
-│ │ Label [请输入]   Label [请输入]   Label [请输入]        │  │
-│ │ Label [请输入]   Label [请输入]        [💾] [↺] [查询]  │  │
-│ └────────────────────────────────────────────────────────┘  │
-│ [创建] [导入] [导出] [打印]                                     │  ← 按钮组
-├──────────────────────────────────────────────────────────────┤
-│ ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌─────────┐              │  ← 卡片网格（换行）
-│ │Card  More│ │Card  More│ │Card  More│ │Card  More│              │
-│ │描述文本…  │ │描述文本…  │ │描述文本…  │ │描述文本…  │              │
-│ │👤User ♡↗⋯│ │👤User ♡↗⋯│ │👤User ♡↗⋯│ │👤User ♡↗⋯│              │
-│ └─────────┘ └─────────┘ └─────────┘ └─────────┘              │
-│ ┌─────────┐ ┌─────────┐ ┌─────────┐                          │
-│ │  ...     │ │  ...     │ │  ...     │                          │
-│ └─────────┘ └─────────┘ └─────────┘                          │
-├──────────────────────────────────────────────────────────────┤
-│ 共50条                        ‹ 1 2 3 4 5 … 20 › 20条/页 前往  │  ← 分页
-└──────────────────────────────────────────────────────────────┘
-```
-
-## 设计规范
-
-### page-header 区域
-- 内边距 `16px 16px 12px`
-- **底部通栏分割线**：页头有一条 1px 下边框 `border-bottom: 1px solid var(--color-border-2)`（贴合设计稿，通栏、不内缩），与下方卡片区分隔
-- 标题：`18px semibold`、`color-text-1`
-- 右侧（筛选行）：筛选方案下拉（可选）+ 搜索输入组（`a-input-group`，宽 ~324px）+ **展开/折叠按钮**（`size="small"` 图标按钮，`IconDown`/`IconUp` 切换）
-- 下方按钮组：创建（`type="primary"`）+ 导入/导出/打印（默认按钮），`gap: 8px`
-
-### 高级筛选面板（可选，条件多时用）
-- 由筛选行右上角的**展开/折叠按钮**控制显隐（`advancedVisible`）；折叠时只显示基础搜索，展开时在筛选行与按钮组之间插入面板
-- 面板样式（贴合设计稿）：灰底 `background: var(--color-fill-1)` + 边框 `1px solid var(--color-border-3)` + 圆角 `var(--border-radius-medium)` + 内边距 `16px`，通栏（与内容区同宽）
-- 面板为**响应式栅格**（`grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))`，`gap: 12px 24px`）：宽屏约 3 列、随宽度自动收敛减列；每个字段为 `label + input`（label 右对齐、`color-text-2`）；动作组 `grid-column: 1 / -1` 独占整行右对齐
-- 右下角动作组（落在栅格最后一格，右下对齐）：保存筛选方案（`IconSave` 图标按钮）+ 重置（`IconUndo` 图标按钮）+ 查询（`type="primary"`）
-- 控件统一 `size="small"`；字段与列数按业务增减（超过 3 个自动换行到下一栅格行）
-
-### 卡片网格
-- 容器：`flex-wrap`，卡片间距 `gap: 16px`；或用 `a-grid` / CSS grid 自适应列数
-- **每张卡片用 `<a-card>`**，圆角 `8px`（`var(--border-radius-large)`）、边框 `1px solid var(--color-border-2)`
-- 卡片宽度：响应式，一行约 4 个（可按容器宽度自适应，最小宽度约 260–285px）
-- **卡片 header**（`#title` + `#extra`）：标题 `16px semibold`；右上角 More 链接用 `<a-link>`（primary 色）
-- **卡片 body**：描述文本（`14px`、`color-text-1`）+ footer
-- **卡片 footer**：左侧头像（`a-avatar` mini）+ 用户名；右侧操作图标（点赞/分享/更多，用**业务图标**从图标包命名导入）。操作图标要有可点击的 **icon-hover 悬停态**——用 `<a-button type="text" shape="circle" size="small">` 包裹图标（悬停出现浅灰圆形背景），不要用裸 `<Icon>`
-
-### 分页
-- 同[简单列表页](page-simple-list.md)：总数左对齐（`margin-right: auto`）+ 翻页器右对齐，`size="small"`，含 `show-jumper` + `show-page-size`
-
-## Vue 代码模板
-
-```vue
 <script setup lang="ts">
 /**
- * 卡片列表页
+ * 卡片列表页（示例）
  * ------------------------------------------------------------------
  * 以卡片形式呈现数据列表。卡片统一用 Arco a-card；网格自适应换行。
  * 复制此模板到 src/pages/<PageName>/index.vue，替换卡片字段与数据。
@@ -98,7 +16,7 @@ import {
   IconUndo,
 } from '@arco-iconbox/vue-pangea-mobile';
 
-const pageTitle = '此处为页面名称';
+const pageTitle = '卡片列表页';
 
 // ====== 搜索 / 筛选 ======
 const searchField = ref('name');
@@ -116,7 +34,11 @@ const advancedFields = [
   { field: 'f5', label: 'Label' },
 ];
 const advancedForm = reactive<Record<string, string>>({
-  f1: '', f2: '', f3: '', f4: '', f5: '',
+  f1: '',
+  f2: '',
+  f3: '',
+  f4: '',
+  f5: '',
 });
 function onAdvancedQuery() {
   pagination.current = 1;
@@ -144,7 +66,7 @@ const pagination = reactive({ current: 1, pageSize: 20, total: 0 });
 function fetchData() {
   loading.value = true;
   setTimeout(() => {
-    cards.value = Array.from({ length: 7 }, (_, i) => ({
+    cards.value = Array.from({ length: 8 }, (_, i) => ({
       id: String(i + 1),
       title: 'Pangea Card',
       desc: 'Aspiring to become the most reliable brand in the world with more than a century of brand.',
@@ -312,7 +234,7 @@ function handleCreate() {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  /* 本页背景：白底（Layout 内容区默认透明，背景由页面自己设置） */
+  /* 本页背景：白底（内容区默认透明，需页面自己设置） */
   background: var(--color-bg-1);
 }
 
@@ -450,27 +372,3 @@ function handleCreate() {
   margin-right: auto;
 }
 </style>
-```
-
-## 使用要点
-
-1. **复制到 `src/pages/<PageName>/index.vue`**，替换 `pageTitle`、卡片数据结构与字段、卡片内部内容。
-2. **卡片统一用 `<a-card>`**，不要用裸 div 拼卡片。header 用 `#title` + `#extra` 插槽（extra 放 More 链接/操作），body 放主体内容。
-3. **网格自适应**：用 CSS grid `repeat(auto-fill, minmax(260px, 1fr))` 实现响应式换行，一行数量随容器宽度变化；也可用 `<a-grid>` 组件。
-4. **卡片内容按业务定制**：图文卡可在 body 顶部加封面图（`a-card` 的 `#cover` 插槽）；纯信息卡如示例（描述 + footer）。
-5. **卡片内的操作图标**属于业务/内容图标，从 Pangea 图标包命名导入（如 `IconThumbUp`）；并用 `<a-button type="text" shape="circle" size="small">` 包裹，获得可点击的 icon-hover 悬停背景。
-6. **卡片区滚动**：grid-wrap 容器 `flex: 1; overflow-y: auto`，卡片多时内联滚动，分页固定底部。
-7. **分页**：与[简单列表页](page-simple-list.md)一致（总数左对齐 + 翻页器右对齐 + small 尺寸）。
-8. **控件尺寸**：操作栏按钮、搜索控件用 `size="small"`。
-9. **圆角用变量**：卡片圆角用 `var(--border-radius-large)`（8px），不硬编码。
-10. **mock 数据**：PM demo 用 `setTimeout` 模拟；开发交付时替换为接口。
-11. **高级筛选面板**：筛选条件多时用筛选行右上角的展开/折叠按钮（`IconDown`/`IconUp`）控制显隐；面板为 3 列 label+input 栅格，右下角放保存/重置/查询。条件少时可整段删除面板与按钮，只保留基础搜索。
-
-## 与其他页面模板的区别
-
-| 场景 | 用什么模板 |
-|---|---|
-| 表格形式的基础列表 | [简单列表页](page-simple-list.md) |
-| **卡片形式呈现的数据列表** | **本模板（卡片列表页）** |
-| 弹窗内轻量录入 | [对话框表单](page-modal-form.md) |
-| 独立页面表单 | [基础表单页](page-form.md) / [分组表单页](page-grouped-form.md) |

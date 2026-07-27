@@ -2,6 +2,22 @@
 name: pangea-page-modal-form
 description: "对话框表单模板。适用于字段较少、轻量的表单录入/编辑场景（在当前页弹窗内完成，无需跳转独立页面）。结构：a-modal 弹窗 + 标题 + 2 列栅格垂直表单（input/select/switch/textarea 等）+ 取消/确定底部按钮。当录入字段少、希望不离开当前页时使用此模板。"
 user-invocable: true
+meta:
+  id: page-modal-form
+  kind: page-template
+  title: 对话框表单
+  status: stable
+  whenToUse: [字段少而轻量的录入/编辑, 弹窗内完成不跳转, 列表页点新建/编辑弹出]
+  whenNotToUse: [字段多→基础表单页, 字段极多需分组→分组表单页]
+  keyStructure: [a-modal, 标题(title-align=start), 2列栅格垂直表单, 取消/确定底部按钮]
+  variants: [1列(字段极少), 2列, 3列(字段较多)]
+  composeWith: [a-modal, a-form, a-grid, a-input, a-select, a-switch, a-textarea]
+  composeBoundary: [宽度≤1000px, 列数≤3, body 设 max-height 内联滚动保证底部按钮可见, 用 on-before-ok 控制校验后关闭]
+  controls: { size: default }
+  pitfalls: [栅格用响应式断点不写死 span, 窄屏宽度不超视口]
+  previewRoute: /
+  source: src/pages/Example/ContractModal.vue
+  tags: [表单, 弹窗]
 ---
 
 # 对话框表单模板

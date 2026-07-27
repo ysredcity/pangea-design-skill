@@ -1,89 +1,8 @@
----
-name: pangea-page-form
-description: "基础表单页模板。适用于字段较多、需要独立页面进行数据录入/编辑的场景（如创建/编辑业务单据）。结构：顶部操作栏（返回+标题+提交）+ 可选提示 + 垂直表单（多列栅格，含 input/select/switch/datepicker/radio/子表单）。当需要独立页面录入大量表单字段时使用此模板。"
-user-invocable: true
-meta:
-  id: page-form
-  kind: page-template
-  title: 基础表单页
-  status: stable
-  whenToUse: [字段较多的独立页面录入/编辑, 创建/编辑业务单据]
-  whenNotToUse: [字段少→对话框表单, 字段极多需分组锚点→分组表单页]
-  keyStructure: [顶部操作栏(返回+标题+帮助+提交), 可选Alert, 垂直表单(3列响应式栅格), 子表单(可编辑a-table)]
-  variants: [纯表单, 带子表单]
-  composeWith: [a-form, a-grid, a-input, a-select, a-switch, a-date-picker, a-radio-group, a-table]
-  composeBoundary: [栅格用响应式断点 xs/sm/lg 不写死 span, 整行字段 span=24, 头部按钮默认尺寸]
-  controls: { size: default }
-  pitfalls: [返回按钮用 text 类型, 帮助文档用 text 按钮+IconFile, 提交与校验二选一]
-  previewRoute: /contract-form
-  source: src/pages/ContractForm/index.vue
-  tags: [表单, 录入]
----
-
-# 基础表单页模板
-
-适用场景：字段较多、需要**独立页面**进行数据录入或编辑的场景（如"创建合同""编辑商品"等业务单据）。
-
-## 页面结构
-
-```
-┌─────────────────────────────────────────────────────────┐
-│ ‹ 创建合同              📄帮助文档  [返回]  [提交]         │  ← 顶部操作栏（sticky）
-├─────────────────────────────────────────────────────────┤
-│ ⚠ 提示信息（可选 Alert）                                   │
-│                                                            │
-│ 合同编号          * 合同名称        * 合同类型             │  ← 垂直表单（3列）
-│ [请输入      ]     [请输入      ]    [请选择      ▾]       │
-│                                                            │
-│ * 合同密级        * 合同拟定方式      开口合同 ⓘ           │
-│ [请选择      ▾]    [请选择      ▾]    [ ○ ]  (switch)      │
-│                                                            │
-│ 签订依据                                                   │  ← 子表单（整行，可编辑表格）
-│ ┌────────────────────────────────────────────────────┐  │
-│ │ ⠿ 序号  输入框        下拉单选      开关      操作   │  │
-│ │ ⠿ 1    [请输入]      [请选择▾]    ●        ⋯      │  │
-│ │ [+ 新增一项]                                        │  │
-│ └────────────────────────────────────────────────────┘  │
-│                                                            │
-│ * 合同起始日期    * 合同终止日期     * 签约日期            │
-│ [请选择日期  📅]   [请选择日期 📅]   [请选择日期 📅]      │
-└─────────────────────────────────────────────────────────┘
-```
-
-## 设计规范
-
-### 顶部操作栏（page-header）
-- 内边距：`12px 16px`，下边框 `1px solid var(--color-border-2)`
-- 左侧：返回图标按钮（**文本按钮 `type="text"`**，图标 `IconLeft` 自定义颜色为 `var(--color-text-1)`）+ 标题（`18px semibold`，`color: #000` / `color-text-1`）
-- 右侧：帮助文档（**文本按钮 `type="text"` + `IconFile` 图标**，可选）+ 返回按钮（默认）+ 提交按钮（`type="primary"`），`gap: 8px`
-- **操作栏按钮统一使用默认尺寸**（含返回文本按钮）
-- **固定在顶部**：操作栏 `flex-shrink: 0`，只有内容区滚动（全局 Layout 已固定视口高度，顶部导航不参与滚动）
-
-### 表单内容区（content）
-- 内边距：`24px`
-- Alert 提示（可选）：整宽，`type="warning"`，与表单间距 `12px`
-- **表单采用垂直布局**（label 在字段上方）：`layout="vertical"`
-- **多列栅格（响应式）**：桌面 3 列，字段间距 `24px`（水平+垂直 gutter）；`a-col` 用断点 `:xs="24" :sm="12" :lg="8"`（窄屏 1 列 / 平板 2 列 / 桌面 3 列）随宽度收敛，不写死 `:span`；整行字段（子表单等）保持 `:span="24"`
-- 每个字段宽度自适应（栅格 `span`），单字段约 `381px`
-- **必填标记**：label 前红色星号（Arco Form 的 required 自动渲染）
-- 字段类型齐全：`a-input`、`a-select`、`a-switch`、`a-date-picker`、`a-radio-group`、`a-input-number` 等
-- **控件尺寸**：与列表页保持一致，操作栏按钮用默认尺寸；表单内控件用默认尺寸（表单页字段是主体，不需要 small）
-
-### 子表单（可编辑表格，可选）
-- 占整行（`span=24`）
-- 使用 `<a-table>` + 可编辑单元格（插槽内放 `a-input`/`a-select`/`a-switch`）
-- 支持拖拽排序（`draggable`）、行操作（删除等）
-- 底部「新增一项」按钮
-
-## Vue 代码模板
-
-```vue
 <script setup lang="ts">
 /**
- * 基础表单页
+ * 基础表单页（示例）
  * ------------------------------------------------------------------
  * 字段较多的独立数据录入/编辑页。垂直表单 + 多列栅格 + 子表单。
- * 复制此模板到 src/pages/<PageName>/index.vue，修改字段定义即可。
  */
 import { ref, reactive } from 'vue';
 import { useRouter } from 'vue-router';
@@ -170,9 +89,7 @@ function removeSubRow(key: string) {
 function handleSubmit() {
   formRef.value?.validate((errors: any) => {
     if (!errors) {
-      // TODO: 交付时替换为接口请求
       Message.success('提交成功');
-      router.back();
     }
   });
 }
@@ -245,7 +162,7 @@ function handleBack() {
             </a-form-item>
           </a-col>
           <a-col :xs="24" :sm="12" :lg="8">
-            <a-form-item field="openContract" label="开口合同">
+            <a-form-item field="openContract">
               <template #label>
                 开口合同
                 <a-tooltip content="开口合同说明">
@@ -357,7 +274,7 @@ function handleBack() {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
-  /* 本页背景：白底（Layout 内容区默认透明，背景由页面自己设置） */
+  /* 本页背景：白底（内容区默认透明，需页面自己设置） */
   background: var(--color-bg-1);
 }
 
@@ -403,26 +320,3 @@ function handleBack() {
   overflow-y: auto;
 }
 </style>
-```
-
-## 使用要点
-
-1. **复制到 `src/pages/<PageName>/index.vue`**，修改 `pageTitle`、`form` 数据模型、`rules` 校验规则、字段定义。
-2. **垂直表单**：`<a-form layout="vertical">` — label 在字段上方，适合字段多的录入页。
-3. **多列栅格（响应式，全局准则）**：用 `<a-row :gutter="24">` + `<a-col :xs="24" :sm="12" :lg="8">` 实现随宽度收敛的 3 列布局（窄屏 1 列 / 平板 2 列 / 桌面 3 列），**不要写死 `:span="8"`**；整行字段用 `:span="24"`。字段本就少的表单可用 `:xs="24" :sm="12"`（最多 2 列）。
-4. **必填标记**：在 `rules` 中定义 `required: true`，Arco Form 会自动在 label 前渲染红色星号，不要手动加。
-5. **顶部操作栏固定**：header `flex-shrink: 0`，content `overflow-y: auto`，长表单滚动时操作栏保持可见。
-6. **提交校验**：`formRef.value.validate()` 校验通过后再提交。
-7. **子表单（可编辑表格）**：用 `<a-table>` + 单元格插槽放输入控件，配合「新增一项」按钮和行删除操作。字段不需要子表单时整块移除。
-8. **日期选择器**：`<a-date-picker style="width: 100%">` 让其撑满栅格列宽。
-9. **带说明的 label**：用 `#label` 插槽 + `<a-tooltip>` + 问号图标实现（如"开口合同"）。
-10. **mock 数据**：PM demo 用内存数据；开发交付时 `handleSubmit` 换成接口请求、下拉选项换成接口拉取。
-11. **Layout 无 padding**：全局 Layout 的 content 区不自带 padding，本页通过 header（`12px 16px`）和 content（`24px`）自控内边距。
-
-## 与其他页面模板的区别
-
-| 场景 | 用什么模板 |
-|---|---|
-| 基础列表，单关键词搜索 | [简单列表页](page-simple-list.md) |
-| **字段多、独立页面录入/编辑** | **本模板（基础表单页）** |
-| 少量字段的快速录入 | 弹窗表单（见 [modal-patterns.md](modal-patterns.md)） |

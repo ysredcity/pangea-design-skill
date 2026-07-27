@@ -77,7 +77,9 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 
 **判断匹配度的三个维度**：① 页面主体形态（列表 / 表单 / 展示 / 混合）；② 字段或列的规模；③ 是否需要分组、锚点、图表等特殊结构。拿不准时优先套最接近的模板并增补，而不是从零设计。
 
-页面模板清单见下方「Skill 索引 → 模式」。
+页面模板清单见下方「Skill 索引 → 模式」。各模板与常用组件的**「适用任务 / 变体 / 组合边界」结构化元数据**见 [metadata-schema.md](references/overview/metadata-schema.md)（机读索引 `references/_generated/catalog.json`），可用于更精细的选型判断。
+
+> ⚑ **生成或修改任何页面后，务必按 [生成后质量门禁](references/overview/quality-gates.md)（G1–G8）逐项自检再交付**：编译、Token 规范、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级。
 
 ## 图表（VChart）
 
@@ -170,6 +172,8 @@ app.mount('#app');
 | 全局配置 | [config-provider.md](references/overview/config-provider.md) | 使用 `app.use(ArcoVue, options)` 或 `<a-config-provider>` 配置语言、前缀、尺寸等 |
 | 国际化 | [internationalization.md](references/overview/internationalization.md) | 语言包和 `<a-config-provider :locale="...">` |
 | 架构约定 | [architecture.md](references/overview/architecture.md) | Vue 3 SFC 结构、导入、`v-model`、属性、事件、插槽、组件注册 |
+| 质量门禁 | [quality-gates.md](references/overview/quality-gates.md) | **生成后自检清单（G1–G8）**：编译/Token/组件与图标/响应式/背景分层/交互四态/可访问性/生成层级 |
+| 元数据 Schema | [metadata-schema.md](references/overview/metadata-schema.md) | 页面模板/组件选型元数据的 frontmatter 规范（适用任务/变体/组合边界）+ `catalog.json` 生成约定 |
 
 ### 通用
 
@@ -294,6 +298,14 @@ app.mount('#app');
 | 弹窗模式 | [modal-patterns.md](references/patterns/modal-patterns.md) | 弹窗表单、确认、全局反馈 |
 | 受控值 | [controlled-uncontrolled.md](references/patterns/controlled-uncontrolled.md) | `v-model`、`default-*`、受控/非受控状态 |
 | 响应式设计 | [responsive-design.md](references/patterns/responsive-design.md) | 栅格断点、响应式表单、自适应仪表盘 |
+
+### 组件选型元数据
+
+选组件/模板时可查各自的**「适用任务 / 变体 / 组合边界 / 常见坑」**结构化元数据：
+
+- 页面模板：各 `references/patterns/page-*.md` 顶部 frontmatter 的 `meta`。
+- 常用组件：[references/component-selection/](references/component-selection/)（Table / Form / Modal / Card / Tabs / Select / Badge / Menu / Pagination / Alert）。
+- **机读汇总**：`references/_generated/catalog.json`（由 `scripts/build-catalog.mjs` 从上述 frontmatter 生成）——快速选型/过滤时读它。**改元数据后需重跑生成器**。字段规范见 [metadata-schema.md](references/overview/metadata-schema.md)。
 
 ## PM Demo 模式（产品经理多轮迭代）
 

@@ -1,5 +1,5 @@
 {
-  "name": "pangea-app-starter",
+  "name": "pangea-design-website",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
     "preview": "vite preview",
+    "sync": "node scripts/sync-from-skill.mjs",
     "check:tokens": "node scripts/check-tokens.mjs",
     "gate": "node scripts/check-tokens.mjs && vue-tsc --noEmit && vite build"
   },
@@ -14,6 +15,7 @@
     "@arco-design/web-vue": "^2.57.0",
     "@arco-iconbox/vue-pangea-mobile": "^1.0.24",
     "@arco-themes/vue-pangea-3-linear": "^1.0.11",
+    "@visactor/vchart": "^1.12.0",
     "vue": "^3.4.0",
     "vue-router": "^4.3.0"
   },

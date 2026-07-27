@@ -1,0 +1,671 @@
+{
+  "generatedAt": "2026-07-25T02:25:51.947Z",
+  "counts": {
+    "pageTemplates": 5,
+    "components": 10
+  },
+  "pageTemplates": [
+    {
+      "id": "page-card-list",
+      "kind": "page-template",
+      "title": "卡片列表页",
+      "status": "stable",
+      "whenToUse": [
+        "以卡片形式呈现数据列表",
+        "应用/项目/资源卡片墙",
+        "图文混合每条信息较丰富"
+      ],
+      "whenNotToUse": [
+        "规整多列数据→简单列表页",
+        "需录入/编辑→表单页"
+      ],
+      "keyStructure": [
+        "页头",
+        "操作栏(按钮组+搜索/筛选)",
+        "卡片网格(a-card)",
+        "分页",
+        "高级筛选面板(可选)"
+      ],
+      "variants": [
+        "基础卡片",
+        "带高级筛选面板"
+      ],
+      "composeWith": [
+        "a-card",
+        "a-pagination",
+        "a-input-group",
+        "a-tabs"
+      ],
+      "composeBoundary": [
+        "卡片统一用 a-card 不自造",
+        "网格用 auto-fill 不写死列数"
+      ],
+      "controls": {
+        "size": "small"
+      },
+      "pitfalls": [
+        "卡片操作图标用 icon-hover 文本按钮而非裸 Icon",
+        "高级筛选面板栅格用 auto-fit 收敛"
+      ],
+      "previewRoute": "/card-list",
+      "source": "src/pages/CardList/index.vue",
+      "tags": [
+        "列表",
+        "卡片",
+        "展示"
+      ],
+      "doc": "references/patterns/page-card-list.md"
+    },
+    {
+      "id": "page-form",
+      "kind": "page-template",
+      "title": "基础表单页",
+      "status": "stable",
+      "whenToUse": [
+        "字段较多的独立页面录入/编辑",
+        "创建/编辑业务单据"
+      ],
+      "whenNotToUse": [
+        "字段少→对话框表单",
+        "字段极多需分组锚点→分组表单页"
+      ],
+      "keyStructure": [
+        "顶部操作栏(返回+标题+帮助+提交)",
+        "可选Alert",
+        "垂直表单(3列响应式栅格)",
+        "子表单(可编辑a-table)"
+      ],
+      "variants": [
+        "纯表单",
+        "带子表单"
+      ],
+      "composeWith": [
+        "a-form",
+        "a-grid",
+        "a-input",
+        "a-select",
+        "a-switch",
+        "a-date-picker",
+        "a-radio-group",
+        "a-table"
+      ],
+      "composeBoundary": [
+        "栅格用响应式断点 xs/sm/lg 不写死 span",
+        "整行字段 span=24",
+        "头部按钮默认尺寸"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "返回按钮用 text 类型",
+        "帮助文档用 text 按钮+IconFile",
+        "提交与校验二选一"
+      ],
+      "previewRoute": "/contract-form",
+      "source": "src/pages/ContractForm/index.vue",
+      "tags": [
+        "表单",
+        "录入"
+      ],
+      "doc": "references/patterns/page-form.md"
+    },
+    {
+      "id": "page-grouped-form",
+      "kind": "page-template",
+      "title": "分组表单页",
+      "status": "stable",
+      "whenToUse": [
+        "字段极多的长表单",
+        "需划分多个分组填写",
+        "需锚点快速定位"
+      ],
+      "whenNotToUse": [
+        "字段较少→基础表单页",
+        "弹窗轻量→对话框表单"
+      ],
+      "keyStructure": [
+        "顶部操作栏",
+        "左侧折叠分组(a-collapse)",
+        "右侧锚点导航(a-anchor)",
+        "多样表单形态"
+      ],
+      "variants": [
+        "折叠分组+锚点"
+      ],
+      "composeWith": [
+        "a-collapse",
+        "a-anchor",
+        "a-form",
+        "a-grid",
+        "a-table"
+      ],
+      "composeBoundary": [
+        "a-anchor 绑定 scroll-container",
+        "分组间 16px 间距",
+        "栅格响应式",
+        "窄屏(≤992px)隐藏锚点"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "隐藏 collapse header 边框线",
+        "content 去左右 padding",
+        "caret 图标 left:0"
+      ],
+      "previewRoute": "/grouped-form",
+      "source": "src/pages/GroupedForm/index.vue",
+      "tags": [
+        "表单",
+        "分组",
+        "长表单"
+      ],
+      "doc": "references/patterns/page-grouped-form.md"
+    },
+    {
+      "id": "page-modal-form",
+      "kind": "page-template",
+      "title": "对话框表单",
+      "status": "stable",
+      "whenToUse": [
+        "字段少而轻量的录入/编辑",
+        "弹窗内完成不跳转",
+        "列表页点新建/编辑弹出"
+      ],
+      "whenNotToUse": [
+        "字段多→基础表单页",
+        "字段极多需分组→分组表单页"
+      ],
+      "keyStructure": [
+        "a-modal",
+        "标题(title-align=start)",
+        "2列栅格垂直表单",
+        "取消/确定底部按钮"
+      ],
+      "variants": [
+        "1列(字段极少)",
+        "2列",
+        "3列(字段较多)"
+      ],
+      "composeWith": [
+        "a-modal",
+        "a-form",
+        "a-grid",
+        "a-input",
+        "a-select",
+        "a-switch",
+        "a-textarea"
+      ],
+      "composeBoundary": [
+        "宽度≤1000px",
+        "列数≤3",
+        "body 设 max-height 内联滚动保证底部按钮可见",
+        "用 on-before-ok 控制校验后关闭"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "栅格用响应式断点不写死 span",
+        "窄屏宽度不超视口"
+      ],
+      "previewRoute": "/",
+      "source": "src/pages/Example/ContractModal.vue",
+      "tags": [
+        "表单",
+        "弹窗"
+      ],
+      "doc": "references/patterns/page-modal-form.md"
+    },
+    {
+      "id": "page-simple-list",
+      "kind": "page-template",
+      "title": "简单列表页",
+      "status": "stable",
+      "whenToUse": [
+        "基础表格列表页",
+        "只需单关键词或单字段筛选",
+        "基础 CRUD 列表"
+      ],
+      "whenNotToUse": [
+        "图文卡片呈现→卡片列表页",
+        "需录入/编辑→表单页"
+      ],
+      "keyStructure": [
+        "页标题",
+        "操作栏(按钮组+简单搜索)",
+        "表格(行选择+撑满高度)",
+        "分页"
+      ],
+      "variants": [
+        "基础列表",
+        "带状态列(a-badge)"
+      ],
+      "composeWith": [
+        "a-table",
+        "a-pagination",
+        "a-input-group",
+        "a-badge"
+      ],
+      "composeBoundary": [
+        "控件统一 small",
+        "分页 total 与真实数据联动",
+        "状态列用 a-badge 不只靠颜色"
+      ],
+      "controls": {
+        "size": "small"
+      },
+      "pitfalls": [
+        "表格高度撑满父容器需 scroll y 100%",
+        "分页总数左对齐翻页器右对齐"
+      ],
+      "previewRoute": "/",
+      "source": "src/pages/Example/index.vue",
+      "tags": [
+        "列表",
+        "表格"
+      ],
+      "doc": "references/patterns/page-simple-list.md"
+    }
+  ],
+  "components": [
+    {
+      "id": "alert",
+      "kind": "component",
+      "title": "警告提示 Alert",
+      "whenToUse": [
+        "页内持久的提示/警告/说明",
+        "表单顶部填写须知"
+      ],
+      "whenNotToUse": [
+        "操作后瞬时反馈→Message",
+        "需用户确认→Modal/Popconfirm",
+        "全局富通知→Notification"
+      ],
+      "variants": [
+        "info/success/warning/error 四类型",
+        "可关闭",
+        "带标题+描述"
+      ],
+      "composeWith": [
+        "表单顶部",
+        "页面提示区"
+      ],
+      "composeBoundary": [
+        "用于页内内联提示不用于瞬时反馈"
+      ],
+      "controls": {},
+      "pitfalls": [
+        "不要用 Alert 做瞬时操作反馈(那是 Message)"
+      ],
+      "tags": [
+        "反馈",
+        "提示"
+      ],
+      "doc": "references/component-selection/alert.md"
+    },
+    {
+      "id": "badge",
+      "kind": "component",
+      "title": "徽标 Badge",
+      "whenToUse": [
+        "状态点+文字",
+        "数字/未读计数",
+        "通知标记"
+      ],
+      "whenNotToUse": [
+        "分类标注→a-tag",
+        "大段说明→文字"
+      ],
+      "variants": [
+        "status 状态点(processing/success/warning/danger/normal)",
+        "count 计数",
+        "dot 圆点"
+      ],
+      "composeWith": [
+        "a-table(状态列)",
+        "文字"
+      ],
+      "composeBoundary": [
+        "状态不只靠颜色需带文字",
+        "表格状态列用 status+text"
+      ],
+      "controls": {},
+      "pitfalls": [
+        "独立计数徽标注意垂直居中"
+      ],
+      "tags": [
+        "数据展示",
+        "状态"
+      ],
+      "doc": "references/component-selection/badge.md"
+    },
+    {
+      "id": "card",
+      "kind": "component",
+      "title": "卡片 Card",
+      "whenToUse": [
+        "内容分块承载",
+        "卡片列表/网格项",
+        "仪表板区块"
+      ],
+      "whenNotToUse": [
+        "规整多列数据→表格",
+        "纯分隔用间距即可不必卡片"
+      ],
+      "variants": [
+        "带标题(title+extra)",
+        "无标题纯 body",
+        "网格项"
+      ],
+      "composeWith": [
+        "a-card-meta",
+        "a-grid",
+        "a-avatar",
+        "a-link"
+      ],
+      "composeBoundary": [
+        "白页面上用边框(默认 bordered)",
+        "灰底仪表板上用无边框白卡(:bordered=false)+大圆角+极轻阴影",
+        "圆角用 var(--border-radius-large)"
+      ],
+      "controls": {},
+      "pitfalls": [
+        "卡片网格用 CSS auto-fill/minmax 不写死列数"
+      ],
+      "tags": [
+        "数据展示",
+        "容器"
+      ],
+      "doc": "references/component-selection/card.md"
+    },
+    {
+      "id": "form",
+      "kind": "component",
+      "title": "表单 Form",
+      "whenToUse": [
+        "结构化字段录入/编辑",
+        "需要校验"
+      ],
+      "whenNotToUse": [
+        "纯展示→描述列表",
+        "单个开关/输入→直接用控件"
+      ],
+      "variants": [
+        "垂直布局(label 在上)",
+        "水平布局",
+        "内联 inline"
+      ],
+      "composeWith": [
+        "a-form-item",
+        "a-grid(a-row/a-col)",
+        "a-input",
+        "a-select",
+        "a-switch",
+        "a-date-picker",
+        "a-radio-group"
+      ],
+      "composeBoundary": [
+        "多列用响应式断点 xs/sm/lg 不写死 span",
+        "整行字段 span=24",
+        "提交与校验二选一不混用"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "声明式 @submit-success 与命令式 validate() 二选一",
+        "校验规则写在 rules"
+      ],
+      "tags": [
+        "表单",
+        "录入"
+      ],
+      "doc": "references/component-selection/form.md"
+    },
+    {
+      "id": "menu",
+      "kind": "component",
+      "title": "菜单 Menu",
+      "whenToUse": [
+        "侧边/顶部导航",
+        "多级子菜单"
+      ],
+      "whenNotToUse": [
+        "页内内容切换→a-tabs",
+        "命令浮层→a-dropdown"
+      ],
+      "variants": [
+        "垂直(侧边)",
+        "水平(顶部)",
+        "含子菜单"
+      ],
+      "composeWith": [
+        "a-sub-menu",
+        "a-menu-item"
+      ],
+      "composeBoundary": [
+        "全局 Layout 已封装侧边菜单+layout-menu.less 样式",
+        "新增页面在 menuItems 追加而非重写 Layout"
+      ],
+      "controls": {},
+      "pitfalls": [
+        "选中态样式已定制(白底+primary-7+medium)",
+        "激活时 hover 保持白色"
+      ],
+      "tags": [
+        "导航"
+      ],
+      "doc": "references/component-selection/menu.md"
+    },
+    {
+      "id": "modal",
+      "kind": "component",
+      "title": "对话框 Modal",
+      "whenToUse": [
+        "轻量确认",
+        "弹窗内录入/编辑",
+        "不跳转的临时任务"
+      ],
+      "whenNotToUse": [
+        "字段极多的长流程→独立表单页",
+        "侧向持久面板→a-drawer"
+      ],
+      "variants": [
+        "确认弹窗",
+        "弹窗表单",
+        "全屏 fullscreen"
+      ],
+      "composeWith": [
+        "a-form",
+        "a-button"
+      ],
+      "composeBoundary": [
+        "宽度≤1000px 列≤3",
+        "body max-height 内联滚动保证底部按钮可见",
+        "on-before-ok 返回 Promise 控制校验后关闭",
+        "窄屏宽不超视口"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "关闭图标用 Arco 默认不替换",
+        "unmount-on-close 重置状态"
+      ],
+      "tags": [
+        "反馈",
+        "弹窗",
+        "表单"
+      ],
+      "doc": "references/component-selection/modal.md"
+    },
+    {
+      "id": "pagination",
+      "kind": "component",
+      "title": "分页 Pagination",
+      "whenToUse": [
+        "列表/表格分页"
+      ],
+      "whenNotToUse": [
+        "无限滚动场景",
+        "数据量极小无需分页"
+      ],
+      "variants": [
+        "基础",
+        "带跳转(show-jumper)",
+        "带页大小(show-page-size)",
+        "simple"
+      ],
+      "composeWith": [
+        "a-table",
+        "a-list",
+        "卡片网格"
+      ],
+      "composeBoundary": [
+        "total 与真实数据联动不写死",
+        "筛选后复位 current=1",
+        "列表页布局总数左对齐翻页器右对齐"
+      ],
+      "controls": {
+        "size": "small"
+      },
+      "pitfalls": [
+        "服务端分页 total 取接口返回",
+        "客户端取数据长度"
+      ],
+      "tags": [
+        "导航",
+        "列表"
+      ],
+      "doc": "references/component-selection/pagination.md"
+    },
+    {
+      "id": "select",
+      "kind": "component",
+      "title": "选择器 Select",
+      "whenToUse": [
+        "从有限选项单选/多选",
+        "需搜索或远程搜索的选择"
+      ],
+      "whenNotToUse": [
+        "选项极少(2-3)→a-radio-group",
+        "布尔→a-switch",
+        "层级数据→a-tree-select"
+      ],
+      "variants": [
+        "单选",
+        "多选",
+        "可搜索",
+        "远程加载",
+        "选项分组"
+      ],
+      "composeWith": [
+        "a-option",
+        "a-optgroup",
+        "a-input-group"
+      ],
+      "composeBoundary": [
+        "下拉箭头用 Arco 默认不替换",
+        "提供 allow-clear 清除"
+      ],
+      "controls": {
+        "size": "small"
+      },
+      "pitfalls": [
+        "远程搜索加防抖",
+        "大数据量用虚拟列表"
+      ],
+      "tags": [
+        "表单",
+        "选择"
+      ],
+      "doc": "references/component-selection/select.md"
+    },
+    {
+      "id": "table",
+      "kind": "component",
+      "title": "表格 Table",
+      "whenToUse": [
+        "规整多列结构化数据",
+        "需要行选择/排序/分页",
+        "需状态列"
+      ],
+      "whenNotToUse": [
+        "图文混合每条信息丰富→卡片(a-card)",
+        "少量键值展示→描述列表/详情摘要"
+      ],
+      "variants": [
+        "基础表格",
+        "行选择(checkbox)",
+        "可编辑子表格",
+        "撑满父容器高度"
+      ],
+      "composeWith": [
+        "a-pagination",
+        "a-badge",
+        "a-input-group",
+        "a-button"
+      ],
+      "composeBoundary": [
+        "分页独立于表格且 total 与真实数据联动",
+        "状态列用 a-badge 不只靠颜色",
+        "操作列用 a-link/text 按钮"
+      ],
+      "controls": {
+        "size": "small"
+      },
+      "pitfalls": [
+        "插槽 record 为 any 用接受 string 的 helper 查表避免 TS7053",
+        "撑满高度需 scroll y 100% + 容器 flex"
+      ],
+      "tags": [
+        "数据展示",
+        "列表"
+      ],
+      "doc": "references/component-selection/table.md"
+    },
+    {
+      "id": "tabs",
+      "kind": "component",
+      "title": "标签页 Tabs",
+      "whenToUse": [
+        "同一区域切换多组内容",
+        "列表页多状态切换(待办/已办)"
+      ],
+      "whenNotToUse": [
+        "页面级导航→菜单/路由",
+        "步骤流程→a-steps"
+      ],
+      "variants": [
+        "line(默认)",
+        "card",
+        "capsule(胶囊)",
+        "rounded",
+        "text"
+      ],
+      "composeWith": [
+        "a-tab-pane",
+        "a-badge"
+      ],
+      "composeBoundary": [
+        "页内内容切换不做页面跳转",
+        "胶囊型默认右对齐需按需覆盖为左对齐"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "胶囊 tabs 默认 justify-content flex-end 右对齐",
+        "需覆盖为 flex-start 改左对齐"
+      ],
+      "tags": [
+        "数据展示",
+        "切换"
+      ],
+      "doc": "references/component-selection/tabs.md"
+    }
+  ],
+  "_note": "AUTO-GENERATED by website/scripts/sync-from-skill.mjs — 请勿手改。改内容请改 skill 内源文件后重跑同步。"
+}

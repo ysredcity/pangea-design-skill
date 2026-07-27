@@ -29,6 +29,7 @@ GitHub：https://github.com/ysredcity/pangea-design-skill
 - ✅ **脚手架已实测可运行**（A+D+C）：修复 3 处缺口后 `npm install`→`vue-tsc`→`vite build`→`npm run dev` 全通过，产物 CSS 含青绿 `--primary-6: 0,170,166`；加了 `package-lock.json`；支持 `npx degit …/templates/project-starter my-app` 一键起项目。
 - ✅ **模式文档增补**：form-patterns（提交/校验二选一）、table-patterns（分页 total 联动）本地补充。
 - ✅ **PM Demo 模式**：SKILL.md 新增「PM Demo 模式」章节（agent 全托管工程生命周期），脚手架内置 2 个 Kiro hooks（`pm-dev-server` SessionStart / `pm-compile-check` PostFileSave），`project-structure.md` 新增对应说明。PM 只需对话+浏览器预览，无需接触终端或处理编译错误。
+- ✅ **官网 showcase 骨架已建**（`website/`，方案阶段 3）：以 `project-starter` 为基底 fork 的**独立** Vue 工程（全站用 GlobalLayout、hash 路由、`base './'`），**6 个栏目全部就绪**：首页 Home（Hero + 定位 + 能力 + 读 catalog 统计）、使用指南 Guide（三步跑通 + 选型对照 + 机制 + PM Demo）、设计基础 Foundations（颜色/圆角运行时读 CSS 变量 + 排版/间距/阴影静态档位）、组件预览 Components（Arco+Pangea live 画廊 + 读 catalog 选型元数据）、页面模板 Templates（读 catalog 索引 + 预览路由渲染同步来的真实示例页 simple-list/card-list/basic-form/grouped-form/dashboard）、更新日志 Changelog（?raw 导入同步的 CHANGELOG.md + 轻量 markdown 渲染）。`scripts/sync-from-skill.mjs` 单向同步 skill 的 `catalog.json` + `CHANGELOG.md` + 示例页/LazyChart → `src/generated/`（提交 git，Dashboard 的 LazyChart 导入改相对路径）。为渲染仪表盘图表，website 把 `@visactor/vchart` 作为**正式依赖**（区别于基础脚手架的按需引入）。独立 `npm install` + `npm run gate`（含 build，vchart 打包）通过；dev 5173 全路由 200。
 - ✅ **5 个页面模板已建**（`references/patterns/`）：`page-simple-list.md`（简单列表页）、`page-card-list.md`（卡片列表页，a-card 网格）、`page-modal-form.md`（对话框表单）、`page-form.md`（基础表单页）、`page-grouped-form.md`（分组表单页）。均基于 Figma 设计稿。脚手架 `src/pages/` 内有示例页（Example=简单列表 / CardList / ContractForm / GroupedForm / **Dashboard=仪表板示例**），均已注册路由 + 菜单。
 - ✅ **仪表板示例（非固化模板）**：`src/pages/Dashboard/index.vue`——工作台/仪表板示例（KPI 卡 + 流程中心/我的项目表格 + 分段占比条 + VChart 环形图），白底 + 边框卡片 + 响应式。是「示例」不是模板，未进 patterns 索引；作为图表/仪表板类页面的组装参考（SKILL.md 图表章节已指向它）。图表库 `@visactor/vchart` **按需引入、不在基础依赖里**（见下 2026-07-23 方案 B）——脚手架用 `src/components/LazyChart.vue` 动态 import + 优雅降级，`vite.config.ts` 把它按可选依赖处理。
 
@@ -56,8 +57,11 @@ pangea-design-skill/
 ├── PROJECT_CONTEXT.md            # 本台账（单一事实源）
 ├── README.md                     # 仓库首页
 ├── CONTRIBUTING.md               # 贡献/维护规则、事实源约定、提交检查
-├── CHANGELOG.md                  # 变更记录
+├── CHANGELOG.md                  # 变更记录（按版本归组：v1.0.0 / v1.0.1 / Unreleased）
+├── docs/
+│   └── plan-gates-metadata-website.md   # 实施蓝图：质量门禁+元数据+官网（阶段0-3已落地，独立于 skills/website）
 ├── .kiro/steering/context-management.md   # Kiro 常驻规则：自动注入本台账
+├── website/                     # 官网 showcase（独立工程，dogfood）：Home/Guide/ComingSoon + sync-from-skill.mjs + src/generated 快照
 └── skills/pangea-design-vue/
     ├── SKILL.md                  # skill 入口
     ├── references/
@@ -65,8 +69,12 @@ pangea-design-skill/
     │   ├── overview/project-structure.md   # 工程结构 + 生成层级
     │   ├── overview/theming.md · getting-started.md   # 定制
     │   ├── overview/architecture.md · config-provider.md · internationalization.md  # 照搬
-    │   ├── components/ (72)  # 照搬
-    │   └── patterns/  (10)   # 5 照搬 + 5 页面模板
+    │   ├── components/ (72)  # 照搬（组件 API）
+    │   ├── component-selection/ (10)  # 组件选型元数据（含 meta frontmatter）
+    │   ├── _generated/catalog.json    # 机读元数据索引（build-catalog.mjs 生成，勿手改）
+    │   └── patterns/  (10)   # 5 照搬 + 5 页面模板（页面模板顶部含 meta frontmatter）
+    ├── scripts/build-catalog.mjs       # 零依赖生成器：frontmatter meta → catalog.json
+    ├── references/overview/quality-gates.md · metadata-schema.md   # 质量门禁 G1–G8 / 元数据 schema
     ├── references/patterns/     # 5 照搬 + 5 页面模板（simple-list / card-list / modal-form / form / grouped-form）
     └── templates/project-starter/          # 可运行脚手架（含主题包/图标包）
         ├── .kiro/hooks/                    # PM Demo 模式 Kiro hooks（随脚手架交付）
@@ -92,6 +100,14 @@ pangea-design-skill/
 - [ ] 继续补充**更多页面模板**（详情页、仪表盘、高级列表页/多条件筛选等）。
 - [ ] （可选）为 `icon.md` 出一份 Pangea 专属图标使用文档（图标包 + iconBox），不动其他照搬文档。
 - [ ] 清理脚手架 `src/pages/` 里的示例页（Example/CardList/ContractForm/GroupedForm/Dashboard）——它们是预览调试/示例用，是否保留为脚手架自带示例需定夺；保留则更新 router/menu 说明，移除则恢复单 Example。若移除 Dashboard，一并评估是否卸载 `@visactor/vchart` 依赖。
+- [ ] **执行 `docs/plan-gates-metadata-website.md` 方案**（已评审通过，分 0–5 阶段）：
+  - [x] 阶段 0（已完成 2026-07-23）：质量门禁清单 `references/overview/quality-gates.md`（G1–G8）+ 元数据 schema `references/overview/metadata-schema.md`（frontmatter `meta` + catalog.json 约定）；已接入 SKILL.md（索引 + 决策树引用）。
+  - [x] 阶段 1（已完成 2026-07-23）：5 个 `page-*.md` 回填 `meta` frontmatter；新建 `references/component-selection/`（10 个高频组件选型文档）；写零依赖生成器 `scripts/build-catalog.mjs` 并生成 `references/_generated/catalog.json`（5 模板 + 10 组件）；SKILL.md 加「组件选型元数据」小节。
+  - [x] 阶段 2（已完成 2026-07-23）：脚手架 `scripts/check-tokens.mjs` + `npm run gate` / `check:tokens`；`pm-compile-check` hook 加交付前跑 gate 说明；quality-gates.md / project-structure.md 同步命令。正负测试通过。
+  - [x] 阶段 3（已完成 2026-07-23）：`website/` 骨架——fork project-starter（全站 GlobalLayout、hash 路由、base './'）、`sync-from-skill.mjs`（catalog→src/generated 提交 git）、首页 Home + 使用指南 Guide + 占位 ComingSoon；独立 install + gate 通过。
+  - [x] 阶段 4（已完成 2026-07-23）：website 设计基础页 Foundations（颜色/圆角运行时读 CSS 变量 + 排版/间距/阴影静态档位）+ 组件预览页 Components（live 画廊分组 + 读 catalog 选型元数据）；router 指向真页面；gate 通过。
+  - [x] 阶段 5（已完成 2026-07-23）：website 页面模板 Templates（索引 + 预览路由渲染同步来的示例页）+ 更新日志 Changelog（渲染同步的 CHANGELOG.md）；sync 扩展为同步示例页/LazyChart/CHANGELOG；website 加 `@visactor/vchart` 正式依赖；gate（含 build）通过。部署暂通用（`base './'`，静态产物可上任意托管，后续 Cloudflare）。
+  - ✅ **方案 `docs/plan-gates-metadata-website.md` 阶段 0–5 全部完成**（质量门禁 + 元数据 + 官网 showcase 三条工作流落地）。
 
 ---
 
@@ -135,3 +151,10 @@ pangea-design-skill/
 - 2026-07-23 修流程中心 tabs 对齐：Arco 胶囊型 tabs 默认 `.arco-tabs-nav-type-capsule .arco-tabs-nav-tab { justify-content: flex-end }`（右对齐），在 Dashboard 用 `:deep()` 覆盖为 `flex-start` 改左对齐。
 - 2026-07-23 VChart 依赖轻量化（方案 B：按需引入 + 懒加载 + 优雅降级）：① 从脚手架基础依赖**移除 `@visactor/vchart`**（`npm uninstall`，package.json/lockfile 已清干净，base 不再背 ~2MB）；② 新增通用封装 `src/components/LazyChart.vue`——`onMounted` 里**动态 import** vchart，装了渲染、没装显示占位提示（用 `// @ts-ignore` 抑制可选依赖的类型解析）；③ `vite.config.ts` 用 `createRequire().resolve` 检测是否安装，未装时把该包加入 `build.rollupOptions.external` + `optimizeDeps.exclude`，**保证没装图表库也能 `vite build`**；④ Dashboard 改用 `<LazyChart :spec="donutSpec" />`，移除直接 `import VChart`。两条路径都实测：**无 vchart 时 build 通过（7.5s，未打包）**、`npm i @visactor/vchart` 后 build 通过（14.4s，正常打包）。SKILL.md 图表章节 + project-structure.md 依赖章节同步「按需安装 + LazyChart + vite 可选依赖」写法。本地预览用 `npm i @visactor/vchart --no-save` 装着（不污染 package.json/lockfile）。
 - 2026-07-23 CHANGELOG 版本化归组：确立版本划分——**≤ 2026-07-22 的全部改动归 `v1.0.0`（首个成型版本）、2026-07-23 起归 `v1.0.1`**；`[Unreleased]` 只保留「计划中」路线图。把原三段 `## 2026-07-21` 明细整合进 v1.0.0（按 Added/Changed/Fixed 分组），逐日细粒度流水仍以本台账为准。今后新改动累加到 v1.0.1 或按需开新版本号。
+- 2026-07-23 定稿「质量门禁 + 组件/模板元数据 + Showcase 官网」实施方案（受 Mihua Design 调研启发）：产出蓝图文档 `docs/plan-gates-metadata-website.md`（**已评审通过、待实施**）。核心边界——**skill 为唯一事实源 + 核心交付；website 为 dogfood showcase、以 `templates/project-starter` 为基底 fork、独立部署、单向消费 skill 产物；不做可视化编辑**。锁定：元数据用文档 frontmatter + 生成 `references/_generated/catalog.json`；门禁 = 清单文档 `quality-gates.md` + 脚手架 `npm run gate`；部署暂通用（后续 Cloudflare）。分 0–5 阶段，阶段 0（门禁清单 + 元数据 schema）为地基先做。该方案文档独立于 skills/ 与 website/，改它不影响两者。
+- 2026-07-23 方案阶段 0 落地（地基）：新增 `references/overview/quality-gates.md`（生成后质量门禁 G1–G8：编译/Token/组件与图标/响应式/背景分层/交互四态/可访问性/生成层级，每条含「怎么查」）+ `references/overview/metadata-schema.md`（页面模板/组件选型元数据 frontmatter `meta` 字段规范 + 示例 + `references/_generated/catalog.json` 生成约定）。SKILL.md 已接入：索引表加两行、决策树末尾加「生成后按质量门禁自检」提示 + 元数据选型引用。阶段 1（回填元数据 + build-catalog.mjs）待接续。
+- 2026-07-23 方案阶段 1 落地：① 5 个 `page-*.md` 顶部 frontmatter 回填 `meta`（id/kind/whenToUse/whenNotToUse/keyStructure/variants/composeWith/composeBoundary/controls/pitfalls/previewRoute/source/tags）；② 新建 `references/component-selection/` 共 10 个组件选型文档（Table/Form/Modal/Card/Tabs/Select/Badge/Menu/Pagination/Alert，含 meta + 简要选型要点）；③ 写零依赖生成器 `scripts/build-catalog.mjs`（内置 meta 子集解析：内联数组/内联对象/标量），运行生成 `references/_generated/catalog.json`（5 模板 + 10 组件，各条自动补 `doc` 路径）；④ SKILL.md 加「组件选型元数据」小节指向 component-selection + catalog。阶段 2（脚手架 `npm run gate` + check-tokens）待接续。
+- 2026-07-23 方案阶段 2 落地：脚手架新增 `scripts/check-tokens.mjs`（零依赖机检 G2：`.vue` 只扫 `<style>` 里的裸 `#hex` 与写死圆角，`.less/.css` 全扫；图表 JS 调色板 hex 为允许例外），`package.json` 加 `check:tokens` 与 `gate`（= `check-tokens && vue-tsc --noEmit && vite build`）。正/负测试均通过（干净→exit 0；注入 `#ff0000`+`6px`→exit 1 报 2 处）。`pm-compile-check` hook 加说明：每次保存只做即时编译检查，**交付前**另跑 `npm run gate` + 对照 G1–G8。quality-gates.md、project-structure.md 同步更新命令。阶段 3–5（website）待接续。
+- 2026-07-23 方案阶段 3 落地：新建 **`website/`** 官网 showcase——以 `templates/project-starter` 为基底 fork 的独立 Vue 工程（自有 package.json/依赖/lockfile，运行时不 import skills/**）。全站用 `GlobalLayout`（站点导航 menuItems：介绍/使用指南/设计基础/组件预览/页面模板/更新日志，appName=Pangea Design），**hash 路由** + `base './'`。页面：首页 `Home`（Hero + 定位 + 6 张能力卡 + 读 `catalog.json` 的统计 + 页面模板 tag + 核心机制）、使用指南 `Guide`（三步跑通 degit/描述需求/预览交付 + 选型对照 + 生成机制 + PM Demo + 资源链接，结构参考花叔 Design）、占位 `ComingSoon`（设计基础/组件/模板/更新日志）。`scripts/sync-from-skill.mjs` 单向同步 skill 的 `catalog.json` → `src/generated/`（加 `_note` 标注 + README，提交 git，官网可独立构建）。独立 `npm install` + `npm run gate`（token 机检 + vue-tsc + build，4.1s）通过，dev 5173 路由 200。阶段 4（设计基础 + 组件 live 预览）待接续。
+- 2026-07-23 方案阶段 5 落地（收尾，方案全部完成）：① `sync-from-skill.mjs` 扩展为递归同步——示例页（Example/CardList/ContractForm/GroupedForm/Dashboard）+ LazyChart → `src/generated/templates/`（Dashboard 的 `@/components/LazyChart.vue` 导入按同步改写为相对路径），并同步 `CHANGELOG.md`；② website 加 `@visactor/vchart` 正式依赖（showcase 需渲染仪表盘环形图），vite.config 检测到已装则正常打包；`vite-env.d.ts` 加 `*.md?raw` 声明；③ 新增**页面模板 Templates** 索引页（读 catalog + 链到预览路由）+ 5 条预览子路由渲染同步来的真实示例页；④ 新增**更新日志 Changelog** 页（`?raw` 导入 CHANGELOG.md + 零依赖轻量 markdown 渲染，转义后套 **加粗**/`代码`/链接）；⑤ GlobalLayout 菜单高亮支持子路由（/templates/xxx 高亮 /templates）。gate（token+vue-tsc+build 14.8s，vchart 打包）通过，dev 全路由 200。部署：`base './'` 静态产物，暂通用，后续 Cloudflare。**至此 docs/plan-gates-metadata-website.md 阶段 0–5 全部完成。**
+- 2026-07-23 方案阶段 4 落地：website 新增两页并接入路由。① **设计基础 Foundations**：颜色（品牌 primary 1-10、文字/背景填充/边框、状态色、扩展调色板）与圆角用 CSS 变量渲染色块并在 `onMounted` 读 `getComputedStyle` 显示解析值（体现「颜色+圆角是运行时变量」）；排版（字号 24/20/16/14/13/12 + 字重 400/500/600/700）、间距（4 倍档）、阴影按 Less 档位静态参考。② **组件预览 Components**：Arco+Pangea live 画廊（基础/表单/数据展示/反馈 分组，含 Button/Tag/Badge/Avatar/Input/Select/DatePicker/Switch/Radio/Checkbox/Tabs(capsule)/Table/Pagination/Alert/Message/Modal），下半读同步的 catalog 展示 10 个组件选型元数据（title + whenToUse）。router 把 /foundations、/components 从 ComingSoon 换成真页面。独立 gate（token+vue-tsc+build，5.2s）通过，dev 路由 200。阶段 5（模板预览 + 更新日志 + 部署）待接续。
