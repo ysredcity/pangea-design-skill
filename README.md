@@ -4,6 +4,8 @@
 
 Pangea = 开源组件库 [`@arco-design/web-vue`](https://arco.design/) + 公司定制主题包 [`@arco-themes/vue-pangea-3-linear`](https://www.npmjs.com/package/@arco-themes/vue-pangea-3-linear) + 图标包 [`@arco-iconbox/vue-pangea-mobile`](https://www.npmjs.com/package/@arco-iconbox/vue-pangea-mobile)。
 
+> 🌐 **在线预览（官网 showcase）**：https://pangea-design-skill.pages.dev/ —— 介绍、使用指南、Design Tokens、页面模板与组件的 live 预览。
+
 ## 核心目的与受众
 
 产出物是一个 **Vue 工程**，同时服务两类使用者（产物结构一致，**差别只在数据来源**）：
@@ -61,6 +63,7 @@ cd my-pangea-app && npm install && npm run dev
 
 ## 相关文档
 
+- 在线预览（官网 showcase）：https://pangea-design-skill.pages.dev/
 - 贡献与维护规则：[CONTRIBUTING.md](./CONTRIBUTING.md)
 - 变更记录：[CHANGELOG.md](./CHANGELOG.md)
 - 设计 token：[skills/pangea-design-vue/references/theme/design-tokens.md](./skills/pangea-design-vue/references/theme/design-tokens.md)
