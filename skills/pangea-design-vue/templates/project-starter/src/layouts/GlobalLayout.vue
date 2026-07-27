@@ -1,49 +1,139 @@
 <script setup lang="ts">
 /**
- * 全局 Layout（Pangea 标准版）
+ * 全局 Layout（Pangea 标准版 · 混合菜单）
  * ------------------------------------------------------------------
- * 基于 Figma 设计稿「Pangea Design PC Templates / 菜单-展开」实现。
- * 结构：顶部 Header(48px) + 下方 [Sidebar(200px, 可折叠) | Content(flex:1)]
+ * 基于 Figma「Pangea Design PC Templates / 菜单-展开」实现。
+ * 结构：顶部 Header(48px) + 下方 [Sidebar(200px, 可折叠) | Content]
+ *
+ * 【混合菜单结构】
+ * - 顶部 Header 中间是**横向模块菜单**（一个模块 = 一块业务域）；
+ * - 左侧 Sidebar 是**当前模块下的菜单**（支持多级），每个模块有自己独立的菜单；
+ * - Sidebar 左上角显示模块名称，下面是该模块的菜单；切换顶部模块 → 左侧菜单随之切换。
+ *
+ * 【单模块 vs 多模块】
+ * - 系统层级简单时视为「单模块」：`modules` 只配 1 个 → **自动隐藏顶部模块菜单**，
+ *   左侧直接展示该模块菜单，Sidebar 左上角显示应用名。
+ * - 层级复杂、需要按业务域分区时配多个 `modules` → 顶部显示模块菜单，
+ *   Sidebar 左上角显示当前模块名。
+ * 根据实际场景在下方 `modules` 配置即可，无需改结构。
  *
  * 使用约定：
  * - 具体页面通过 <router-view /> 作为子路由渲染在内容区；
- * - 需要新增页面时只改路由与 src/pages/，不动这里；
- * - 侧边栏菜单数据通过 menuItems 配置，新增页面后同步加菜单项即可。
+ * - 新增页面 = 建页面组件 + 注册子路由 + 在对应模块的 menu 里加一项；不改本文件结构。
  */
-import { ref, computed } from 'vue';
+import { ref, computed, type Component } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { IconGeneral, IconHisense, IconLeft } from '@arco-iconbox/vue-pangea-mobile';
 
-// ------ 侧边栏折叠状态 ------
-const collapsed = ref(false);
-const sidebarWidth = computed(() => (collapsed.value ? 0 : 200));
-
 // ------ 应用名称（生成时替换为当前产品名称） ------
 const appName = ref('低代码开发平台');
+
+// ------ 菜单数据模型 ------
+interface MenuItem {
+  key: string; // 路由路径
+  title: string;
+  icon?: Component; // 仅一级菜单可选配图标；二级菜单不使用图标
+  children?: MenuItem[];
+}
+interface ModuleDef {
+  key: string;
+  title: string;
+  menu: MenuItem[];
+}
+
+// 顶部模块 + 各模块的左侧菜单（示例，按实际业务配置）。
+// 只配 1 个模块 → 自动进入单模块模式（隐藏顶部模块菜单）。
+const modules = ref<ModuleDef[]>([
+  {
+    key: 'workbench',
+    title: '工作台',
+    menu: [{ key: '/dashboard', title: '仪表板' }],
+  },
+  {
+    key: 'list',
+    title: '列表页',
+    menu: [
+      { key: '/', title: '简单列表页' },
+      { key: '/card-list', title: '卡片列表页' },
+    ],
+  },
+  {
+    key: 'form',
+    title: '表单页',
+    menu: [
+      { key: '/contract-form', title: '基础表单页' },
+      { key: '/grouped-form', title: '分组表单页' },
+    ],
+  },
+]);
+
+// 多模块才展示顶部模块菜单
+const isMultiModule = computed(() => modules.value.length > 1);
+
+// ------ 侧边栏折叠 ------
+const collapsed = ref(false);
+const sidebarWidth = computed(() => (collapsed.value ? 0 : 200));
 
 // ------ 路由 ------
 const router = useRouter();
 const route = useRoute();
 
-// ------ 菜单数据（示例，实际项目按需配置） ------
-interface MenuItem {
-  key: string;
-  title: string;
-  icon?: string;
-  children?: MenuItem[];
+function menuContainsPath(items: MenuItem[], path: string): boolean {
+  return items.some((it) => it.key === path || (it.children ? menuContainsPath(it.children, path) : false));
+}
+function firstLeaf(items: MenuItem[]): MenuItem | undefined {
+  for (const it of items) {
+    if (it.children && it.children.length) {
+      const leaf = firstLeaf(it.children);
+      if (leaf) return leaf;
+    } else {
+      return it;
+    }
+  }
+  return undefined;
 }
 
-const menuItems = ref<MenuItem[]>([
-  { key: '/', title: '简单列表页' },
-  { key: '/card-list', title: '卡片列表页' },
-  { key: '/dashboard', title: '仪表板（示例）' },
-  { key: '/contract-form', title: '基础表单页' },
-  { key: '/grouped-form', title: '分组表单页' },
-]);
+// 当前模块 = 拥有当前路由的模块，回退到第一个
+const activeModule = computed<ModuleDef>(() => {
+  return modules.value.find((m) => menuContainsPath(m.menu, route.path)) || modules.value[0];
+});
+const activeModuleKey = computed(() => activeModule.value.key);
+const sidebarMenu = computed(() => activeModule.value.menu);
+// Sidebar 左上角标题：多模块显示当前模块名，单模块显示应用名
+const sidebarTitle = computed(() => (isMultiModule.value ? activeModule.value.title : appName.value));
 
-// 菜单选中
-const selectedKeys = computed(() => [route.path]);
+// 侧边栏选中 / 展开
+function flattenKeys(items: MenuItem[]): string[] {
+  return items.flatMap((it) => (it.children && it.children.length ? flattenKeys(it.children) : [it.key]));
+}
+// 精确匹配优先；否则让子路由（如 /x/detail）高亮其父菜单项（/x）
+const selectedKeys = computed(() => {
+  const p = route.path;
+  const keys = flattenKeys(sidebarMenu.value);
+  if (keys.includes(p)) return [p];
+  const prefix = keys
+    .filter((k) => k !== '/' && (p === k || p.startsWith(k + '/')))
+    .sort((a, b) => b.length - a.length)[0];
+  return [prefix || p];
+});
+const defaultOpenKeys = computed(() => {
+  const keys: string[] = [];
+  const walk = (items: MenuItem[]) =>
+    items.forEach((it) => {
+      if (it.children && it.children.length) {
+        if (menuContainsPath(it.children, route.path)) keys.push(it.key);
+        walk(it.children);
+      }
+    });
+  walk(sidebarMenu.value);
+  return keys;
+});
 
+function onModuleClick(key: string) {
+  const m = modules.value.find((x) => x.key === key);
+  const leaf = m && firstLeaf(m.menu);
+  if (leaf) router.push(leaf.key);
+}
 function onMenuItemClick(key: string) {
   router.push(key);
 }
@@ -64,64 +154,70 @@ function onMenuItemClick(key: string) {
         </div>
       </div>
 
-      <!-- 中间：应用页签（占位） -->
+      <!-- 中间：横向模块菜单（单模块时隐藏） -->
       <div class="pg-layout__header-center">
-        <!-- 实际项目在此放置应用级 tabs -->
+        <a-menu
+          v-if="isMultiModule"
+          mode="horizontal"
+          class="pg-layout__module-menu"
+          :selected-keys="[activeModuleKey]"
+          @menu-item-click="onModuleClick"
+        >
+          <a-menu-item v-for="m in modules" :key="m.key">{{ m.title }}</a-menu-item>
+        </a-menu>
       </div>
 
       <!-- 右侧：头像 -->
       <div class="pg-layout__header-right">
-        <a-avatar :size="32" class="pg-layout__avatar">
-          <span>U</span>
-        </a-avatar>
+        <a-avatar :size="32" class="pg-layout__avatar"><span>U</span></a-avatar>
       </div>
     </header>
 
     <!-- ═══════════ Body（Sidebar + Content） ═══════════ -->
     <div class="pg-layout__body">
-      <!-- Sidebar -->
       <aside
         class="pg-layout__sidebar"
         :class="{ 'pg-layout__sidebar--collapsed': collapsed }"
         :style="{ width: sidebarWidth + 'px' }"
       >
-        <!-- 侧边栏 Head：应用名 -->
+        <!-- Sidebar Head：左上角显示模块名（单模块时为应用名） -->
         <div v-show="!collapsed" class="pg-layout__sidebar-head">
-          <span class="pg-layout__sidebar-title">应用名称</span>
+          <span class="pg-layout__sidebar-title">{{ sidebarTitle }}</span>
         </div>
 
-        <!-- 菜单 -->
+        <!-- 当前模块的菜单（多级）；切换模块时用 key 重挂载以复位展开态 -->
         <div v-show="!collapsed" class="pg-layout__menu-wrap">
           <a-menu
+            :key="activeModuleKey"
             :selected-keys="selectedKeys"
-            :default-open-keys="[]"
+            :default-open-keys="defaultOpenKeys"
             :style="{ width: '100%' }"
             @menu-item-click="onMenuItemClick"
           >
-            <template v-for="item in menuItems" :key="item.key">
-              <!-- 有子菜单 -->
+            <template v-for="item in sidebarMenu" :key="item.key">
               <a-sub-menu v-if="item.children && item.children.length" :key="item.key">
+                <template v-if="item.icon" #icon><component :is="item.icon" /></template>
                 <template #title>{{ item.title }}</template>
+                <!-- 二级菜单项：不配图标 -->
                 <a-menu-item v-for="child in item.children" :key="child.key">
                   {{ child.title }}
                 </a-menu-item>
               </a-sub-menu>
-              <!-- 无子菜单 -->
               <a-menu-item v-else :key="item.key">
+                <template v-if="item.icon" #icon><component :is="item.icon" /></template>
                 {{ item.title }}
               </a-menu-item>
             </template>
           </a-menu>
         </div>
 
-        <!-- 展开/折叠按钮：始终可见 -->
+        <!-- 展开/折叠按钮 -->
         <div class="pg-layout__collapse-btn" @click="collapsed = !collapsed">
           <IconLeft
             :style="{
               fontSize: '12px',
               transform: collapsed ? 'rotate(180deg)' : 'rotate(0)',
               transition: 'transform 0.2s',
-              color: 'var(--color-text-3)',
             }"
           />
         </div>
@@ -175,6 +271,7 @@ function onMenuItemClick(key: string) {
   align-items: center;
   gap: 8px;
   padding-left: 12px;
+  padding-right: 24px;
   height: 100%;
 }
 
@@ -197,7 +294,6 @@ function onMenuItemClick(key: string) {
   display: flex;
   align-items: center;
   height: 100%;
-  padding: 0 32px;
   min-width: 0;
 }
 
@@ -260,28 +356,40 @@ function onMenuItemClick(key: string) {
   min-width: 0;
 }
 
-/* 折叠按钮：紧贴侧边栏右缘外侧，始终可见 */
+/* 展开/折叠按钮
+   - 展开：完整胶囊（16×62），跨在侧边栏右缘上（一半压内容区）；
+   - 折叠：贴左侧屏幕边，只右侧圆角的半胶囊。
+   宽 16 + 圆角 large(8px) = 上下端全圆 → 胶囊形。 */
 .pg-layout__collapse-btn {
   position: absolute;
-  right: -14px;
+  right: -8px;
   top: 50%;
   transform: translateY(-50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 14px;
-  padding: 24px 0;
+  width: 16px;
+  height: 62px;
   background: var(--color-fill-2);
-  border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
-  box-shadow: 1px 0 1px rgba(0, 0, 0, 0.08);
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--border-radius-large);
+  color: var(--color-text-2);
   cursor: pointer;
   z-index: 10;
+  transition: color 0.2s, border-color 0.2s, background 0.2s;
+}
+
+/* 悬停：描边 + 箭头变青绿主色，底色转白，明显可点 */
+.pg-layout__collapse-btn:hover {
+  background: var(--color-bg-1);
+  border-color: rgb(var(--primary-6));
+  color: rgb(var(--primary-6));
 }
 
 .pg-layout__sidebar--collapsed .pg-layout__collapse-btn {
   right: auto;
   left: 0;
-  transform: translateY(-50%);
+  border-left: none;
   border-radius: 0 var(--border-radius-large) var(--border-radius-large) 0;
 }
 
@@ -289,9 +397,8 @@ function onMenuItemClick(key: string) {
 .pg-layout__content {
   flex: 1;
   min-width: 0;
-  /* 内容区默认不设背景，漏出 body 层灰色（--color-fill-2）；
-     具体背景由各页面自己决定：常规内容页设白底、仪表板类页保持透明用白卡区隔。
-     左上圆角 + overflow 会把页面白底裁出圆角，自动复现「白面板悬浮在灰底」的观感。 */
+  /* 内容区默认透明，漏出 body 灰底；具体背景由各页面自己设置。
+     左上圆角 + overflow 会把页面白底裁出圆角，复现「白面板浮在灰底」。 */
   background: transparent;
   border-top-left-radius: var(--border-radius-large);
   overflow-y: auto;

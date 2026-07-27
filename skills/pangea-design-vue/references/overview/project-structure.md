@@ -157,15 +157,17 @@ project/
 
 - 应用外壳 = `App.vue`（挂载路由出口）+ `layouts/GlobalLayout.vue`（页头/侧边栏/导航等骨架）。
 - **全局 Layout 已标准化实现**（基于 Figma「Pangea Design PC Templates / 菜单-展开」）。结构：顶部 Header（48px）+ 左侧可折叠侧边栏（200px）+ 右侧内容区（左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
+- **混合菜单结构**：顶部 Header 中间是**横向模块菜单**（一个模块 = 一块业务域），左侧侧边栏是**当前模块下的多级菜单**，切换顶部模块 → 左侧菜单随之切换。数据模型 = `GlobalLayout.vue` 的 `modules` ref：`{ key, title, menu: MenuItem[] }[]`，每个模块有独立菜单。
+- **单模块 vs 多模块（按场景判断）**：系统层级简单时把 `modules` 配成**只 1 个** → **自动隐藏顶部模块菜单**，左侧直接展示该模块菜单、Sidebar 头显示应用名；层级复杂需按业务域分区时配**多个** `modules` → 顶部显示模块菜单、Sidebar 头显示「当前模块」名。当前模块由当前路由所属菜单自动推导。
 - **页面背景由页面自己设置**：内容区默认**透明**，漏出 body 层灰底（`--color-fill-2`）。常规内容页（列表/表单/详情）在页面根设白底 `background: var(--color-bg-1)`（内容区左上圆角会自动把白底裁成圆角，复现「白面板浮在灰底」）；仪表板/工作台类聚合页保持透明、用白底无边框卡片区隔区块。详见 SKILL.md「页面背景（全局准则）」。
-- 侧边栏使用 Arco `<a-menu>` 组件 + 自定义样式覆盖（`src/layouts/layout-menu.less`），选中态为白背景 + `primary-7` 文字 + medium 字重。菜单数据通过 `GlobalLayout.vue` 的 `menuItems` ref 配置。
+- 侧边栏与顶部模块菜单都用 Arco `<a-menu>` + 自定义样式覆盖（`src/layouts/layout-menu.less`）：侧边选中态为白背景 + `primary-7` + medium；顶部模块选中态为 `primary-6` 文字。
 - **具体页面**放在 `src/pages/<PageName>/index.vue`，作为全局 Layout 路由的**子路由**，渲染在其 `<router-view/>` 中。
 
 ### 新增一个页面 = 三步
 
 1. 新建页面组件 `src/pages/<PageName>/index.vue`；
 2. 在 `src/router/index.ts` 中，把它追加为全局 Layout 路由的 `children` 子路由；
-3. 在 `GlobalLayout.vue` 的 `menuItems` 中追加对应菜单项（`key` 为路由 path）。
+3. 在 `GlobalLayout.vue` 的 `modules` 中，把它加进**所属模块**的 `menu`（`key` 为路由 path）；多模块时选对模块，单模块时加到唯一模块即可。
 
 ```ts
 const routes = [

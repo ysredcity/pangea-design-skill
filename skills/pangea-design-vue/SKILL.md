@@ -41,8 +41,8 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 - **主题包** `@arco-themes/vue-pangea-3-linear` 通过 `@arco-plugins/vite-vue` 的 `theme` 选项接入（脚手架已内置）；`less` 为必需 devDep；`main.ts` 显式 `import` 主题 `theme.css` 以保证运行时 CSS 变量。
 - **图标分工（铁律）**：组件内建的**功能性图标**（Modal 关闭、Select 下拉箭头、DatePicker 日历等）用 **Arco 默认，不替换**（不启用 `iconBox` 全局替换，否则会破坏组件内部样式）；**业务/内容图标**从 Pangea 图标包**命名导入**（如 `import { IconGlobal } from '@arco-iconbox/vue-pangea-mobile'`），`font-size` 控制大小、`color` 控制颜色；不确定图标名就问用户，不臆造。
 - **全局 Layout 是稳定骨架，具体页面是它内部的路由子页面**：页面放 `src/pages/<PageName>/index.vue`，注册为全局 Layout 路由的 `children`，渲染在 Layout 的 `<router-view/>` 中。
-- 全局 Layout 已按 Figma 设计稿（Pangea Design PC Templates）**标准化实现**，包含：顶部 Header（48px）、左侧可折叠侧边栏（200px，自定义 Menu 样式）、右侧内容区（白背景 + 左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
-- 侧边栏菜单数据通过 `GlobalLayout.vue` 中的 `menuItems` 配置；新增页面后同步追加菜单项。菜单样式已通过 `src/layouts/layout-menu.less` 覆盖 Arco 默认样式（选中态：白背景 + `primary-7` 文字 + medium 字重）。
+- 全局 Layout 已按 Figma 设计稿（Pangea Design PC Templates）**标准化实现**，包含：顶部 Header（48px）、左侧可折叠侧边栏（200px，自定义 Menu 样式）、右侧内容区（左上圆角 8px，背景由页面自设）。**不要重写/替换全局 Layout**（除非明确被要求）。
+- **混合菜单结构**：顶部 Header 是**横向模块菜单**、左侧是**当前模块的多级菜单**；数据模型为 `GlobalLayout.vue` 的 `modules`（`{ key, title, menu }[]`，每模块独立菜单）。**按场景判断单/多模块**：层级简单 → `modules` 只配 1 个（自动隐藏顶部模块菜单，退化为纯侧边菜单）；层级复杂需分业务域 → 配多个模块。新增页面 = 建页面 + 注册子路由 + 加进**所属模块**的 `menu`。菜单样式见 `src/layouts/layout-menu.less`（侧边选中：白底 + `primary-7` + medium；顶部模块选中：`primary-6` 文字）。详见 [project-structure.md](references/overview/project-structure.md)。
 
 ## 页面生成决策树（先选型，再动手）
 

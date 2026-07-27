@@ -1,9 +1,10 @@
 import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-router';
 
 // Pangea Design 官网（showcase）路由
-// - 全站使用 GlobalLayout 作为骨架，各栏目作为其子路由渲染在 <router-view /> 中。
+// - 全站使用 GlobalLayout（混合菜单）作为骨架，各页作为其子路由渲染在 <router-view /> 中。
+// - 两个模块（顶部横向菜单切换）：设计系统（介绍/使用指南/设计基础/页面模板/更新日志）
+//   与 组件预览（每个组件一页 /components/:id）。
 // - hash 路由：产物可部署到任意静态托管，无需服务端 SPA 回退配置。
-// - 页面模板 / 更新日志 为占位（阶段 5 实现），暂用 ComingSoon 页。
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
@@ -27,10 +28,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Foundations/index.vue'),
         meta: { title: '设计基础' },
       },
+      // 组件预览模块：每个组件一页
       {
         path: 'components',
-        name: 'components',
-        component: () => import('@/pages/Components/index.vue'),
+        redirect: '/components/table',
+      },
+      {
+        path: 'components/:id',
+        name: 'component-detail',
+        component: () => import('@/pages/Components/Detail.vue'),
         meta: { title: '组件预览' },
       },
       {

@@ -12,7 +12,64 @@
  * - 无边框、无底部分割线
  */
 
-/* ═══════════ 菜单容器 ═══════════ */
+/* ═══════════ 顶部横向模块菜单（a-menu mode="horizontal"） ═══════════ */
+/* Arco 组件样式懒加载注入在全局 less 之后，且 `.arco-menu-horizontal .arco-menu-item`
+ * 与本文选择器同级；覆盖 Arco 默认（inner padding 14/20、item 高度等）需**更高特异性 + !important**，
+ * 否则会退回 Arco 默认样式、看起来「不像 horizontal 菜单」。 */
+.pg-layout__module-menu.arco-menu {
+  height: 48px;
+  background: transparent;
+  border-bottom: none;
+}
+
+/* 去掉 Arco 默认 inner 的 14px/20px 内边距，让菜单与 Header 等高 */
+.pg-layout__module-menu.arco-menu .arco-menu-inner {
+  height: 48px;
+  padding: 0 !important;
+  align-items: center;
+}
+
+/* 菜单项：撑满 48px 高、文字垂直居中；下划线贴 header 底 */
+.pg-layout__module-menu.arco-menu .arco-menu-item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 48px !important;
+  line-height: 48px !important;
+  margin: 0 !important;
+  padding: 0 16px !important;
+  font-size: 14px;
+  color: var(--color-text-2);
+  background: transparent !important;
+}
+
+.pg-layout__module-menu.arco-menu .arco-menu-item:not(:first-child) {
+  margin-left: 8px !important;
+}
+
+.pg-layout__module-menu.arco-menu .arco-menu-item:hover {
+  color: var(--color-text-1);
+  background: transparent !important;
+}
+
+.pg-layout__module-menu.arco-menu .arco-menu-item.arco-menu-selected {
+  color: rgb(var(--primary-6)) !important;
+  font-weight: 500;
+}
+
+/* 选中态：底部青绿下划线（贴合设计稿），盖住 Arco 默认指示器 */
+.pg-layout__module-menu.arco-menu .arco-menu-item.arco-menu-selected::after {
+  content: '';
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 0;
+  height: 2px;
+  background: rgb(var(--primary-6));
+  border-radius: var(--border-radius-small);
+}
+
+/* ═══════════ 侧边栏菜单容器 ═══════════ */
 .pg-layout__menu-wrap .arco-menu {
   background: transparent;
   border-right: none;
@@ -54,22 +111,24 @@
 }
 
 /* ═══════════ 选中态（核心差异） ═══════════ */
-/* 选中：白色背景 + primary-7 文字 + medium 字重 */
+/* 选中：白色背景 + primary-7 文字 + medium 字重
+   （color 必须 !important：Arco 的 .arco-menu-light .arco-menu-item.arco-menu-selected
+    特异性 0,4,0 高于本选择器，不加 !important 会被 Arco 默认色覆盖） */
 .pg-layout__menu-wrap .arco-menu-item.arco-menu-selected {
   background: var(--color-bg-1) !important;
-  color: rgb(var(--primary-7));
+  color: rgb(var(--primary-7)) !important;
   font-weight: 500;
 }
 
 /* 选中 + hover：保持白色背景不变 */
 .pg-layout__menu-wrap .arco-menu-item.arco-menu-selected:hover {
   background: var(--color-bg-1) !important;
-  color: rgb(var(--primary-7));
+  color: rgb(var(--primary-7)) !important;
 }
 
 /* 选中项图标同步 primary-7 */
 .pg-layout__menu-wrap .arco-menu-item.arco-menu-selected .arco-menu-icon {
-  color: rgb(var(--primary-7));
+  color: rgb(var(--primary-7)) !important;
 }
 
 /* 去掉 Arco 默认的左侧竖条指示器 */
@@ -78,8 +137,15 @@
 }
 
 /* ═══════════ 子菜单（二级） ═══════════ */
+/* 二级菜单不使用图标：隐藏 Arco 的图标缩进占位（arco-menu-indent-list），
+   二级缩进改由下面的 padding-left 控制 */
+.pg-layout__menu-wrap .arco-menu-indent-list {
+  display: none;
+}
+
+/* 二级项高度用 padding 调到 32px（line-height 20 + 上下 6） */
 .pg-layout__menu-wrap .arco-menu-inline .arco-menu-item {
-  padding: 4px 8px 4px 28px;
+  padding: 6px 8px 6px 28px !important;
   font-size: 12px;
   line-height: 20px;
   margin-bottom: 2px;
@@ -93,7 +159,7 @@
 
 .pg-layout__menu-wrap .arco-menu-inline .arco-menu-item.arco-menu-selected,
 .pg-layout__menu-wrap .arco-menu-inline .arco-menu-item.arco-menu-selected:hover {
-  color: rgb(var(--primary-7));
+  color: rgb(var(--primary-7)) !important;
   background: var(--color-bg-1) !important;
   font-weight: 500;
 }
