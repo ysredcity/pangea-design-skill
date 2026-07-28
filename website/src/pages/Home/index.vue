@@ -23,6 +23,7 @@ import {
   IconApps,
   IconPalette,
   IconGithub,
+  IconFile,
 } from '@arco-iconbox/vue-pangea-mobile';
 import catalog from '@/generated/catalog.json';
 
@@ -70,6 +71,7 @@ const capabilities = [
 // ── 它是怎么工作的（流程）──
 const steps = [
   { icon: IconCommand, title: '描述需求', desc: '用自然语言说明页面 / 业务，或直接给出 PRD。' },
+  { icon: IconFile, title: '需求规格化', desc: '先把输入转成界面架构需求文档，少量澄清后由你确认。' },
   { icon: IconApps, title: '决策树匹配', desc: '按场景与模板匹配度决定「套用 / 增补 / 自主设计」。' },
   { icon: IconCode, title: '规范生成', desc: '只用 Pangea 组件 + Token 生成可运行页面与路由。' },
   { icon: IconCheckCircle, title: '门禁自检', desc: 'G1–G8 + npm run gate 通过后再交付。' },
@@ -78,6 +80,7 @@ const steps = [
 // 终端演示行
 const termLines = [
   { kind: 'cmd', text: '描述：新建「合同列表」页面' },
+  { kind: 'note', text: '规格化需求 → 确认界面架构（模块 / 菜单 / 页面）' },
   { kind: 'note', text: '匹配「简单列表页」模板（决策树）' },
   { kind: 'note', text: '生成 src/pages/ContractList + 注册路由 / 菜单' },
   { kind: 'ok', text: 'gate 通过：Token / 组件 / 响应式 / 可访问性' },
@@ -120,6 +123,7 @@ const compareRows = [
 
 // ── 核心机制 ──
 const mechanisms = [
+  { k: '需求先规格化', v: '任意颗粒度输入先转成界面架构需求文档、少量澄清并经你确认后再逐页生成，降低输入差异带来的质量波动。' },
   { k: 'Skill 是唯一事实源', v: '规则、Token、组件与模板元数据、质量门禁都收敛在 skill 内；本官网只是它的 showcase 快照。' },
   { k: '页面生成决策树', v: '按场景与模板匹配度决定「套模板 / 增补 / AI 自主设计」，自主设计也必须用设计系统组件 + Token。' },
   { k: '元数据驱动选型', v: '模板与组件的适用任务、变体、组合边界结构化沉淀，供 AI 与人对照。' },
@@ -233,8 +237,8 @@ function openSkill() {
     <section class="pg-home__section pg-home__section--muted">
       <div class="pg-home__section-wrap pg-reveal">
         <span class="pg-home__eyebrow">// 03 &nbsp;怎么工作</span>
-        <h2 class="pg-home__h2">四步：从一句话到可交付</h2>
-        <p class="pg-home__section-desc">「按规范生成」是贯穿始终的主线。</p>
+        <h2 class="pg-home__h2">从一句话到可交付</h2>
+        <p class="pg-home__section-desc">「先规格化需求、再按规范生成」是贯穿始终的主线。</p>
 
         <ol class="pg-home__steps">
           <li v-for="(s, i) in steps" :key="s.title" class="pg-home__step">

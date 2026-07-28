@@ -33,8 +33,14 @@ import {
   IconPalette,
   IconLayout,
   IconApps,
+  IconGithub,
 } from '@arco-iconbox/vue-pangea-mobile';
 import { componentMenuItems } from '@/pages/Components/registry';
+
+const GITHUB_URL = 'https://github.com/ysredcity/pangea-design-skill';
+function openGithub() {
+  window.open(GITHUB_URL, '_blank', 'noopener');
+}
 
 // ------ 应用名称 ------
 const appName = ref('Pangea Design');
@@ -187,8 +193,13 @@ function onMenuItemClick(key: string) {
         </a-menu>
       </div>
 
-      <!-- 右侧：头像 -->
+      <!-- 右侧：GitHub + 头像 -->
       <div class="pg-layout__header-right">
+        <a-tooltip content="GitHub 仓库" mini>
+          <button class="pg-layout__gh" aria-label="GitHub 仓库" @click="openGithub">
+            <IconGithub />
+          </button>
+        </a-tooltip>
         <a-avatar :size="32" class="pg-layout__avatar"><span>U</span></a-avatar>
       </div>
     </header>
@@ -323,6 +334,27 @@ function onMenuItemClick(key: string) {
   gap: 12px;
   padding-right: 20px;
   height: 100%;
+}
+
+.pg-layout__gh {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  font-size: 18px;
+  color: var(--color-text-2);
+  background: transparent;
+  border: none;
+  border-radius: var(--border-radius-medium);
+  cursor: pointer;
+  transition: color 0.2s, background 0.2s;
+}
+
+.pg-layout__gh:hover {
+  color: rgb(var(--primary-6));
+  background: var(--color-fill-2);
 }
 
 .pg-layout__avatar {

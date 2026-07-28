@@ -22,11 +22,14 @@
   border-bottom: none !important;
 }
 
-/* 去掉 Arco 默认 inner 的 14px/20px 内边距，让菜单与 Header 等高 */
+/* 去掉 Arco 默认 inner 的 14px/20px 内边距，让菜单与 Header 等高；
+ * overflow:hidden 覆盖 Arco 基础 `.arco-menu-inner{overflow:auto}`——否则强制 48px 高时内容
+ * 略超出会在 header 右侧冒出一条竖向滚动条。 */
 .pg-layout__module-menu.arco-menu .arco-menu-inner {
   height: 48px !important;
   padding: 0 !important;
   align-items: center !important;
+  overflow: hidden !important;
 }
 
 /* 菜单项：撑满 48px 高、文字垂直居中；下划线贴 header 底 */
