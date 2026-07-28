@@ -17,6 +17,23 @@
 
 ---
 
+## [1.1.1] - 2026-07-23
+
+> 修复外部工具实测发现的「生成页面全空白」，强化生成流程：类型检查前置 + AI 模板陷阱防护。
+
+### Fixed
+- **生成页面空白**：`<template>` 内写 TypeScript 类型注解（如 `:disabled-date="(current?: Date) => ..."`、`@click="(e: MouseEvent) => ..."`）会让 Vue 模板运行时编译失败、`router-view` 渲染成**空白页**；而 Vite dev server 不做类型检查、不报错——根因是生成流程「先起 dev server、后跑类型检查」，buggy 代码未被拦截。
+
+### Added
+- **质量门禁 G9「AI 代码常见陷阱」**（`references/overview/quality-gates.md`）：① `<template>` 内禁 TS 类型注解（抽到 `<script setup>`）；② 响应式派生必须用 `computed()`，不用普通函数调用一次赋值；③ 模板内禁 `async`。含正反例与自查方式。
+
+### Changed
+- **G1 增加执行顺序硬约束**：先跑通 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，再启动或依赖 dev server；**不能只凭「dev server 起来了、无控制台报错」判定页面正常**。
+- `SKILL.md`：「关键约定」补两条（`<template>` 不写 TS 注解、响应式派生用 `computed`）；决策树门禁提示与索引更新为 **G1–G9** 并加「先类型检查再依赖 dev server」警告；PM Demo 流程（首次生成 / 每轮修改 / 空白排错 + 初始化步骤）插入 `vue-tsc` 把关。
+- 脚手架 `pm-compile-check` hook 提示补充：保存 `.vue` 后**额外跑 `vue-tsc`**，不要只看 dev server 输出（模板 TS 注解等错误 dev 不报却会空白）。
+
+---
+
 ## [1.1.0] - 2026-07-23
 
 > 大幅补齐海信 B 端 / 中后台体系：生成前**需求规格化**输入层、**质量门禁 + 组件/模板元数据**、**混合菜单**脚手架、页面模板体系与仪表板示例、图表按需引入、响应式与背景分层全局准则。skill 定位刷新为海信集团 B 端 / 中后台产品。

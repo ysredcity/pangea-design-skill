@@ -7,7 +7,7 @@
       "matcher": "\\.(vue|ts|tsx|less|css)$",
       "action": {
         "type": "agent",
-        "prompt": "文件已保存。请检查 dev server 的终端输出是否有编译错误：\n\n1. 读取 dev server 进程的最新输出（用 get_process_output 查看 npm run dev 的终端）。\n2. 如果输出中包含 ERROR、Failed to compile、SyntaxError、TypeError、TS 错误码（如 TS2345、TS7053）等关键词：\n   - 分析错误原因，自动修复代码。\n   - 修复后再次检查输出，确认错误消失。\n   - 不要把错误信息展示给用户，直接修好。\n3. 如果没有错误（输出正常，显示 hmr update 或无新错误）：\n   - 不需要做任何事，也不需要通知用户（HMR 会自动刷新浏览器）。\n\n关键原则：\n- 编译错误是你（agent）的责任，不是用户的。\n- 只有在修复完成且需要用户手动刷新时才通知用户。\n- 如果是 Vite HMR 自动更新，用户不需要任何操作。\n\n注意：本 hook 只做即时编译检查（依赖 dev server 输出），不必每次保存都跑完整门禁。**在向用户交付/定稿一个页面前**，另行运行 `npm run gate`（token 机检 + 类型检查 + 构建）并对照 quality-gates.md 的 G1–G8 自检。"
+        "prompt": "文件已保存。检查是否有编译 / 类型 / 模板错误：\n\n1. 读取 dev server 最新输出（get_process_output 看 npm run dev 终端）。若含 ERROR、Failed to compile、SyntaxError、TypeError、TS 错误码等 → 分析并自动修复。\n2. ⚠️ **Vite dev server 不做类型检查**：模板里的非法语法（内联函数带 TS 注解如 `(e: MouseEvent) =>`、`(current?: Date) =>`；对 ref/reactive 用普通函数而非 computed 做派生）**不会在 dev 输出报错，却会让页面渲染成空白**。因此保存的是 `.vue` 时，**额外运行 `npx vue-tsc --noEmit`** 捕获这类错误，有错自动修复至通过。\n3. 无错则无需动作、也不打扰用户（HMR 自动刷新）。\n\n关键原则：\n- 编译 / 类型错误是你（agent）的责任，不是用户的；不要把报错抛给用户。\n- **不要只凭「dev server 无报错」判定页面正常**——页面空白时优先跑 `vue-tsc` 定位。\n- 修复完成需用户刷新时才通知；HMR 自动更新则无需操作。\n\n注意：本 hook 做即时检查，不必每次保存都跑完整门禁。**向用户交付 / 定稿页面前**，另行运行 `npm run gate`（token 机检 + `vue-tsc` 类型检查 + 构建）并对照 quality-gates.md 的 G1–G9 自检（尤其 G1 的执行顺序与 G9 的模板陷阱）。"
       }
     }
   ]

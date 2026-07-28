@@ -92,7 +92,8 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 
 页面模板清单见下方「Skill 索引 → 模式」。各模板与常用组件的**「适用任务 / 变体 / 组合边界」结构化元数据**见 [metadata-schema.md](references/overview/metadata-schema.md)（机读索引 `references/_generated/catalog.json`），可用于更精细的选型判断。
 
-> ⚑ **生成或修改任何页面后，务必按 [生成后质量门禁](references/overview/quality-gates.md)（G1–G8）逐项自检再交付**：编译、Token 规范、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级。
+> ⚑ **生成或修改任何页面后，务必按 [生成后质量门禁](references/overview/quality-gates.md)（G1–G9）逐项自检再交付**：编译、Token 规范、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级、AI 代码常见陷阱（模板内 TS 注解 / 响应式用 computed / 模板 async）。
+> ⚠️ **先类型检查、再依赖 dev server**：Vite dev server 默认不做类型检查——模板内的非法语法（如内联函数带 TS 注解 `(v?: Date) =>`）不会阻止启动，却会让组件运行时编译失败、页面渲染成**空白页**。生成/修改后先跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无误，**不要只凭「dev server 起来了、无报错」就判定页面正常**。
 
 ## 图表（VChart）
 
@@ -134,6 +135,8 @@ app.mount('#app');
 - 表单使用 `:model`、`field` 和校验规则；子输入控件用 `v-model`。
 - 日期时间组件内部使用 `dayjs`；不要引入 Moment.js。
 - 优先使用本 skill 中的 Vue 示例。不要套用 React 专属 API，例如 `Form.useForm`、JSX children 或 `Component.Sub`。
+- **`<template>` 里不写 TypeScript 类型注解**：模板中的内联函数（`v-on`/`v-bind`/作用域插槽）不能带 `: Type` / `?: Type`——如 `@click="(e: MouseEvent) => ..."`、`:disabled-date="(current?: Date) => ..."` 都会让模板编译失败、页面渲染成**空白页**（Vite dev server 不拦，只在运行时暴露）。把函数抽到 `<script setup>`（`const onClick = (e: MouseEvent) => {...}`），模板只写 `@click="onClick"`。
+- **响应式派生用 `computed()`**：对 `ref`/`reactive` 数据做过滤 / 排序 / 派生，用 `import { computed } from 'vue'` 的 `computed`，不要用普通 `function` 调用一次赋值（那样不会随依赖更新）。详见 [质量门禁 G9](references/overview/quality-gates.md)。
 
 ### 主题取值铁律（Pangea 专属）
 
@@ -186,7 +189,7 @@ app.mount('#app');
 | 全局配置 | [config-provider.md](references/overview/config-provider.md) | 使用 `app.use(ArcoVue, options)` 或 `<a-config-provider>` 配置语言、前缀、尺寸等 |
 | 国际化 | [internationalization.md](references/overview/internationalization.md) | 语言包和 `<a-config-provider :locale="...">` |
 | 架构约定 | [architecture.md](references/overview/architecture.md) | Vue 3 SFC 结构、导入、`v-model`、属性、事件、插槽、组件注册 |
-| 质量门禁 | [quality-gates.md](references/overview/quality-gates.md) | **生成后自检清单（G1–G8）**：编译/Token/组件与图标/响应式/背景分层/交互四态/可访问性/生成层级 |
+| 质量门禁 | [quality-gates.md](references/overview/quality-gates.md) | **生成后自检清单（G1–G9）**：编译（先类型检查再依赖 dev server）/Token/组件与图标/响应式/背景分层/交互四态/可访问性/生成层级/AI 代码常见陷阱（模板内 TS 注解·computed·async） |
 | 元数据 Schema | [metadata-schema.md](references/overview/metadata-schema.md) | 页面模板/组件选型元数据的 frontmatter 规范（适用任务/变体/组合边界）+ `catalog.json` 生成约定 |
 
 ### 通用
@@ -329,9 +332,9 @@ app.mount('#app');
 
 | 阶段 | Agent 必须做的事 | PM 需要做的事 |
 |---|---|---|
-| **首次生成** | 1. 从脚手架初始化完整工程<br>2. 执行 `npm install`<br>3. 启动 `npm run dev`（后台）<br>4. 确认编译成功后，告知 PM 预览地址（如 `http://localhost:5173/`） | 打开浏览器访问地址 |
-| **每轮修改** | 1. 修改代码<br>2. 确认 HMR 热更新生效（无编译错误）<br>3. 若编译报错，自动修复直到通过<br>4. 告知 PM「已更新，刷新浏览器即可」 | 刷新浏览器看效果 |
-| **编译报错** | 读取终端输出，定位错误，自动修复，**不要把报错信息抛给 PM** | 无需任何操作 |
+| **首次生成** | 1. 从脚手架初始化完整工程<br>2. 执行 `npm install`<br>3. 生成页面后**先跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误**<br>4. 再启动 `npm run dev`（后台）<br>5. 告知 PM 预览地址（如 `http://localhost:5173/`） | 打开浏览器访问地址 |
+| **每轮修改** | 1. 修改代码<br>2. **跑 `vue-tsc --noEmit` 确认无类型/模板错误**（⚠️ Vite HMR 不做类型检查，不能只看「热更新了、无控制台报错」就当没问题——模板内 TS 注解等错误会让页面空白）<br>3. 有错自动修复直到 `vue-tsc` 通过<br>4. 告知 PM「已更新，刷新浏览器即可」 | 刷新浏览器看效果 |
+| **页面空白 / 编译报错** | 优先跑 `vue-tsc --noEmit` 定位（dev server 无报错也可能已空白）；定位错误、自动修复，**不要把报错信息抛给 PM** | 无需任何操作 |
 | **Dev server 意外停止** | 自动重启 dev server，确认恢复后告知 PM | 无需任何操作 |
 | **会话结束/PM 说"完了"** | 告知 PM 工程位置；可选执行 `npm run build` 确认产物可构建 | 保存工程目录即可 |
 
@@ -361,7 +364,8 @@ Agent 对 PM 的反馈应简洁、非技术性：
 4. **启动 dev server**：后台执行 `npm run dev`，监听输出确认 `Local: http://localhost:xxxx` 就绪。
 5. **需求规格化并确认**：先按 [需求规格化](references/overview/requirement-intake.md) 把 PM 的需求转成「界面架构需求文档」（有限轮澄清），请 PM 确认模块划分 / 菜单 / 页面结构与交互后再动手；建议存到工程 `docs/requirement.md`。（这一步的问答对 PM 用非技术语言，聚焦「要哪些页面、每页长什么样」。）
 6. **生成页面**：按已确认的需求文档写页面 + 路由 + mock 数据。
-7. **交付预览地址**：告诉 PM 打开浏览器访问具体路由。
+7. **类型检查把关**：跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，有错先修复至通过——**不要只依赖 dev server 判断**（Vite 不做类型检查，模板内 TS 注解等错误会让页面空白）。
+8. **交付预览地址**：告诉 PM 打开浏览器访问具体路由。
 
 若当前目录已有工程（PM 继续上次的迭代）：
 

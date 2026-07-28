@@ -1,6 +1,6 @@
 ---
 name: pangea-quality-gates
-description: "生成后质量门禁（G1–G8）。每次生成或修改页面后，按本清单逐项核销：编译、Token 规范、组件用法与图标分工、响应式、背景分层、交互四态、可访问性、生成层级。用于保证产出符合 Pangea 设计系统与可交付标准。"
+description: "生成后质量门禁（G1–G9）。每次生成或修改页面后，按本清单逐项核销：编译（先类型检查再依赖 dev server）、Token 规范、组件用法与图标分工、响应式、背景分层、交互四态、可访问性、生成层级、AI 代码常见陷阱（模板内 TS 注解 / 响应式用 computed / 模板 async）。用于保证产出符合 Pangea 设计系统与可交付标准。"
 user-invocable: false
 ---
 
@@ -24,6 +24,8 @@ user-invocable: false
 **怎么查**：
 - 运行 `npm run gate`（含 `vue-tsc --noEmit` 类型检查 + `vite build` 构建 + 裸值机检），均无报错。
 - 常见坑：表格插槽 `record` 为 `any`，用强类型索引映射会触发 TS7053 → 改用接受 `string` 的 helper 查表（见 [table-patterns.md](../patterns/table-patterns.md)）。
+
+> ⚠️ **硬性执行顺序（务必遵守）**：**先跑通 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，再启动或依赖 dev server 判断结果。** Vite dev server **默认不做类型检查**——模板里的非法语法（如下方 G9 的模板内 TS 注解）不会阻止 dev server 启动，却会让组件在运行时编译失败、`router-view` 渲染成**空白页**。因此：**不能只凭「dev server 起来了、无控制台报错」就认为页面正常**；生成/修改页面后、告知用户预览前，必须先过一遍 `vue-tsc`。（PM Demo 模式下 dev server 可长驻预览，但每轮改完仍要跑 `vue-tsc` 确认，再告知 PM 刷新。）
 
 ## G2 · Token 规范
 
@@ -94,8 +96,25 @@ user-invocable: false
 
 **怎么查**：确认路由已注册、菜单已加、Layout 未被改动。
 
+## G9 · AI 代码常见陷阱（模板 / 响应式）
+
+> 这些错误 **Vite dev server 不会拦**，只在运行时暴露（常表现为**空白页**或功能不更新）。AI 生成 Vue 代码时高发，务必自检。
+
+**检查**：
+- **模板里禁止出现 TypeScript 类型注解**：`<template>` 中的内联函数（`v-on`/`v-bind`/作用域插槽等）**不能带 `: Type` / `?: Type`**。
+  - ✗ 反例：`@click="(e: MouseEvent) => handle(e)"`、`:disabled-date="(current?: Date) => ..."`
+  - ✓ 正确：把函数抽到 `<script setup>` 里（`const onClick = (e: MouseEvent) => {...}`），模板只写 `@click="onClick"`；或在模板里写不带注解的版本 `(current) => ...`。
+- **响应式推导必须用 `computed()`**：对 `ref`/`reactive` 数据做过滤/排序/派生，用 `import { computed } from 'vue'` 的 `computed`，**不能用普通 `function` 调用一次赋值**（那样不会随依赖更新）。
+  - ✗ 反例：`function computedFiltered(){...}; const filteredRooms = computedFiltered()`
+  - ✓ 正确：`const filteredRooms = computed(() => rooms.value.filter(...))`
+- **模板里禁止 `async`**：不要写 `@click="async () => await ..."`；异步逻辑放到 script 的方法里。
+
+**怎么查**：
+- `vue-tsc --noEmit`（G1）能捕获**模板内 TS 注解**这类致命语法错误——这也是「先类型检查再依赖 dev server」的原因。
+- 人检/搜索：在 `<template>` 区域搜 `?:`、`: Date`、`: MouseEvent`、`: string`、`: number`、`async ` 等模式；搜 `function` 是否被用来对 `ref`/`reactive` 数据做派生（应改 `computed`）。
+
 ---
 
 ## 交付前速查（一句话版）
 
-编译过（G1）· 颜色圆角走变量、间距字号落档（G2）· Arco 组件 + 图标分工对（G3）· 响应式收敛不溢出（G4）· 背景由页面设、仪表板用无边框白卡（G5）· 空/载/错/禁四态 + 校验不重复 + 分页联动（G6）· 图标按钮有可访问名、不只靠颜色（G7）· 页面是 Layout 子路由 + 菜单已加（G8）。
+编译过 + **先类型检查再依赖 dev server**（G1）· 颜色圆角走变量、间距字号落档（G2）· Arco 组件 + 图标分工对（G3）· 响应式收敛不溢出（G4）· 背景由页面设、仪表板用无边框白卡（G5）· 空/载/错/禁四态 + 校验不重复 + 分页联动（G6）· 图标按钮有可访问名、不只靠颜色（G7）· 页面是 Layout 子路由 + 菜单已加（G8）· 模板无 TS 注解 / 派生用 computed / 模板无 async（G9）。
