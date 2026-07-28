@@ -31,7 +31,7 @@ const routes: RouteRecordRaw[] = [
       // 组件预览模块：每个组件一页
       {
         path: 'components',
-        redirect: '/components/table',
+        redirect: '/components/button',
       },
       {
         path: 'components/:id',

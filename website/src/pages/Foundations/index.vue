@@ -8,15 +8,29 @@
  */
 import { reactive, onMounted } from 'vue';
 
-// —— 颜色 token（用法即渲染表达式）——
-const colorGroups = [
-  {
-    group: '品牌主色 Primary（rgb(var(--primary-n))）',
-    items: Array.from({ length: 10 }, (_, i) => ({
-      name: `--primary-${i + 1}`,
-      expr: `rgb(var(--primary-${i + 1}))`,
-    })),
-  },
+// —— 完整调色板（品牌主色 + 全部 14 个基础色系，每系 10 阶）——
+// 这些都是主题包注入的运行时 CSS 变量 rgb(var(--<hue>-<n>))；-6 阶为标准色。
+const paletteHues = [
+  { hue: 'primary', label: '品牌主色 Primary' },
+  { hue: 'red', label: '红 Red' },
+  { hue: 'orangered', label: '橙红 OrangeRed' },
+  { hue: 'orange', label: '橙 Orange' },
+  { hue: 'gold', label: '金 Gold' },
+  { hue: 'yellow', label: '黄 Yellow' },
+  { hue: 'lime', label: '黄绿 Lime' },
+  { hue: 'green', label: '绿 Green' },
+  { hue: 'cyan', label: '青 Cyan' },
+  { hue: 'blue', label: '蓝 Blue' },
+  { hue: 'arcoblue', label: '极客蓝 ArcoBlue' },
+  { hue: 'purple', label: '紫 Purple' },
+  { hue: 'pinkpurple', label: '粉紫 PinkPurple' },
+  { hue: 'magenta', label: '洋红 Magenta' },
+  { hue: 'gray', label: '中性灰 Gray' },
+];
+const paletteSteps = Array.from({ length: 10 }, (_, i) => i + 1);
+
+// —— 语义色 token ——
+const semanticGroups = [
   {
     group: '文字 Text',
     items: [
@@ -34,6 +48,7 @@ const colorGroups = [
       { name: '--color-fill-1', expr: 'var(--color-fill-1)' },
       { name: '--color-fill-2', expr: 'var(--color-fill-2)' },
       { name: '--color-fill-3', expr: 'var(--color-fill-3)' },
+      { name: '--color-fill-4', expr: 'var(--color-fill-4)' },
     ],
   },
   {
@@ -46,25 +61,12 @@ const colorGroups = [
     ],
   },
   {
-    group: '状态色 Status',
+    group: '状态色 Status（语义映射）',
     items: [
       { name: 'success / green-6', expr: 'rgb(var(--green-6))' },
       { name: 'danger / red-6', expr: 'rgb(var(--red-6))' },
       { name: 'warning / orange-6', expr: 'rgb(var(--orange-6))' },
       { name: 'info / arcoblue-6', expr: 'rgb(var(--arcoblue-6))' },
-    ],
-  },
-  {
-    group: '扩展调色板（图表/分类，-6 阶）',
-    items: [
-      { name: 'arcoblue-6', expr: 'rgb(var(--arcoblue-6))' },
-      { name: 'green-6', expr: 'rgb(var(--green-6))' },
-      { name: 'orange-6', expr: 'rgb(var(--orange-6))' },
-      { name: 'gold-6', expr: 'rgb(var(--gold-6))' },
-      { name: 'purple-6', expr: 'rgb(var(--purple-6))' },
-      { name: 'cyan-6', expr: 'rgb(var(--cyan-6))' },
-      { name: 'magenta-6', expr: 'rgb(var(--magenta-6))' },
-      { name: 'lime-6', expr: 'rgb(var(--lime-6))' },
     ],
   },
 ];
@@ -95,13 +97,37 @@ const weights = [
 // —— 间距档位（4 的倍数，Less 变量，静态参考）——
 const spacings = [2, 4, 6, 8, 12, 16, 24, 32];
 
-// 挂载后读取解析值
+// 挂载后读取解析值（颜色转 hex 展示；并按亮度决定文字色，浅色块用深字、深色块用浅字）
 const resolved = reactive<Record<string, string>>({});
+const isDark = reactive<Record<string, boolean>>({});
+
+function parseRgb(str: string): [number, number, number] | null {
+  const m = str.match(/(\d+(?:\.\d+)?)/g);
+  if (!m || m.length < 3) return null;
+  return [Number(m[0]), Number(m[1]), Number(m[2])];
+}
+function toHex(str: string): string {
+  const rgb = parseRgb(str);
+  if (!rgb) return str;
+  return '#' + rgb.map((x) => Math.round(x).toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+function luminance(str: string): number {
+  const rgb = parseRgb(str);
+  if (!rgb) return 255;
+  return 0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2];
+}
+
 onMounted(() => {
   document.querySelectorAll<HTMLElement>('[data-token]').forEach((el) => {
     const name = el.getAttribute('data-token') as string;
     const cs = getComputedStyle(el);
-    resolved[name] = el.getAttribute('data-kind') === 'radius' ? cs.borderTopLeftRadius : cs.backgroundColor;
+    if (el.getAttribute('data-kind') === 'radius') {
+      resolved[name] = cs.borderTopLeftRadius;
+    } else {
+      const bg = cs.backgroundColor;
+      resolved[name] = toHex(bg);
+      isDark[name] = luminance(bg) < 150;
+    }
   });
 });
 </script>
@@ -117,10 +143,47 @@ onMounted(() => {
         </p>
       </header>
 
-      <!-- 颜色 -->
+      <!-- 完整调色板 -->
       <section class="pg-foundations__section">
-        <h2 class="pg-foundations__h2">颜色 Color</h2>
-        <div v-for="g in colorGroups" :key="g.group" class="pg-foundations__group">
+        <h2 class="pg-foundations__h2">调色板 Palette</h2>
+        <p class="pg-foundations__note">
+          品牌主色 + 14 个基础色系，每系 10 阶（由浅到深，<strong>第 6 阶为标准色</strong>，标「主」）。
+          均为主题包注入的运行时变量 <code>rgb(var(--&lt;hue&gt;-&lt;n&gt;))</code>；色值为页面实时解析。
+        </p>
+        <div class="pg-foundations__palette">
+          <div v-for="h in paletteHues" :key="h.hue" class="pg-foundations__pal-row">
+            <div class="pg-foundations__pal-label">
+              <span class="pg-foundations__pal-name">{{ h.label }}</span>
+              <span class="pg-foundations__pal-var">--{{ h.hue }}</span>
+            </div>
+            <div class="pg-foundations__pal-scale">
+              <div
+                v-for="n in paletteSteps"
+                :key="n"
+                class="pg-foundations__pal-cell"
+                :class="{ 'is-std': n === 6 }"
+                :data-token="`${h.hue}-${n}`"
+                :style="{ background: `rgb(var(--${h.hue}-${n}))` }"
+                :title="`--${h.hue}-${n}  ${resolved[`${h.hue}-${n}`] || ''}`"
+              >
+                <span
+                  class="pg-foundations__pal-cell-inner"
+                  :style="{ color: isDark[`${h.hue}-${n}`] ? 'rgba(255,255,255,0.92)' : 'rgba(0,0,0,0.82)' }"
+                >
+                  <span class="pg-foundations__pal-step">{{ n }}<template v-if="n === 6"> 主</template></span>
+                  <span class="pg-foundations__pal-hex">{{ resolved[`${h.hue}-${n}`] || '' }}</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 语义色 -->
+      <section class="pg-foundations__section">
+        <h2 class="pg-foundations__h2">语义色 Semantic</h2>
+        <p class="pg-foundations__note">界面与组件只引用语义 token；下方色值为页面实时解析。</p>
+        <div v-for="g in semanticGroups" :key="g.group" class="pg-foundations__group">
           <div class="pg-foundations__group-title">{{ g.group }}</div>
           <div class="pg-foundations__swatches">
             <div v-for="it in g.items" :key="it.name" class="pg-foundations__swatch">
@@ -243,6 +306,117 @@ onMounted(() => {
   font-size: 13px;
   font-weight: 500;
   color: var(--color-text-2);
+}
+
+.pg-foundations__note code {
+  padding: 1px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+  color: rgb(var(--primary-7));
+  background: var(--color-fill-2);
+  border-radius: var(--border-radius-small);
+}
+
+/* 调色板：每系一行连续色块（1px 分隔线保证浅色也可见），块内显示阶数 + 实时 hex */
+.pg-foundations__palette {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pg-foundations__pal-row {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+}
+
+.pg-foundations__pal-label {
+  flex: none;
+  width: 132px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.pg-foundations__pal-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-1);
+}
+
+.pg-foundations__pal-var {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11px;
+  color: var(--color-text-3);
+}
+
+/* gap:1px + 底色 = 每格之间 1px 分隔线，浅色块也不会与白底/邻格糊在一起 */
+.pg-foundations__pal-scale {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 1px;
+  background: var(--color-border-2);
+  border: 1px solid var(--color-border-2);
+  border-radius: var(--border-radius-medium);
+  overflow: hidden;
+}
+
+.pg-foundations__pal-cell {
+  flex: 1;
+  min-width: 0;
+}
+
+.pg-foundations__pal-cell-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 60px;
+  padding: 4px 2px;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.pg-foundations__pal-step {
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.is-std .pg-foundations__pal-step {
+  font-weight: 700;
+}
+
+.pg-foundations__pal-hex {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 10px;
+  line-height: 1;
+  opacity: 0.85;
+}
+
+@media (max-width: 900px) {
+  .pg-foundations__pal-hex {
+    display: none;
+  }
+  .pg-foundations__pal-cell-inner {
+    height: 44px;
+  }
+}
+
+@media (max-width: 640px) {
+  .pg-foundations__pal-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+  }
+  .pg-foundations__pal-label {
+    width: auto;
+    flex-direction: row;
+    gap: 8px;
+    align-items: baseline;
+  }
 }
 
 .pg-foundations__swatches {

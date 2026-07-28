@@ -34,7 +34,7 @@ import {
   IconLayout,
   IconApps,
 } from '@arco-iconbox/vue-pangea-mobile';
-import catalog from '@/generated/catalog.json';
+import { componentMenuItems } from '@/pages/Components/registry';
 
 // ------ 应用名称 ------
 const appName = ref('Pangea Design');
@@ -52,11 +52,8 @@ interface ModuleDef {
   menu: MenuItem[];
 }
 
-// 各组件页作为「组件」下的二级菜单，从同步来的 catalog 动态生成
-const componentChildren: MenuItem[] = catalog.components.map((c) => ({
-  key: `/components/${c.id}`,
-  title: c.title,
-}));
+// 各组件页作为「组件」下的二级菜单，来自站点组件清单 registry（按分组排序平铺）
+const componentChildren: MenuItem[] = componentMenuItems;
 
 // 官网分两个模块，通过顶部横向菜单切换：
 // - 说明文档：介绍 / 使用指南 / 更新日志

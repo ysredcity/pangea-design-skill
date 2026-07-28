@@ -1,6 +1,6 @@
 ---
 name: pangea-design-vue
-description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
+description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖生成前的需求规格化（把一句话需求或 PRD 转成面向界面架构的需求文档、有限轮澄清、确认后再开发）、页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
 ---
 
 # Pangea Design Vue Skill
@@ -44,9 +44,22 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 - 全局 Layout 已按 Figma 设计稿（Pangea Design PC Templates）**标准化实现**，包含：顶部 Header（48px）、左侧可折叠侧边栏（200px，自定义 Menu 样式）、右侧内容区（左上圆角 8px，背景由页面自设）。**不要重写/替换全局 Layout**（除非明确被要求）。
 - **混合菜单结构**：顶部 Header 是**横向模块菜单**、左侧是**当前模块的多级菜单**；数据模型为 `GlobalLayout.vue` 的 `modules`（`{ key, title, menu }[]`，每模块独立菜单）。**按场景判断单/多模块**：层级简单 → `modules` 只配 1 个（自动隐藏顶部模块菜单，退化为纯侧边菜单）；层级复杂需分业务域 → 配多个模块。新增页面 = 建页面 + 注册子路由 + 加进**所属模块**的 `menu`。菜单样式见 `src/layouts/layout-menu.less`（侧边选中：白底 + `primary-7` + medium；顶部模块选中：`primary-6` 文字）。详见 [project-structure.md](references/overview/project-structure.md)。
 
+## 生成前：需求规格化（第一步，先对齐再动手）
+
+**不论用户输入是「一句话需求」还是「完整 PRD」，生成任何实际代码之前，先把它转化为一份面向界面架构的需求文档并经用户确认。** 这一步消除输入颗粒度差异导致的生成质量波动。
+
+流程（参考头脑风暴的原理，但**克制、限轮**）：
+
+1. **理解意图**：从输入中提取目标用户/角色、核心场景、关键实体与数据、主要操作。
+2. **有限轮澄清**：只针对**影响界面架构**的模糊点（模块划分、页面清单、每页形态、关键字段/列、角色差异、数据来源、特殊交互）提问；**一次性打包成一组问，最多 1–2 轮**；仍不明确的用合理默认假设补齐并在文档标注，不无限追问。能按中后台常规推断的（分页、校验、CRUD、空/加载/错误态）不问。
+3. **产出需求文档**：以界面架构为中心，含①概述 ②模块划分（对应顶部模块）③菜单与导航（对应左侧菜单）④页面清单与每页结构（页型/布局/关键内容/交互）⑤全局约定 ⑥待确认假设。
+4. **确认闸门**：用户确认（或修改后确认）**模块划分、菜单设定、页面清单、每页布局与交互**后，才进入下方决策树逐页生成 → 质量门禁自检 → 交付。建议把需求文档留存到工程 `docs/requirement.md`。
+
+已确认文档下的增量迭代（加/改单个已说清的页面）、纯样式/文案微调、明确的单点修改可跳过本步骤。完整流程、澄清问题清单与需求文档模板见 [requirement-intake.md](references/overview/requirement-intake.md)。
+
 ## 页面生成决策树（先选型，再动手）
 
-生成任何页面前，**先判断场景与现有页面模板的匹配度**，据此选择「套用模板」还是「AI 自主设计」。核心原则：**能套模板就套模板；套不了也必须用设计系统的组件与 token，不自由发挥。**
+**在需求文档确认后**，对文档中的每个页面按其「页型」走本决策树：**先判断场景与现有页面模板的匹配度**，据此选择「套用模板」还是「AI 自主设计」。核心原则：**能套模板就套模板；套不了也必须用设计系统的组件与 token，不自由发挥。**
 
 ```
 需求场景
@@ -167,6 +180,7 @@ app.mount('#app');
 
 | 主题 | 文件 | 适用场景 |
 |---|---|---|
+| 需求规格化（生成前第一步） | [requirement-intake.md](references/overview/requirement-intake.md) | **生成代码前**把任意颗粒度输入转成面向界面架构的需求文档：有限轮澄清、问题清单、需求文档模板（模块/菜单/页面结构/交互）、确认闸门 |
 | 工程结构与生成层级 | [project-structure.md](references/overview/project-structure.md) | 项目脚手架、主题包/图标包引用约定、全局 Layout 下的路由页面生成层级、PM demo 与开发交付差异；脚手架样例见 `templates/project-starter/` |
 | 安装 | [getting-started.md](references/overview/getting-started.md) | 安装 `@arco-design/web-vue`、注册 ArcoVue、引入样式、接入 Pangea 主题、配置按需加载 |
 | 全局配置 | [config-provider.md](references/overview/config-provider.md) | 使用 `app.use(ArcoVue, options)` 或 `<a-config-provider>` 配置语言、前缀、尺寸等 |
@@ -345,8 +359,9 @@ Agent 对 PM 的反馈应简洁、非技术性：
 2. **初始化**：从 `templates/project-starter` 创建工程（`npx degit` 或复制）。
 3. **安装依赖**：后台执行 `npm install`，等待完成。
 4. **启动 dev server**：后台执行 `npm run dev`，监听输出确认 `Local: http://localhost:xxxx` 就绪。
-5. **生成页面**：按需求写页面 + 路由 + mock 数据。
-6. **交付预览地址**：告诉 PM 打开浏览器访问具体路由。
+5. **需求规格化并确认**：先按 [需求规格化](references/overview/requirement-intake.md) 把 PM 的需求转成「界面架构需求文档」（有限轮澄清），请 PM 确认模块划分 / 菜单 / 页面结构与交互后再动手；建议存到工程 `docs/requirement.md`。（这一步的问答对 PM 用非技术语言，聚焦「要哪些页面、每页长什么样」。）
+6. **生成页面**：按已确认的需求文档写页面 + 路由 + mock 数据。
+7. **交付预览地址**：告诉 PM 打开浏览器访问具体路由。
 
 若当前目录已有工程（PM 继续上次的迭代）：
 

@@ -5,14 +5,25 @@
  * 路由 /components/:id。上方展示该组件的选型元数据（来自同步的 catalog），
  * 下方是 Arco + Pangea 的 live 交互示例（按 id 渲染）。
  */
-import { ref, computed } from 'vue';
+import { ref, computed, defineAsyncComponent } from 'vue';
 import { useRoute } from 'vue-router';
 import { Message } from '@arco-design/web-vue';
 import catalog from '@/generated/catalog.json';
+import { findComponent } from './registry';
 
 const route = useRoute();
 const id = computed(() => String(route.params.id || ''));
 const meta = computed(() => catalog.components.find((c) => c.id === id.value));
+const entry = computed(() => findComponent(id.value));
+const title = computed(() => entry.value?.title || meta.value?.title || id.value);
+
+// 专属 demo 文件（demos/<Id>.vue）优先；没有则回退到下方内联示例
+const demoModules = import.meta.glob('./demos/*.vue');
+const demoComp = computed(() => {
+  const cap = id.value.charAt(0).toUpperCase() + id.value.slice(1);
+  const loader = demoModules[`./demos/${cap}.vue`];
+  return loader ? defineAsyncComponent(loader as never) : null;
+});
 
 // —— demo 状态 ——
 const switchVal = ref(true);
@@ -46,14 +57,14 @@ function toast() {
 <template>
   <div class="pg-cd">
     <div class="pg-cd__inner">
-      <template v-if="meta">
+      <template v-if="entry || meta">
         <header class="pg-cd__head">
-          <h1 class="pg-cd__title">{{ meta.title }}</h1>
-          <p class="pg-cd__id"><code>{{ meta.id }}</code></p>
+          <h1 class="pg-cd__title">{{ title }}</h1>
+          <p class="pg-cd__id"><code>{{ id }}</code></p>
         </header>
 
-        <!-- 选型元数据 -->
-        <a-card class="pg-cd__card" :bordered="true" title="选型要点">
+        <!-- 选型元数据（命中 skill catalog 时展示）-->
+        <a-card v-if="meta" class="pg-cd__card" :bordered="true" title="选型要点">
           <div class="pg-cd__meta">
             <div v-if="meta.whenToUse?.length" class="pg-cd__meta-row">
               <span class="pg-cd__meta-label">适用</span>
@@ -88,8 +99,11 @@ function toast() {
           </div>
         </a-card>
 
-        <!-- live 交互示例 -->
-        <a-card class="pg-cd__card" :bordered="true" title="交互示例">
+        <!-- 专属 demo（全面示例） -->
+        <component :is="demoComp" v-if="demoComp" />
+
+        <!-- live 交互示例（内联回退，用于尚无专属 demo 的组件） -->
+        <a-card v-else class="pg-cd__card" :bordered="true" title="交互示例">
           <!-- table -->
           <template v-if="id === 'table'">
             <a-table :data="tableData" :columns="tableColumns" :pagination="false" size="small">
