@@ -17,25 +17,37 @@
 
 ---
 
-## [1.0.1] - 2026-07-23
+## [1.1.0] - 2026-07-23
 
-> 定位刷新为海信集团 B 端 / 中后台产品；补齐页面模板体系、仪表板示例、图表（按需引入）、响应式与背景分层全局准则。
+> 大幅补齐海信 B 端 / 中后台体系：生成前**需求规格化**输入层、**质量门禁 + 元数据 + 官网 showcase** 三条工作流、**混合菜单**、页面模板体系与仪表板示例、图表按需引入、响应式与背景分层全局准则。skill 定位刷新为海信集团 B 端 / 中后台产品。
 
 ### Added
-- **页面模板**（`references/patterns/page-*.md`，基于 Figma 设计稿；脚手架含示例页 + 路由 + 菜单）：卡片列表页（a-card 网格 + 高级筛选面板）、对话框表单、分组表单页（折叠分组 + 锚点导航）。
-- **仪表板示例页（非固化模板）** `src/pages/Dashboard/index.vue`：KPI 指标卡 + 流程中心/我的项目表格 + 分段占比条 + VChart 环形图；灰底 + 无边框白卡 + 响应式。
+- **需求规格化（生成前第一步）**：`references/overview/requirement-intake.md` + `SKILL.md`「生成前：需求规格化」章节——任意颗粒度输入（一句话～完整 PRD）先转成**面向界面架构的需求文档**（模块划分↔顶部模块 / 菜单导航↔左侧菜单 / 逐页 页型+布局+关键内容+交互 / 待确认假设），参考头脑风暴但**克制限轮**（一次性打包问、最多 1–2 轮、余下用默认假设），用户确认后再逐页生成。确立流程：**需求规格化 → 决策树选型 → 生成 → G1–G8 门禁**。
+- **质量门禁与元数据体系**：`references/overview/quality-gates.md`（生成后自检 G1–G8）、`metadata-schema.md`（元数据 frontmatter 规范）、`references/component-selection/`（10 个高频组件选型元数据）、5 个页面模板补 `meta` frontmatter、零依赖生成器 `scripts/build-catalog.mjs` → `references/_generated/catalog.json`；脚手架 `scripts/check-tokens.mjs` + `npm run gate`（check-tokens + vue-tsc + build）。
+- **官网 showcase `website/`**（以脚手架 fork 的独立 Vue 工程，dogfood，hash 路由；已部署 Cloudflare Pages：<https://pangea-design-skill.pages.dev/>）：两个模块（说明文档 / 设计系统）——介绍（科技感重构，9 板块）、使用指南、Design Tokens（含**完整调色板** 品牌主色 + 14 色系 × 10 阶）、页面模板（索引 + 预览真实示例页）、组件预览（**16 个组件，每组件一页**，其中 Button/Tag/Tooltip/Tree/Dropdown/Steps/Form 为全面示例）、更新日志；`scripts/sync-from-skill.mjs` 单向同步 skill 的 catalog + CHANGELOG + 示例页（产物提交 git）。
+- **混合菜单结构**（`GlobalLayout.vue`）：顶部 Header 横向**模块菜单** + 左侧**当前模块多级菜单**，按场景判断单/多模块（单模块自动隐藏顶部）；一级菜单可选图标、二级菜单不用图标（去 Arco 图标缩进占位）。
+- **页面模板**（累计 5 个）：卡片列表页（a-card 网格 + 高级筛选面板）、对话框表单、分组表单页（折叠分组 + 锚点导航）（+ 已有简单列表页、基础表单页）；**仪表板示例页（非固化模板）** `src/pages/Dashboard/index.vue`（KPI 卡 + 表格 + 分段占比条 + VChart 环形图，灰底 + 无边框白卡 + 响应式）。
 - **页面生成决策树**（`SKILL.md`）：按场景与模板匹配度决定「套模板 / 增补 / AI 自主设计」，自主设计也须用设计系统组件 + token。
-- **图表（VChart）章节 + 按需引入机制**：图表库 `@visactor/vchart` **不进基础依赖**，通过 `src/components/LazyChart.vue`（动态 import + 优雅降级）+ `vite.config.ts` 可选依赖处理（未装时 external，保证没装也能 build）；需要时 `npm i @visactor/vchart`。
-- **响应式适配（全局准则）**（`SKILL.md`）：表单多列栅格用 Arco Grid 断点（`:xs/:sm/:lg`）不写死 `:span`、卡片网格用 CSS `auto-fill/fit minmax`、表格横滚/隐列、工具栏 `flex-wrap`、固定宽防溢出；5 个模板已落地。
-- **页面背景（全局准则）**（`SKILL.md`）：Layout 内容区默认透明（漏出 body 灰底），背景由各页面自设——常规内容页白底、仪表板类页透明 + 无边框白卡区隔。
+- **图表（VChart）按需引入**：`@visactor/vchart` **不进基础依赖**，经 `src/components/LazyChart.vue`（动态 import + 优雅降级）+ `vite.config.ts` 可选依赖处理（未装也能 build）；需要时 `npm i @visactor/vchart`。
+- **响应式适配 & 页面背景分层（全局准则）**（`SKILL.md`）：栅格断点（`:xs/:sm/:lg`）/ 卡片自适应网格 / 表格横滚 / 工具栏换行 / 固定宽防溢出；内容区默认透明、背景由各页面自设（常规页白底、仪表板灰底无边框白卡）。
 - 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`（会议室预约系统，综合检验多个页面模板选型与组装）。
 
 ### Changed
 - **skill 定位刷新为「海信集团 B 端 / 中后台产品」**（管理后台、业务系统、数据平台、内部工具）：`SKILL.md` 新增「定位与适用范围」章节，frontmatter description 更新。
 - **图标分工根因修复**：移除 `vite.config.ts` 中 `vitePluginForArco` 的 `iconBox` 全局替换选项（它会连带替换 Arco 组件内建功能性图标、破坏组件内部样式）；确立分工「功能性/组件内建图标用 Arco 默认，业务/内容图标从图标包命名导入」；删除治标的 `arco-fixes.less`；同步 `project-structure.md`/`SKILL.md`/`README.md`/`getting-started.md`/`theming.md`。
 - **非颜色 token 化**：确认主题包只把**颜色 + 圆角**注入为运行时 CSS 变量；`GlobalLayout.vue`/`layout-menu.less` 硬编码圆角改 `var(--border-radius-*)`；`design-tokens.md` 补「哪些 token 是运行时 CSS 变量」。
-- **背景分层调整**：`GlobalLayout` 内容区背景由白改**透明**，背景责任下放到各页面（4 个内容页加白底、仪表板示例改透明 + 无边框白卡）。
-- **全局 Layout / 菜单细节修正**：菜单各状态样式对齐组件设计稿（默认透明 / hover / 选中白底 + `primary-7` + medium）、Header 图标/Logo/平台名调整、侧边栏展开/折叠按钮、固定视口高度仅内容区滚动等。
+- **背景分层调整**：`GlobalLayout` 内容区背景由白改**透明**，背景责任下放到各页面（内容页加白底、仪表板示例改透明 + 无边框白卡）。
+- **Foundations 调色板呈现重做**：改为连续色块条 + 1px 分隔 + 块内阶数/hex + 按亮度自适应文字色。
+- **全局 Layout / 菜单细节**：状态样式对齐设计稿（侧边选中白底 + `primary-7` + medium；顶部模块选中 `primary-6` + 下划线）、Header 图标/Logo/平台名、折叠按钮胶囊 + 悬停、固定视口高度仅内容区滚动。
+
+### Fixed
+- **顶部模块菜单样式错乱**：引入更多 Arco 组件后，其懒加载样式注入顺序变化使原先仅靠特异性取胜的覆盖失效——`layout-menu.less` 顶部模块菜单关键属性统一补 `!important`，不再依赖注入顺序。
+- **一级菜单激活文字色未生效**：Arco `.arco-menu-light .arco-menu-item.arco-menu-selected`（特异性 0,4,0）覆盖了自定义 `primary-7`，补 `!important` 修复。
+- **Foundations 浅阶色块「消失」**：浅色块无边框、块间留白落在白底上不可见——改连续色块条 + 分隔线修复。
+- 组件预览 Dropdown `@select` handler 类型签名对齐 Arco（`(v: string|number|Record<string,any>|undefined)`）。
+
+### Notes
+- 部署：`website/` 用 `base './'` 静态产物，已上 Cloudflare Pages（`https://pangea-design-skill.pages.dev/`）；README 加在线预览链接。
 
 ---
 
