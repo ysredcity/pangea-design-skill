@@ -1,11 +1,26 @@
 ---
 name: pangea-design-vue
-description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖生成前的需求规格化（把一句话需求或 PRD 转成面向界面架构的需求文档、有限轮澄清、确认后再开发）、页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
+description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖生成前的需求规格化（把一句话需求或 PRD 转成面向界面架构的需求文档、有限轮澄清；**必须先输出文档并经用户确认后，下一轮才写代码——禁止同一轮既出文档又出工程**）、页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
 ---
 
 # Pangea Design Vue Skill
 
 海信集团前端设计体系 **Pangea** 的 Vue 3 实现说明。
+
+## 🚦 最高优先级：两阶段强制门（先确认需求文档，再写代码）
+
+**任何「生成 / 新建系统、模块、页面」的需求，必须分两个回合完成，禁止在同一轮里既出需求文档又出工程代码。**
+
+| 阶段 | 你要做的 | 你**禁止**做的 |
+|---|---|---|
+| **阶段一（本轮）** | 有限轮澄清（最多 1–2 轮，一次性打包问）→ 输出**界面架构需求文档** → **明确请用户确认或修改** → **结束本轮回复，停下等待** | ❌ 创建 / 修改任何工程文件（含脚手架初始化、`degit`、`npm install`、写 `.vue`/路由/菜单）<br>❌ 在同一条回复里继续进入生成<br>❌ 说「已确认，我继续」自问自答 |
+| **阶段二（用户确认后的下一轮）** | 按已确认文档逐页生成 → 类型检查 → 质量门禁 → 交付 | ❌ 偏离已确认文档（要改先说明） |
+
+**判定「已确认」的唯一标准**：用户在**看到需求文档之后**给出明确肯定答复（如「确认」「可以」「按这个做」「开始开发」）。以下都**不算**确认：用户最初那句需求、用户回答澄清问题、用户说「继续」但还没看到文档、你自己推断"应该没问题"。
+
+**唯一可跳过本门的情形**（从严解释，拿不准就走门）：① 已确认文档下的增量（加/改一个文档里已写清的页面）；② 纯样式 / 文案 / 单点微调（如「按钮改次要」）；③ 用户**显式**要求「不用出文档，直接做」。
+
+> 违反表现：一轮回复里同时产出了 `requirement.md` 和 `src/pages/**` —— 这是**错误**，必须避免。完整流程见 [需求规格化](references/overview/requirement-intake.md)。
 
 ## 定位与适用范围
 
@@ -54,9 +69,11 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 2. **有限轮澄清**：只针对**影响界面架构**的模糊点（模块划分、页面清单、每页形态、关键字段/列、角色差异、数据来源、特殊交互）提问；**一次性打包成一组问，最多 1–2 轮**；仍不明确的用合理默认假设补齐并在文档标注，不无限追问。能按中后台常规推断的（分页、校验、CRUD、空/加载/错误态）不问。
 3. **产出需求文档**：以界面架构为中心，含①概述 ②模块划分（对应顶部模块）③菜单与导航（对应左侧菜单）④页面清单与每页结构（页型/套用模板/布局/关键内容/交互）⑤全局约定 ⑥待确认假设。
    - ⚠️ **命中页面模板的页面，布局结构必须以该模板文档的「## 页面结构」为基准逐区块照抄**，只允许做**显式标注**的增补 `[增补]` / 删减 `[删减]`；不要在需求文档里另行设计一套结构（否则文档与模板不一致，产出会与模板存在偏差）。无模板可用时才写「自定义页型（无模板）」并自拟结构。
-4. **确认闸门**：用户确认（或修改后确认）**模块划分、菜单设定、页面清单、每页布局与交互**后，才进入下方决策树逐页生成 → 质量门禁自检 → 交付。建议把需求文档留存到工程 `docs/requirement.md`。
+4. **确认闸门（硬停止）**：输出需求文档后，**请用户确认并结束本轮回复**——不要在同一轮继续生成任何工程文件。用户明确确认（或改后确认）**模块划分、菜单设定、页面清单、每页布局与交互**，**下一轮**才进入下方决策树逐页生成 → 类型检查 → 质量门禁 → 交付。建议把需求文档留存到工程 `docs/requirement.md`。
 
-已确认文档下的增量迭代（加/改单个已说清的页面）、纯样式/文案微调、明确的单点修改可跳过本步骤。完整流程、澄清问题清单与需求文档模板见 [requirement-intake.md](references/overview/requirement-intake.md)。
+> ⛔ 参见顶部「🚦 两阶段强制门」：**同一轮里既产出需求文档又产出工程代码是错误的**。「已确认」= 用户看到文档后的明确肯定答复；用户的初始需求、对澄清问题的回答都**不算**确认。
+
+已确认文档下的增量迭代（加/改单个已说清的页面）、纯样式/文案微调、明确的单点修改，以及用户显式要求「不用出文档直接做」时可跳过本步骤（从严解释）。完整流程、澄清问题清单与需求文档模板见 [requirement-intake.md](references/overview/requirement-intake.md)。
 
 ## 页面生成决策树（先选型，再动手）
 
@@ -93,7 +110,7 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 
 页面模板清单见下方「Skill 索引 → 模式」。各模板与常用组件的**「适用任务 / 变体 / 组合边界」结构化元数据**见 [metadata-schema.md](references/overview/metadata-schema.md)（机读索引 `references/_generated/catalog.json`），可用于更精细的选型判断。
 
-> ⚑ **生成或修改任何页面后，务必按 [生成后质量门禁](references/overview/quality-gates.md)（G1–G9）逐项自检再交付**：编译、Token 规范、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级、AI 代码常见陷阱（模板内 TS 注解 / 响应式用 computed / 模板 async）。
+> ⚑ **动手前先过 G0（需求文档已确认），生成或修改任何页面后，务必按 [质量门禁](references/overview/quality-gates.md)（G0–G9）逐项自检再交付**：编译、Token 规范、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级、AI 代码常见陷阱（模板内 TS 注解 / 响应式用 computed / 模板 async）。
 > ⚠️ **先类型检查、再依赖 dev server**：Vite dev server 默认不做类型检查——模板内的非法语法（如内联函数带 TS 注解 `(v?: Date) =>`）不会阻止启动，却会让组件运行时编译失败、页面渲染成**空白页**。生成/修改后先跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无误，**不要只凭「dev server 起来了、无报错」就判定页面正常**。
 
 ## 图表（VChart）
@@ -190,7 +207,7 @@ app.mount('#app');
 | 全局配置 | [config-provider.md](references/overview/config-provider.md) | 使用 `app.use(ArcoVue, options)` 或 `<a-config-provider>` 配置语言、前缀、尺寸等 |
 | 国际化 | [internationalization.md](references/overview/internationalization.md) | 语言包和 `<a-config-provider :locale="...">` |
 | 架构约定 | [architecture.md](references/overview/architecture.md) | Vue 3 SFC 结构、导入、`v-model`、属性、事件、插槽、组件注册 |
-| 质量门禁 | [quality-gates.md](references/overview/quality-gates.md) | **生成后自检清单（G1–G9）**：编译（先类型检查再依赖 dev server）/Token/组件与图标/响应式/背景分层/交互四态/可访问性/生成层级/AI 代码常见陷阱（模板内 TS 注解·computed·async） |
+| 质量门禁 | [quality-gates.md](references/overview/quality-gates.md) | **G0（生成前：需求文档已确认）+ 生成后自检清单（G1–G9）**：编译（先类型检查再依赖 dev server）/Token/组件与图标/响应式/背景分层/交互四态/可访问性/生成层级/AI 代码常见陷阱（模板内 TS 注解·computed·async） |
 | 元数据 Schema | [metadata-schema.md](references/overview/metadata-schema.md) | 页面模板/组件选型元数据的 frontmatter 规范（适用任务/变体/组合边界）+ `catalog.json` 生成约定 |
 
 ### 通用
@@ -333,7 +350,7 @@ app.mount('#app');
 
 | 阶段 | Agent 必须做的事 | PM 需要做的事 |
 |---|---|---|
-| **首次生成** | 1. 从脚手架初始化完整工程<br>2. 执行 `npm install`<br>3. 生成页面后**先跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误**<br>4. 再启动 `npm run dev`（后台）<br>5. 告知 PM 预览地址（如 `http://localhost:5173/`） | 打开浏览器访问地址 |
+| **首次生成**（⚠️ 仅在需求文档**已被 PM 确认**后执行；未确认时本行一律不做） | 1. 从脚手架初始化完整工程<br>2. 执行 `npm install`<br>3. 生成页面后**先跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误**<br>4. 再启动 `npm run dev`（后台）<br>5. 告知 PM 预览地址（如 `http://localhost:5173/`） | 打开浏览器访问地址 |
 | **每轮修改** | 1. 修改代码<br>2. **跑 `vue-tsc --noEmit` 确认无类型/模板错误**（⚠️ Vite HMR 不做类型检查，不能只看「热更新了、无控制台报错」就当没问题——模板内 TS 注解等错误会让页面空白）<br>3. 有错自动修复直到 `vue-tsc` 通过<br>4. 告知 PM「已更新，刷新浏览器即可」 | 刷新浏览器看效果 |
 | **页面空白 / 编译报错** | 优先跑 `vue-tsc --noEmit` 定位（dev server 无报错也可能已空白）；定位错误、自动修复，**不要把报错信息抛给 PM** | 无需任何操作 |
 | **Dev server 意外停止** | 自动重启 dev server，确认恢复后告知 PM | 无需任何操作 |
@@ -363,7 +380,7 @@ Agent 对 PM 的反馈应简洁、非技术性：
 2. **初始化**：从 `templates/project-starter` 创建工程（`npx degit` 或复制）。
 3. **安装依赖**：后台执行 `npm install`，等待完成。
 4. **启动 dev server**：后台执行 `npm run dev`，监听输出确认 `Local: http://localhost:xxxx` 就绪。
-5. **需求规格化并确认**：先按 [需求规格化](references/overview/requirement-intake.md) 把 PM 的需求转成「界面架构需求文档」（有限轮澄清），请 PM 确认模块划分 / 菜单 / 页面结构与交互后再动手；建议存到工程 `docs/requirement.md`。（这一步的问答对 PM 用非技术语言，聚焦「要哪些页面、每页长什么样」。）
+5. **需求规格化并确认（硬停止）**：先按 [需求规格化](references/overview/requirement-intake.md) 把 PM 的需求转成「界面架构需求文档」（有限轮澄清），**发给 PM 请其确认后结束本轮、停下等待**；PM 明确确认后的**下一轮**才继续第 6 步。建议存到工程 `docs/requirement.md`。（问答对 PM 用非技术语言，聚焦「要哪些页面、每页长什么样」。）
 6. **生成页面**：按已确认的需求文档写页面 + 路由 + mock 数据。
 7. **类型检查把关**：跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，有错先修复至通过——**不要只依赖 dev server 判断**（Vite 不做类型检查，模板内 TS 注解等错误会让页面空白）。
 8. **交付预览地址**：告诉 PM 打开浏览器访问具体路由。
