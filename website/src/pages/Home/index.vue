@@ -35,8 +35,8 @@ const SKILL_URL = 'https://github.com/ysredcity/pangea-design-skill/tree/main/sk
 const stats = [
   { value: String(catalog.counts.pageTemplates), label: '页面模板' },
   { value: String(catalog.counts.components), label: '组件选型' },
-  { value: '8', label: '质量门禁' },
-  { value: '72', label: '组件文档' },
+  { value: '9', label: '质量门禁' },
+  { value: '74', label: '组件文档' },
 ];
 
 // ── 为什么需要（痛点 → 解法）──
@@ -54,7 +54,7 @@ const pains = [
   {
     icon: IconCode,
     problem: '产出停在「看着像」的 demo，无法直接进开发',
-    solution: '产出可运行 Vue 工程 + G1–G8 质量门禁，直接交付',
+    solution: '产出可运行 Vue 工程 + G1–G9 质量门禁，直接交付',
   },
 ];
 
@@ -62,7 +62,7 @@ const pains = [
 const capabilities = [
   { icon: IconLayout, title: '页面模板套用', desc: '列表 / 卡片 / 表单 / 分组表单等场景，按匹配度直接套用或增补，不从零设计。' },
   { icon: IconPuzzle, title: '组件选型元数据', desc: '组件与模板标注「适用任务 / 变体 / 组合边界」，让 AI 与人选型有据可依。' },
-  { icon: IconCheckCircle, title: '生成后质量门禁', desc: 'G1–G8 自检：编译、Token、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级。' },
+  { icon: IconCheckCircle, title: '生成后质量门禁', desc: 'G1–G9 自检：编译（类型检查前置）、Token、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级、AI 代码陷阱。' },
   { icon: IconDashboard, title: '响应式 & 背景分层', desc: 'Arco Grid 断点 + 卡片自适应网格；灰底 + 白卡的背景分层，多端一致。' },
   { icon: IconThunderbolt, title: '图表按需引入', desc: 'VChart 不进基础依赖，通过懒加载封装按需启用，保持工程轻量。' },
   { icon: IconCode, title: '可运行工程交付', desc: '产出完整 Vue 3 工程（页面 / 路由 / 组件 / 主题），可 degit 起步、直接开发交付。' },
@@ -71,10 +71,10 @@ const capabilities = [
 // ── 它是怎么工作的（流程）──
 const steps = [
   { icon: IconCommand, title: '描述需求', desc: '用自然语言说明页面 / 业务，或直接给出 PRD。' },
-  { icon: IconFile, title: '需求规格化', desc: '先把输入转成界面架构需求文档，少量澄清后由你确认。' },
+  { icon: IconFile, title: '需求规格化', desc: '先把输入转成界面架构需求文档（命中模板的页面对齐模板结构），少量澄清后由你确认。' },
   { icon: IconApps, title: '决策树匹配', desc: '按场景与模板匹配度决定「套用 / 增补 / 自主设计」。' },
   { icon: IconCode, title: '规范生成', desc: '只用 Pangea 组件 + Token 生成可运行页面与路由。' },
-  { icon: IconCheckCircle, title: '门禁自检', desc: 'G1–G8 + npm run gate 通过后再交付。' },
+  { icon: IconCheckCircle, title: '门禁自检', desc: 'G1–G9 + npm run gate 通过后再交付。' },
 ];
 
 // 终端演示行
@@ -116,18 +116,18 @@ const compareRows = [
   { dim: '视觉一致性', plain: '每次风格不同、容易跑偏', pangea: '主题包 Token 唯一事实源，稳定一致' },
   { dim: '规范符合度', plain: '取决于模型发挥', pangea: '强制 Arco + Pangea，字号字重间距落档位' },
   { dim: '组件选型', plain: '随机使用甚至自造组件', pangea: '选型元数据标注适用 / 边界，有据可依' },
-  { dim: '可交付性', plain: 'demo 感重、难以落地', pangea: '可运行工程 + G1–G8 质量门禁' },
+  { dim: '可交付性', plain: 'demo 感重、难以落地', pangea: '可运行工程 + G1–G9 质量门禁' },
   { dim: '可维护性', plain: '一次性代码、结构随意', pangea: '标准工程结构 + 固定生成层级' },
   { dim: '响应式 / 多端', plain: '常被忽略', pangea: '全局准则：Grid 断点 + 自适应网格' },
 ];
 
 // ── 核心机制 ──
 const mechanisms = [
-  { k: '需求先规格化', v: '任意颗粒度输入先转成界面架构需求文档、少量澄清并经你确认后再逐页生成，降低输入差异带来的质量波动。' },
+  { k: '需求先规格化', v: '任意颗粒度输入先转成界面架构需求文档、少量澄清并经你确认后再逐页生成；命中页面模板的页面，需求文档直接以该模板的结构为基准，保证文档与产出一致。' },
   { k: 'Skill 是唯一事实源', v: '规则、Token、组件与模板元数据、质量门禁都收敛在 skill 内；本官网只是它的 showcase 快照。' },
   { k: '页面生成决策树', v: '按场景与模板匹配度决定「套模板 / 增补 / AI 自主设计」，自主设计也必须用设计系统组件 + Token。' },
   { k: '元数据驱动选型', v: '模板与组件的适用任务、变体、组合边界结构化沉淀，供 AI 与人对照。' },
-  { k: '门禁保交付', v: '生成后按 G1–G8 自检 + npm run gate，保证产出可交付。' },
+  { k: '门禁保交付', v: '生成后按 G1–G9 自检 + npm run gate（含类型检查前置），保证产出可交付。' },
   { k: '本站即样例', v: '这个官网就是照着 skill、用同一套 GlobalLayout 与 Pangea 主题构建的（dogfood）。' },
 ];
 
