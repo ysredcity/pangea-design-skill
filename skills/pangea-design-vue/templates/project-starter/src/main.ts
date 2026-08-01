@@ -8,6 +8,14 @@ import '@arco-themes/vue-pangea-3-linear/theme.css';
 import './layouts/layout-menu.less';
 import router from './router';
 import App from './App.vue';
+import { APP_NAME } from './config/app';
+
+// 浏览器标签页标题：取系统名称（APP_NAME），并随路由显示「页面名 · 系统名」
+document.title = APP_NAME;
+router.afterEach((to) => {
+  const pageTitle = to.meta?.title as string | undefined;
+  document.title = pageTitle ? `${pageTitle} · ${APP_NAME}` : APP_NAME;
+});
 
 const app = createApp(App);
 app.use(ArcoVue);

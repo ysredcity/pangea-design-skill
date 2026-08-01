@@ -24,9 +24,10 @@
 import { ref, computed, type Component } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { IconGeneral, IconHisense, IconLeft } from '@arco-iconbox/vue-pangea-mobile';
+import { APP_NAME } from '@/config/app';
 
-// ------ 应用名称（生成时替换为当前产品名称） ------
-const appName = ref('低代码开发平台');
+// ------ 应用名称（单一来源：src/config/app.ts；浏览器 title 也取它）------
+const appName = ref(APP_NAME);
 
 // ------ 菜单数据模型 ------
 interface MenuItem {
@@ -99,8 +100,8 @@ const activeModule = computed<ModuleDef>(() => {
 });
 const activeModuleKey = computed(() => activeModule.value.key);
 const sidebarMenu = computed(() => activeModule.value.menu);
-// Sidebar 左上角标题：多模块显示当前模块名，单模块显示应用名
-const sidebarTitle = computed(() => (isMultiModule.value ? activeModule.value.title : appName.value));
+// Sidebar 左上角标题：仅多模块时显示当前模块名；单模块时整块隐藏（避免与 Header 的系统名重复）
+const sidebarTitle = computed(() => activeModule.value.title);
 
 // 侧边栏选中 / 展开
 function flattenKeys(items: MenuItem[]): string[] {
@@ -180,8 +181,8 @@ function onMenuItemClick(key: string) {
         :class="{ 'pg-layout__sidebar--collapsed': collapsed }"
         :style="{ width: sidebarWidth + 'px' }"
       >
-        <!-- Sidebar Head：左上角显示模块名（单模块时为应用名） -->
-        <div v-show="!collapsed" class="pg-layout__sidebar-head">
+        <!-- Sidebar Head：左上角显示当前模块名；单模块时不显示（与 Header 系统名重复） -->
+        <div v-if="isMultiModule" v-show="!collapsed" class="pg-layout__sidebar-head">
           <span class="pg-layout__sidebar-title">{{ sidebarTitle }}</span>
         </div>
 

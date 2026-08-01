@@ -72,7 +72,7 @@ npm run dev        # 本地预览；npm run build 产出生产包
 
 > **可选：图表库 `@visactor/vchart`（按需引入，不在基础依赖里）。** 保持 base 轻量，需要图表时才装：`npm i @visactor/vchart`。脚手架已提供 `src/components/LazyChart.vue`（动态 import vchart，装了渲染、没装占位），并在 `vite.config.ts` 把它按可选依赖处理（未装时 `external` + `optimizeDeps.exclude`，保证「没装也能 build」）。用法 `<LazyChart :spec="spec" height="240px" />`。详见 SKILL.md「图表（VChart）」。
 
-> **质量门禁命令**：生成/定稿页面后运行 `npm run gate`（= `check-tokens` 裸值机检 + `vue-tsc --noEmit` + `vite build`），并对照 [quality-gates.md](quality-gates.md) 的 G1–G8 自检；`npm run check:tokens` 可单跑裸 hex / 写死圆角机检。
+> **质量门禁命令**：生成/定稿页面后运行 `npm run gate`（= `check-tokens` 裸值机检 + `vue-tsc --noEmit` + `vite build`），并对照 [quality-gates.md](quality-gates.md) 的 G1–G9 自检；`npm run check:tokens` 可单跑裸 hex / 写死圆角机检。
 
 ### 主题包 + 图标包接入（推荐：Vite 插件）
 
@@ -143,6 +143,8 @@ project/
     ├── vite-env.d.ts         # *.vue 类型 shim + vite/client + 图标包模块声明（TS 必需）
     ├── router/
     │   └── index.ts          # 路由：全局 Layout + 子路由页面
+    ├── config/
+    │   └── app.ts            # APP_NAME：系统名称单一来源（Header 品牌名 + 浏览器 title）
     ├── layouts/
     │   ├── GlobalLayout.vue   # 全局 Layout（标准版：header + sidebar + content）
     │   └── layout-menu.less   # 侧边栏菜单自定义样式（覆盖 Arco Menu 默认）
@@ -158,7 +160,8 @@ project/
 - 应用外壳 = `App.vue`（挂载路由出口）+ `layouts/GlobalLayout.vue`（页头/侧边栏/导航等骨架）。
 - **全局 Layout 已标准化实现**（基于 Figma「Pangea Design PC Templates / 菜单-展开」）。结构：顶部 Header（48px）+ 左侧可折叠侧边栏（200px）+ 右侧内容区（左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
 - **混合菜单结构**：顶部 Header 中间是**横向模块菜单**（一个模块 = 一块业务域），左侧侧边栏是**当前模块下的多级菜单**，切换顶部模块 → 左侧菜单随之切换。数据模型 = `GlobalLayout.vue` 的 `modules` ref：`{ key, title, menu: MenuItem[] }[]`，每个模块有独立菜单。
-- **单模块 vs 多模块（按场景判断）**：系统层级简单时把 `modules` 配成**只 1 个** → **自动隐藏顶部模块菜单**，左侧直接展示该模块菜单、Sidebar 头显示应用名；层级复杂需按业务域分区时配**多个** `modules` → 顶部显示模块菜单、Sidebar 头显示「当前模块」名。当前模块由当前路由所属菜单自动推导。
+- **单模块 vs 多模块（按场景判断）**：系统层级简单时把 `modules` 配成**只 1 个** → **自动隐藏顶部模块菜单**，左侧直接展示该模块菜单，且 **Sidebar 左上角模块名整块隐藏**（单模块下它与 Header 的系统名重复）；层级复杂需按业务域分区时配**多个** `modules` → 顶部显示模块菜单、Sidebar 头显示「当前模块」名。当前模块由当前路由所属菜单自动推导。
+- **系统名称单一来源 `src/config/app.ts` 的 `APP_NAME`**：Header 品牌名与**浏览器标签页 title** 都取它（`main.ts` 里 `document.title = APP_NAME`，并用 `router.afterEach` 随路由 `meta.title` 显示「页面名 · 系统名」）。**生成工程时替换 `APP_NAME`（以及 `index.html` 的首屏占位 `<title>`）为实际产品名**，不要在别处硬编码系统名。
 - **页面背景由页面自己设置**：内容区默认**透明**，漏出 body 层灰底（`--color-fill-2`）。常规内容页（列表/表单/详情）在页面根设白底 `background: var(--color-bg-1)`（内容区左上圆角会自动把白底裁成圆角，复现「白面板浮在灰底」）；仪表板/工作台类聚合页保持透明、用白底无边框卡片区隔区块。详见 SKILL.md「页面背景（全局准则）」。
 - 侧边栏与顶部模块菜单都用 Arco `<a-menu>` + 自定义样式覆盖（`src/layouts/layout-menu.less`）：侧边选中态为白背景 + `primary-7` + medium；顶部模块选中态为 `primary-6` 文字。
 - **具体页面**放在 `src/pages/<PageName>/index.vue`，作为全局 Layout 路由的**子路由**，渲染在其 `<router-view/>` 中。
