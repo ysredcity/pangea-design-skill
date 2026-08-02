@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url';
 import { createRequire } from 'node:module';
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv, type PluginOption } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { vitePluginForArco } from '@arco-plugins/vite-vue';
 
@@ -24,26 +24,56 @@ try {
 //    与 Arco 内部样式（如 icon-hover 圆形背景定位）不匹配而显示异常。
 //    正确分工：组件内建的功能性图标用 Arco 默认；业务/内容图标从 Pangea 图标包【命名导入】
 //    （`import { IconXxx } from '@arco-iconbox/vue-pangea-mobile'`，不依赖此插件选项）。
-export default defineConfig({
-  plugins: [
+//
+// 部署模式（详见 references/overview/deployment.md）——由 .env / .env.<mode> 驱动，
+// 不用 `VAR=x cmd` 这种 shell 前缀（跨平台不可靠，且 `&&` 后的命令拿不到变量）：
+//   npm run build         默认：hash 路由 + 相对 base + 正常分包
+//   npm run build:embed   嵌入式：hash + 相对 base + 全部内联为单个 HTML（aily / 妙搭 / iframe）
+//   npm run build:history History：需服务端 SPA fallback
+export default defineConfig(({ mode }) => {
+  // 第三个参数传 '' 表示不做前缀过滤，便于读取自定义变量
+  const env = loadEnv(mode, process.cwd(), '');
+  const isEmbed = env.VITE_BUILD_TARGET === 'embed';
+
+  const plugins: PluginOption[] = [
     vue(),
     vitePluginForArco({
       theme: '@arco-themes/vue-pangea-3-linear',
     }),
-  ],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+  ];
+
+  // 嵌入式模式：把 JS/CSS 全部内联进 index.html
+  // 用 require 动态取，保证未安装该插件时（非 embed 构建）不影响其他命令
+  if (isEmbed) {
+    const { viteSingleFile } = require('vite-plugin-singlefile');
+    plugins.push(viteSingleFile());
+  }
+
+  return {
+    base: env.VITE_BASE || './',
+    plugins,
+    resolve: {
+      alias: {
+        '@': fileURLToPath(new URL('./src', import.meta.url)),
+      },
     },
-  },
-  // 未安装图表库时排除预构建，避免 dev 预构建报错
-  optimizeDeps: {
-    exclude: chartInstalled ? [] : [OPTIONAL_CHART],
-  },
-  build: {
-    rollupOptions: {
-      // 未安装时标记为外部依赖，保证「没装图表库也能构建」；装了则正常打包进产物
-      external: chartInstalled ? [] : [OPTIONAL_CHART],
+    // 未安装图表库时排除预构建，避免 dev 预构建报错
+    optimizeDeps: {
+      exclude: chartInstalled ? [] : [OPTIONAL_CHART],
     },
-  },
+    build: {
+      // 嵌入式：CSS 不拆分 + 资源全部内联（base64），彻底去掉外部资源请求
+      ...(isEmbed ? { cssCodeSplit: false, assetsInlineLimit: 100_000_000 } : {}),
+      rollupOptions: {
+        // 未安装时标记为外部依赖，保证「没装图表库也能构建」；装了则正常打包进产物
+        external: chartInstalled ? [] : [OPTIONAL_CHART],
+        output: {
+          // 嵌入式：合并所有动态 import 的 chunk 到单个 bundle。
+          // 这是 iframe / 子路径 / 动态 <base> 环境下白屏的关键修复——
+          // 页面组件可以继续用 () => import(...) 懒加载写法，无需改成静态导入。
+          ...(isEmbed ? { inlineDynamicImports: true } : {}),
+        },
+      },
+    },
+  };
 });

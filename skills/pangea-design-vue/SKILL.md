@@ -1,6 +1,6 @@
 ---
 name: pangea-design-vue
-description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖生成前的需求规格化（把一句话需求或 PRD 转成面向界面架构的需求文档、有限轮澄清；**必须先输出文档并经用户确认后，下一轮才写代码——禁止同一轮既出文档又出工程**）、页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
+description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或需要把生成的 Vue 工程部署 / 嵌入到飞书 aily、妙搭 Miaoda、Coze 等平台（嵌入式单文件构建），或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖生成前的需求规格化（把一句话需求或 PRD 转成面向界面架构的需求文档、有限轮澄清；**必须先输出文档并经用户确认后，下一轮才写代码——禁止同一轮既出文档又出工程**）、页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
 ---
 
 # Pangea Design Vue Skill
@@ -202,6 +202,7 @@ app.mount('#app');
 | 主题 | 文件 | 适用场景 |
 |---|---|---|
 | 需求规格化（生成前第一步） | [requirement-intake.md](references/overview/requirement-intake.md) | **生成代码前**把任意颗粒度输入转成面向界面架构的需求文档：有限轮澄清、问题清单、需求文档模板（模块/菜单/页面结构/交互）、确认闸门 |
+| 部署配置 | [deployment.md](references/overview/deployment.md) | **交付/部署前必读**：默认（Hash + 相对 base）/ 嵌入式单文件（飞书 aily·妙搭·Coze·iframe）/ History（需 SPA fallback）三种模式、**环境识别信号表**（agent 自动选命令，用户不必选）、白屏排错速查、体积权衡 |
 | 工程结构与生成层级 | [project-structure.md](references/overview/project-structure.md) | 项目脚手架、主题包/图标包引用约定、全局 Layout 下的路由页面生成层级、PM demo 与开发交付差异；脚手架样例见 `templates/project-starter/` |
 | 安装 | [getting-started.md](references/overview/getting-started.md) | 安装 `@arco-design/web-vue`、注册 ArcoVue、引入样式、接入 Pangea 主题、配置按需加载 |
 | 全局配置 | [config-provider.md](references/overview/config-provider.md) | 使用 `app.use(ArcoVue, options)` 或 `<a-config-provider>` 配置语言、前缀、尺寸等 |
@@ -354,7 +355,9 @@ app.mount('#app');
 | **每轮修改** | 1. 修改代码<br>2. **跑 `vue-tsc --noEmit` 确认无类型/模板错误**（⚠️ Vite HMR 不做类型检查，不能只看「热更新了、无控制台报错」就当没问题——模板内 TS 注解等错误会让页面空白）<br>3. 有错自动修复直到 `vue-tsc` 通过<br>4. 告知 PM「已更新，刷新浏览器即可」 | 刷新浏览器看效果 |
 | **页面空白 / 编译报错** | 优先跑 `vue-tsc --noEmit` 定位（dev server 无报错也可能已空白）；定位错误、自动修复，**不要把报错信息抛给 PM** | 无需任何操作 |
 | **Dev server 意外停止** | 自动重启 dev server，确认恢复后告知 PM | 无需任何操作 |
-| **会话结束/PM 说"完了"** | 告知 PM 工程位置；可选执行 `npm run build` 确认产物可构建 | 保存工程目录即可 |
+| **会话结束/PM 说"完了"** | 告知 PM 工程位置；按部署目标跑对应构建（默认 `npm run build`；aily / 妙搭 / iframe 等嵌入式环境用 `npm run build:embed` 出**单个 HTML**）并**实测产物能打开**，见 [deployment.md](references/overview/deployment.md) | 保存工程目录即可 |
+
+> **dev 预览与交付构建是两套配置**：`npm run dev` 只管开发体验（HMR、分包快编译）；交付时按部署目标选构建命令（默认 / `build:embed` / `build:history`）。部署模式由 agent 按 [deployment.md](references/overview/deployment.md) 的环境识别信号表自动判断，**不要让用户在模式之间做选择**。
 
 ### 交互话术约定
 

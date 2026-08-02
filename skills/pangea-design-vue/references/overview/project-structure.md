@@ -35,7 +35,11 @@ Vue 3 + Vite + TypeScript + Vue Router + `@arco-design/web-vue` + Pangea 主题�
 npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
 cd my-pangea-app
 npm install
-npm run dev        # 本地预览；npm run build 产出生产包
+npm run dev          # 本地预览
+# 交付构建（按部署目标选一条，详见 deployment.md）：
+# npm run build        默认：Hash + 相对 base，适配任意静态托管/子路径
+# npm run build:embed  嵌入式单文件：飞书 aily / 妙搭 / Coze / iframe
+# npm run build:history History：需服务端 SPA fallback
 ```
 
 **方式二：直接复制** `templates/project-starter/` 目录，再 `npm install && npm run dev`。
@@ -43,6 +47,8 @@ npm run dev        # 本地预览；npm run build 产出生产包
 起项目后，**新增页面 = 两步**（见下方「生成层级约定」）：新建 `src/pages/<PageName>/index.vue` + 在路由 `children` 追加子路由。PM demo 用 mock 数据；开发交付把 mock 换成接口请求，结构与路由不变。
 
 > 脚手架已实测：`npm install`（含 `less`）→ `vue-tsc` 类型检查 → `vite build` 均通过，产物 CSS 含 Pangea 青绿主题变量（`--primary-6: 0, 170, 166`）。
+>
+> 三种部署构建也已实测：**默认**（Hash + 相对 base）放到静态服务器**子路径** `/page/<token>/` 下 5 个路由正常渲染；**`build:embed`** 产出单个 `dist/index.html`（约 1.2MB，无任何外部 JS/CSS 引用），直接 `file://` 打开 5 个路由全部正常；**`build:history`** 产出绝对路径资源（需服务端 fallback）。详见 [deployment.md](deployment.md)。
 
 ## 依赖与引用约定
 
@@ -145,6 +151,8 @@ project/
     │   └── index.ts          # 路由：全局 Layout + 子路由页面
     ├── config/
     │   └── app.ts            # APP_NAME：系统名称单一来源（Header 品牌名 + 浏览器 title）
+    │
+    │   （工程根目录还有部署配置：.env 默认 / .env.embed 嵌入式单文件 / .env.history）
     ├── layouts/
     │   ├── GlobalLayout.vue   # 全局 Layout（标准版：header + sidebar + content）
     │   └── layout-menu.less   # 侧边栏菜单自定义样式（覆盖 Arco Menu 默认）
@@ -161,6 +169,7 @@ project/
 - **全局 Layout 已标准化实现**（基于 Figma「Pangea Design PC Templates / 菜单-展开」）。结构：顶部 Header（48px）+ 左侧可折叠侧边栏（200px）+ 右侧内容区（左上圆角 8px）。**不要重写/替换全局 Layout**（除非明确被要求）。
 - **混合菜单结构**：顶部 Header 中间是**横向模块菜单**（一个模块 = 一块业务域），左侧侧边栏是**当前模块下的多级菜单**，切换顶部模块 → 左侧菜单随之切换。数据模型 = `GlobalLayout.vue` 的 `modules` ref：`{ key, title, menu: MenuItem[] }[]`，每个模块有独立菜单。
 - **单模块 vs 多模块（按场景判断）**：系统层级简单时把 `modules` 配成**只 1 个** → **自动隐藏顶部模块菜单**，左侧直接展示该模块菜单，且 **Sidebar 左上角模块名整块隐藏**（单模块下它与 Header 的系统名重复）；层级复杂需按业务域分区时配**多个** `modules` → 顶部显示模块菜单、Sidebar 头显示「当前模块」名。当前模块由当前路由所属菜单自动推导。
+- **路由与部署模式**：默认 **Hash 路由 + 相对 base `./`**（产物可丢到任意静态托管的任意子路径，**不需要服务端 SPA fallback**）。另有 `npm run build:embed`（嵌入式单文件，用于飞书 aily / 妙搭 / Coze / iframe）与 `npm run build:history`（干净 URL，**需服务端 fallback**）。配置由根目录 `.env` / `.env.embed` / `.env.history` 驱动（Vite `--mode`），路由读 `VITE_ROUTER_MODE`；**页面组件保持 `() => import(...)` 懒加载即可**，嵌入式构建会用 `inlineDynamicImports` 合并 chunk。详见 [deployment.md](deployment.md)。
 - **系统名称单一来源 `src/config/app.ts` 的 `APP_NAME`**：Header 品牌名与**浏览器标签页 title** 都取它（`main.ts` 里 `document.title = APP_NAME`，并用 `router.afterEach` 随路由 `meta.title` 显示「页面名 · 系统名」）。**生成工程时替换 `APP_NAME`（以及 `index.html` 的首屏占位 `<title>`）为实际产品名**，不要在别处硬编码系统名。
 - **页面背景由页面自己设置**：内容区默认**透明**，漏出 body 层灰底（`--color-fill-2`）。常规内容页（列表/表单/详情）在页面根设白底 `background: var(--color-bg-1)`（内容区左上圆角会自动把白底裁成圆角，复现「白面板浮在灰底」）；仪表板/工作台类聚合页保持透明、用白底无边框卡片区隔区块。详见 SKILL.md「页面背景（全局准则）」。
 - 侧边栏与顶部模块菜单都用 Arco `<a-menu>` + 自定义样式覆盖（`src/layouts/layout-menu.less`）：侧边选中态为白背景 + `primary-7` + medium；顶部模块选中态为 `primary-6` 文字。

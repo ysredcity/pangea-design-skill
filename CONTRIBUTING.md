@@ -112,6 +112,22 @@ pangea-design-skill/
 
 ---
 
+## 五-b、打包上传平台（飞书 aily / 妙搭 等）
+
+skill 需要以 zip 形式上传智能体平台时，用：
+
+```sh
+./scripts/pack-skill.sh            # 版本号自动取 CHANGELOG.md 最新已发布版本
+./scripts/pack-skill.sh 1.2.1      # 或手动指定
+```
+
+- 产物：`releases/pangea-design-vue_<版本>.zip`，包内根目录为 `pangea-design-vue/`，可直接上传。
+- `releases/` 已 gitignore（本地打包产物，不入库）。
+- ⚠️ **脚本打的是「工作区当前状态」，不是 `git HEAD`**：新增但未提交的文件（新 references 文档、`.env` 等）也会进包。若用 `git archive HEAD` 会静默漏掉这些文件、打出旧内容。脚本用 `git ls-files --cached --others --exclude-standard`，自动遵守 `.gitignore`（`node_modules`/`dist`/`.DS_Store`/`_tests` 均被排除）。
+- 脚本自带自检：必需文件（SKILL.md、各 overview 文档、catalog.json、脚手架关键文件）齐全 + 无构建产物，任一不满足**退出码非 0**。
+
+---
+
 ## 六、版本与事实源速查
 
 | 事项 | 事实源 |

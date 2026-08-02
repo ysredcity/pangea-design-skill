@@ -36,6 +36,8 @@ user-invocable: false
 - 运行 `npm run gate`（含 `vue-tsc --noEmit` 类型检查 + `vite build` 构建 + 裸值机检），均无报错。
 - 常见坑：表格插槽 `record` 为 `any`，用强类型索引映射会触发 TS7053 → 改用接受 `string` 的 helper 查表（见 [table-patterns.md](../patterns/table-patterns.md)）。
 
+- **若交付物需要部署**：按目标模式跑对应构建（默认 `npm run build`；飞书 aily / 妙搭 / Coze / iframe 等嵌入式环境用 `npm run build:embed`；History 用 `build:history`），并**实测产物能渲染**——嵌入式直接用浏览器打开 `dist/index.html`（`file://`）逐路由点一遍，默认模式放到静态服务器**子路径**下访问。「构建成功」≠「部署后能打开」（实测曾出现构建通过但部署白屏）。详见 [deployment.md](deployment.md)。
+
 > ⚠️ **硬性执行顺序（务必遵守）**：**先跑通 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，再启动或依赖 dev server 判断结果。** Vite dev server **默认不做类型检查**——模板里的非法语法（如下方 G9 的模板内 TS 注解）不会阻止 dev server 启动，却会让组件在运行时编译失败、`router-view` 渲染成**空白页**。因此：**不能只凭「dev server 起来了、无控制台报错」就认为页面正常**；生成/修改页面后、告知用户预览前，必须先过一遍 `vue-tsc`。（PM Demo 模式下 dev server 可长驻预览，但每轮改完仍要跑 `vue-tsc` 确认，再告知 PM 刷新。）
 
 ## G2 · Token 规范
@@ -128,4 +130,4 @@ user-invocable: false
 
 ## 交付前速查（一句话版）
 
-需求文档已确认才动手（G0）· 编译过 + **先类型检查再依赖 dev server**（G1）· 颜色圆角走变量、间距字号落档（G2）· Arco 组件 + 图标分工对（G3）· 响应式收敛不溢出（G4）· 背景由页面设、仪表板用无边框白卡（G5）· 空/载/错/禁四态 + 校验不重复 + 分页联动（G6）· 图标按钮有可访问名、不只靠颜色（G7）· 页面是 Layout 子路由 + 菜单已加（G8）· 模板无 TS 注解 / 派生用 computed / 模板无 async（G9）。
+需求文档已确认才动手（G0）· 编译过 + **先类型检查再依赖 dev server** + 需部署时按目标模式构建并实测产物（G1）· 颜色圆角走变量、间距字号落档（G2）· Arco 组件 + 图标分工对（G3）· 响应式收敛不溢出（G4）· 背景由页面设、仪表板用无边框白卡（G5）· 空/载/错/禁四态 + 校验不重复 + 分页联动（G6）· 图标按钮有可访问名、不只靠颜色（G7）· 页面是 Layout 子路由 + 菜单已加（G8）· 模板无 TS 注解 / 派生用 computed / 模板无 async（G9）。

@@ -26,3 +26,6 @@ pnpm-debug.log*
 
 # Local skill effect-tests (test cases + generated prototypes) — never upload
 _tests/
+
+# 本地打包产物（上传平台用的 skill zip）——不入库
+releases/

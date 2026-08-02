@@ -23,6 +23,34 @@
 
 ---
 
+## [1.2.0] - 2026-08-02
+
+> 把**部署配置纳入 skill 一等公民**：默认改 Hash + 相对 base（静态托管/子路径开箱可用），新增嵌入式单文件构建（飞书 aily / 妙搭 / Coze / iframe），并由 agent 按环境自动选择——用户不需要在部署模式之间做选择。
+
+### Added
+- **部署指南 [`references/overview/deployment.md`](skills/pangea-design-vue/references/overview/deployment.md)**：三模式对照表、**环境识别信号表**（宿主是飞书 aily 时，其开发类任务由妙搭执行 ⇒ 产物落在静态托管 + `/page/<token>/` 子路径 + iframe ⇒ 判定嵌入式）、三层白屏根因与消除方式、体积权衡、白屏排错速查。
+- **嵌入式单文件构建 `npm run build:embed`**：`vite-plugin-singlefile`（固定 2.3.3）+ `cssCodeSplit: false` + `assetsInlineLimit` + `rollupOptions.output.inlineDynamicImports`，产出**单个 `dist/index.html`**（约 1.2MB / gzip ≈ 320KB，无任何外部 JS/CSS 引用）。**页面组件无需改写**——继续用 `() => import(...)` 懒加载即可。
+- **构建脚本**：`build:embed`、`build:history`、`gate:embed`；部署配置由 `.env` / `.env.embed` / `.env.history` 驱动（Vite `--mode`，跨平台，避免 `VAR=x cmd` 在 Windows 失效、以及变量只作用于 `&&` 前半句的坑）。
+- 需求文档「全局约定」新增 **`部署目标`** 字段（agent 按信号表自动填，**不额外占用澄清轮次**）。
+- 新增测试场景 `_tests/cases/S4-embed-deploy.md`（嵌入式部署产物可打开性，防白屏回归）。
+
+### Changed
+- **⚠️ 默认路由模式由 History 改为 Hash，并显式设 `base: './'`**（脚手架行为变化）：产物可直接部署到任意静态托管的**任意子路径**，**不再需要服务端 SPA fallback**，消除"部署后刷新/深链接白屏"这类最常见故障。需要干净 URL 的团队用 `npm run build:history`（须自行配置 fallback）。
+- 质量门禁 **G1 增加交付项**：需部署时按目标模式构建，并**实测产物能渲染**（嵌入式 `file://` 打开逐路由点；默认模式放到静态服务器子路径访问）——「构建成功」≠「部署后能打开」。
+- `SKILL.md`：索引新增 deployment.md；PM Demo 补「dev 预览与交付构建是两套配置」且**部署模式由 agent 自动判断、不让用户选**；frontmatter 补 aily / 妙搭 / Coze 嵌入式关键词。
+- `project-structure.md` 同步：默认 Hash + 相对 base 说明、`.env*` 部署配置、三种构建命令与实测结论。
+
+### Fixed
+- **嵌入式平台（妙搭）部署后白屏**：三层根因——① History 缺服务端 fallback；② `base: '/'` 在 `/page/<token>/` 子路径下资源 404（平台还会注入动态 `<base>`）；③ 路由懒加载 chunk 在「iframe + 动态 base + 子路径」下路径解析失败（**最关键**，前两层修好后仍白屏）。`build:embed` 三层一次性消除。
+
+### Verified
+- 默认构建：部署到静态服务器子路径 `/page/token123/`，5 个路由（含 Hash 子路由）全部正常渲染，无资源 404。
+- `build:embed`：产物仅 `dist/index.html`、零外部引用；**直接 `file://` 打开，5 个路由全部正常渲染、无运行时报错**（复现"无服务端 + 无正确 base"的最严苛环境）。
+- `build:history`：产出绝对路径资源，构建通过（需服务端 fallback）。
+- 脚手架 `npm install` → `npm run gate` → `npm run dev` 全通过，`package-lock.json` 已更新。
+
+---
+
 ## [1.1.2] - 2026-07-23
 
 > 按实测反馈修正生成流程：需求文档确认改为**两阶段硬门**、需求文档对齐页面模板基准；系统名称单一来源 + 浏览器标题；单模块下去掉重复的模块名。

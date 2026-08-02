@@ -6,9 +6,12 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc --noEmit && vite build",
+    "build:embed": "vue-tsc --noEmit && vite build --mode embed",
+    "build:history": "vue-tsc --noEmit && vite build --mode history",
     "preview": "vite preview",
     "check:tokens": "node scripts/check-tokens.mjs",
-    "gate": "node scripts/check-tokens.mjs && vue-tsc --noEmit && vite build"
+    "gate": "node scripts/check-tokens.mjs && vue-tsc --noEmit && vite build",
+    "gate:embed": "node scripts/check-tokens.mjs && vue-tsc --noEmit && vite build --mode embed"
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.57.0",
@@ -23,6 +26,7 @@
     "less": "^4.2.0",
     "typescript": "^5.4.0",
     "vite": "^5.2.0",
+    "vite-plugin-singlefile": "2.3.3",
     "vue-tsc": "^2.0.0"
   }
 }

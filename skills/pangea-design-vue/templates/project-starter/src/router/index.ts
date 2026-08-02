@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import {
+  createRouter,
+  createWebHashHistory,
+  createWebHistory,
+  type RouteRecordRaw,
+} from 'vue-router';
 
 // ⚑ 生成层级约定（重要）
 // 全局 Layout 是稳定骨架（基于 Pangea 设计稿标准化实现）。所有「具体页面」都作为
@@ -49,8 +54,15 @@ const routes: RouteRecordRaw[] = [
   },
 ];
 
+// 路由模式由构建配置决定（.env / .env.<mode>，见 references/overview/deployment.md）：
+// - 默认 hash：不需要服务端 SPA fallback，任意静态托管 / 子路径 / iframe 都能直接跑
+// - history：URL 无 #，但**要求服务端把未匹配路由回退到 index.html**（npm run build:history）
+// 注意：页面组件保持 () => import(...) 懒加载即可——嵌入式单文件构建会用
+// inlineDynamicImports 把所有 chunk 合并进单文件，不存在 chunk 路径解析问题。
+const useHistory = import.meta.env.VITE_ROUTER_MODE === 'history';
+
 const router = createRouter({
-  history: createWebHistory(),
+  history: useHistory ? createWebHistory() : createWebHashHistory(),
   routes,
 });
 
