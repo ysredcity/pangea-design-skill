@@ -1,0 +1,2133 @@
+{
+  "$meta": {
+    "generatedBy": "scripts/build-icon-catalog.mjs",
+    "iconPackage": "@arco-iconbox/vue-pangea-mobile",
+    "categorySource": "Figma · Pangea Icons Library",
+    "totalExports": 517,
+    "totalListed": 517
+  },
+  "categories": [
+    {
+      "key": "general",
+      "title": "通用",
+      "icons": [
+        {
+          "name": "column-setting",
+          "component": "IconColumnSetting"
+        },
+        {
+          "name": "transaction",
+          "component": "IconTransaction"
+        },
+        {
+          "name": "trademark",
+          "component": "IconTrademark"
+        },
+        {
+          "name": "select",
+          "component": "IconSelect"
+        },
+        {
+          "name": "pull-request",
+          "component": "IconPullRequest"
+        },
+        {
+          "name": "pound",
+          "component": "IconPound"
+        },
+        {
+          "name": "percentage",
+          "component": "IconPercentage"
+        },
+        {
+          "name": "monitor",
+          "component": "IconMonitor"
+        },
+        {
+          "name": "key",
+          "component": "IconKey"
+        },
+        {
+          "name": "gold",
+          "component": "IconGold"
+        },
+        {
+          "name": "gateway",
+          "component": "IconGateway"
+        },
+        {
+          "name": "euro",
+          "component": "IconEuro"
+        },
+        {
+          "name": "dollar",
+          "component": "IconDollar"
+        },
+        {
+          "name": "deployment-unit",
+          "component": "IconDeploymentUnit"
+        },
+        {
+          "name": "coffee",
+          "component": "IconCoffee"
+        },
+        {
+          "name": "cluster",
+          "component": "IconCluster"
+        },
+        {
+          "name": "ci",
+          "component": "IconCi"
+        },
+        {
+          "name": "barcode",
+          "component": "IconBarcode"
+        },
+        {
+          "name": "usb",
+          "component": "IconUsb"
+        },
+        {
+          "name": "switcher",
+          "component": "IconSwitcher"
+        },
+        {
+          "name": "shop",
+          "component": "IconShop"
+        },
+        {
+          "name": "rocket",
+          "component": "IconRocket"
+        },
+        {
+          "name": "rest",
+          "component": "IconRest"
+        },
+        {
+          "name": "reconciliation",
+          "component": "IconReconciliation"
+        },
+        {
+          "name": "money-collect",
+          "component": "IconMoneyCollect"
+        },
+        {
+          "name": "medicine-box",
+          "component": "IconMedicineBox"
+        },
+        {
+          "name": "hourglass",
+          "component": "IconHourglass"
+        },
+        {
+          "name": "flag",
+          "component": "IconFlag"
+        },
+        {
+          "name": "crown",
+          "component": "IconCrown"
+        },
+        {
+          "name": "contacts",
+          "component": "IconContacts"
+        },
+        {
+          "name": "carry-out",
+          "component": "IconCarryOut"
+        },
+        {
+          "name": "car",
+          "component": "IconCar"
+        },
+        {
+          "name": "build",
+          "component": "IconBuild"
+        },
+        {
+          "name": "red-envelope",
+          "component": "IconRedEnvelope"
+        },
+        {
+          "name": "folder-open",
+          "component": "IconFolderOpen"
+        },
+        {
+          "name": "shopping",
+          "component": "IconShopping"
+        },
+        {
+          "name": "border",
+          "component": "IconBorder"
+        },
+        {
+          "name": "project",
+          "component": "IconProject"
+        },
+        {
+          "name": "control",
+          "component": "IconControl"
+        },
+        {
+          "name": "calculator",
+          "component": "IconCalculator"
+        },
+        {
+          "name": "inbox",
+          "component": "IconInbox"
+        },
+        {
+          "name": "security-scan",
+          "component": "IconSecurityScan"
+        },
+        {
+          "name": "property-safety",
+          "component": "IconPropertySafety"
+        },
+        {
+          "name": "insurance",
+          "component": "IconInsurance"
+        },
+        {
+          "name": "block",
+          "component": "IconBlock"
+        },
+        {
+          "name": "number",
+          "component": "IconNumber"
+        },
+        {
+          "name": "table",
+          "component": "IconTable"
+        },
+        {
+          "name": "shopping-cart",
+          "component": "IconShoppingCart"
+        },
+        {
+          "name": "solution",
+          "component": "IconSolution"
+        },
+        {
+          "name": "audit",
+          "component": "IconAudit"
+        },
+        {
+          "name": "container",
+          "component": "IconContainer"
+        },
+        {
+          "name": "wallet",
+          "component": "IconWallet"
+        },
+        {
+          "name": "credit-card",
+          "component": "IconCreditCard"
+        },
+        {
+          "name": "laptop",
+          "component": "IconLaptop"
+        },
+        {
+          "name": "file-sync",
+          "component": "IconFileSync"
+        },
+        {
+          "name": "file-protect",
+          "component": "IconFileProtect"
+        },
+        {
+          "name": "file-done",
+          "component": "IconFileDone"
+        },
+        {
+          "name": "exception",
+          "component": "IconException"
+        },
+        {
+          "name": "cloud-server",
+          "component": "IconCloudServer"
+        },
+        {
+          "name": "account-book",
+          "component": "IconAccountBook"
+        },
+        {
+          "name": "file-search",
+          "component": "IconFileSearch"
+        },
+        {
+          "name": "apartment",
+          "component": "IconApartment"
+        },
+        {
+          "name": "alert",
+          "component": "IconAlert"
+        },
+        {
+          "name": "explore",
+          "component": "IconExplore"
+        },
+        {
+          "name": "bank",
+          "component": "IconBank"
+        },
+        {
+          "name": "heat-map",
+          "component": "IconHeatMap"
+        },
+        {
+          "name": "english-fill",
+          "component": "IconEnglishFill"
+        },
+        {
+          "name": "fund",
+          "component": "IconFund"
+        },
+        {
+          "name": "chinese-fill",
+          "component": "IconChineseFill"
+        },
+        {
+          "name": "box-plot",
+          "component": "IconBoxPlot"
+        },
+        {
+          "name": "face-smile-fill",
+          "component": "IconFaceSmileFill"
+        },
+        {
+          "name": "radar-chart",
+          "component": "IconRadarChart"
+        },
+        {
+          "name": "face-meh-fill",
+          "component": "IconFaceMehFill"
+        },
+        {
+          "name": "line-chart",
+          "component": "IconLineChart"
+        },
+        {
+          "name": "face-frown-fill",
+          "component": "IconFaceFrownFill"
+        },
+        {
+          "name": "dot-chart",
+          "component": "IconDotChart"
+        },
+        {
+          "name": "bar-chart",
+          "component": "IconBarChart"
+        },
+        {
+          "name": "area-chart",
+          "component": "IconAreaChart"
+        },
+        {
+          "name": "bookmark",
+          "component": "IconBookmark"
+        },
+        {
+          "name": "dash",
+          "component": "IconDash"
+        },
+        {
+          "name": "calendar-clock",
+          "component": "IconCalendarClock"
+        },
+        {
+          "name": "computer",
+          "component": "IconComputer"
+        },
+        {
+          "name": "layers",
+          "component": "IconLayers"
+        },
+        {
+          "name": "relation",
+          "component": "IconRelation"
+        },
+        {
+          "name": "palette",
+          "component": "IconPalette"
+        },
+        {
+          "name": "snippets",
+          "component": "IconSnippets"
+        },
+        {
+          "name": "language",
+          "component": "IconLanguage"
+        },
+        {
+          "name": "diff",
+          "component": "IconDiff"
+        },
+        {
+          "name": "archive",
+          "component": "IconArchive"
+        },
+        {
+          "name": "form",
+          "component": "IconForm"
+        },
+        {
+          "name": "old-version",
+          "component": "IconOldVersion"
+        },
+        {
+          "name": "issues-close",
+          "component": "IconIssuesClose"
+        },
+        {
+          "name": "dice",
+          "component": "IconDice"
+        },
+        {
+          "name": "moon-fill",
+          "component": "IconMoonFill"
+        },
+        {
+          "name": "moon",
+          "component": "IconMoon"
+        },
+        {
+          "name": "sun-fill",
+          "component": "IconSunFill"
+        },
+        {
+          "name": "sun",
+          "component": "IconSun"
+        },
+        {
+          "name": "wifi",
+          "component": "IconWifi"
+        },
+        {
+          "name": "branch",
+          "component": "IconBranch"
+        },
+        {
+          "name": "loading",
+          "component": "IconLoading"
+        },
+        {
+          "name": "location",
+          "component": "IconLocation"
+        },
+        {
+          "name": "schedule",
+          "component": "IconSchedule"
+        },
+        {
+          "name": "unlock",
+          "component": "IconUnlock"
+        },
+        {
+          "name": "email",
+          "component": "IconEmail"
+        },
+        {
+          "name": "user-group",
+          "component": "IconUserGroup"
+        },
+        {
+          "name": "dashboard",
+          "component": "IconDashboard"
+        },
+        {
+          "name": "compass",
+          "component": "IconCompass"
+        },
+        {
+          "name": "command",
+          "component": "IconCommand"
+        },
+        {
+          "name": "cloud",
+          "component": "IconCloud"
+        },
+        {
+          "name": "camera",
+          "component": "IconCamera"
+        },
+        {
+          "name": "calendar",
+          "component": "IconCalendar"
+        },
+        {
+          "name": "bulb",
+          "component": "IconBulb"
+        },
+        {
+          "name": "user-add",
+          "component": "IconUserAdd"
+        },
+        {
+          "name": "trophy",
+          "component": "IconTrophy"
+        },
+        {
+          "name": "tool",
+          "component": "IconTool"
+        },
+        {
+          "name": "thunderbolt",
+          "component": "IconThunderbolt"
+        },
+        {
+          "name": "common",
+          "component": "IconCommon"
+        },
+        {
+          "name": "upload-default",
+          "component": "IconUploadDefault"
+        },
+        {
+          "name": "subscribed",
+          "component": "IconSubscribed"
+        },
+        {
+          "name": "upload-image",
+          "component": "IconUploadImage"
+        },
+        {
+          "name": "subscribe",
+          "component": "IconSubscribe"
+        },
+        {
+          "name": "upload-zip",
+          "component": "IconUploadZip"
+        },
+        {
+          "name": "subscribe-add",
+          "component": "IconSubscribeAdd"
+        },
+        {
+          "name": "upload-pdf",
+          "component": "IconUploadPdf"
+        },
+        {
+          "name": "storage",
+          "component": "IconStorage"
+        },
+        {
+          "name": "upload-excel",
+          "component": "IconUploadExcel"
+        },
+        {
+          "name": "stamp",
+          "component": "IconStamp"
+        },
+        {
+          "name": "upload-word",
+          "component": "IconUploadWord"
+        },
+        {
+          "name": "skin",
+          "component": "IconSkin"
+        },
+        {
+          "name": "upload-ppt",
+          "component": "IconUploadPpt"
+        },
+        {
+          "name": "drive-file",
+          "component": "IconDriveFile"
+        },
+        {
+          "name": "drag-dot",
+          "component": "IconDragDot"
+        },
+        {
+          "name": "upload-markdown",
+          "component": "IconUploadMarkdown"
+        },
+        {
+          "name": "upload-txt",
+          "component": "IconUploadTxt"
+        },
+        {
+          "name": "drag-dot-vertical",
+          "component": "IconDragDotVertical"
+        },
+        {
+          "name": "desktop",
+          "component": "IconDesktop"
+        },
+        {
+          "name": "copyright",
+          "component": "IconCopyright"
+        },
+        {
+          "name": "woman",
+          "component": "IconWoman"
+        },
+        {
+          "name": "video-camera",
+          "component": "IconVideoCamera"
+        },
+        {
+          "name": "experiment",
+          "component": "IconExperiment"
+        },
+        {
+          "name": "ear",
+          "component": "IconEar"
+        },
+        {
+          "name": "empty",
+          "component": "IconEmpty"
+        },
+        {
+          "name": "var",
+          "component": "IconVar"
+        },
+        {
+          "name": "user",
+          "component": "IconUser"
+        },
+        {
+          "name": "api",
+          "component": "IconApi"
+        },
+        {
+          "name": "tags",
+          "component": "IconTags"
+        },
+        {
+          "name": "js",
+          "component": "IconJs"
+        },
+        {
+          "name": "tag",
+          "component": "IconTag"
+        },
+        {
+          "name": "jira",
+          "component": "IconJira"
+        },
+        {
+          "name": "shake",
+          "component": "IconShake"
+        },
+        {
+          "name": "global",
+          "component": "IconGlobal"
+        },
+        {
+          "name": "bug",
+          "component": "IconBug"
+        },
+        {
+          "name": "pie-chart",
+          "component": "IconPieChart"
+        },
+        {
+          "name": "book",
+          "component": "IconBook"
+        },
+        {
+          "name": "general",
+          "component": "IconGeneral"
+        },
+        {
+          "name": "file",
+          "component": "IconFile"
+        },
+        {
+          "name": "subordinates",
+          "component": "IconSubordinates"
+        },
+        {
+          "name": "file-video",
+          "component": "IconFileVideo"
+        },
+        {
+          "name": "reference",
+          "component": "IconReference"
+        },
+        {
+          "name": "file-image",
+          "component": "IconFileImage"
+        },
+        {
+          "name": "hierarchy",
+          "component": "IconHierarchy"
+        },
+        {
+          "name": "file-pdf",
+          "component": "IconFilePdf"
+        },
+        {
+          "name": "flow",
+          "component": "IconFlow"
+        },
+        {
+          "name": "file-audio",
+          "component": "IconFileAudio"
+        },
+        {
+          "name": "mosaic",
+          "component": "IconMosaic"
+        },
+        {
+          "name": "puzzle",
+          "component": "IconPuzzle"
+        },
+        {
+          "name": "safe",
+          "component": "IconSafe"
+        },
+        {
+          "name": "robot",
+          "component": "IconRobot"
+        },
+        {
+          "name": "mobile",
+          "component": "IconMobile"
+        },
+        {
+          "name": "apps",
+          "component": "IconApps"
+        },
+        {
+          "name": "gift",
+          "component": "IconGift"
+        },
+        {
+          "name": "folder",
+          "component": "IconFolder"
+        },
+        {
+          "name": "folder-delete",
+          "component": "IconFolderDelete"
+        },
+        {
+          "name": "folder-add",
+          "component": "IconFolderAdd"
+        },
+        {
+          "name": "fire",
+          "component": "IconFire"
+        },
+        {
+          "name": "mind-mapping",
+          "component": "IconMindMapping"
+        },
+        {
+          "name": "menu",
+          "component": "IconMenu"
+        },
+        {
+          "name": "man",
+          "component": "IconMan"
+        },
+        {
+          "name": "loop",
+          "component": "IconLoop"
+        },
+        {
+          "name": "lock",
+          "component": "IconLock"
+        },
+        {
+          "name": "layout",
+          "component": "IconLayout"
+        },
+        {
+          "name": "interaction",
+          "component": "IconInteraction"
+        },
+        {
+          "name": "image",
+          "component": "IconImage"
+        },
+        {
+          "name": "image-close",
+          "component": "IconImageClose"
+        },
+        {
+          "name": "idcard",
+          "component": "IconIdcard"
+        },
+        {
+          "name": "robot-add",
+          "component": "IconRobotAdd"
+        },
+        {
+          "name": "qrcode",
+          "component": "IconQrcode"
+        },
+        {
+          "name": "pushpin",
+          "component": "IconPushpin"
+        },
+        {
+          "name": "public",
+          "component": "IconPublic"
+        },
+        {
+          "name": "printer",
+          "component": "IconPrinter"
+        },
+        {
+          "name": "phone",
+          "component": "IconPhone"
+        },
+        {
+          "name": "pen-fill",
+          "component": "IconPenFill"
+        },
+        {
+          "name": "pen",
+          "component": "IconPen"
+        },
+        {
+          "name": "notification",
+          "component": "IconNotification"
+        },
+        {
+          "name": "notification-close",
+          "component": "IconNotificationClose"
+        },
+        {
+          "name": "nav",
+          "component": "IconNav"
+        }
+      ]
+    },
+    {
+      "key": "edit",
+      "title": "编辑",
+      "icons": [
+        {
+          "name": "bg-colors",
+          "component": "IconBgColors"
+        },
+        {
+          "name": "h1",
+          "component": "IconH1"
+        },
+        {
+          "name": "h2",
+          "component": "IconH2"
+        },
+        {
+          "name": "h3",
+          "component": "IconH3"
+        },
+        {
+          "name": "h4",
+          "component": "IconH4"
+        },
+        {
+          "name": "h5",
+          "component": "IconH5"
+        },
+        {
+          "name": "h6",
+          "component": "IconH6"
+        },
+        {
+          "name": "h7",
+          "component": "IconH7"
+        },
+        {
+          "name": "find-replace",
+          "component": "IconFindReplace"
+        },
+        {
+          "name": "filter",
+          "component": "IconFilter"
+        },
+        {
+          "name": "edit",
+          "component": "IconEdit"
+        },
+        {
+          "name": "eraser",
+          "component": "IconEraser"
+        },
+        {
+          "name": "bold",
+          "component": "IconBold"
+        },
+        {
+          "name": "ordered-list",
+          "component": "IconOrderedList"
+        },
+        {
+          "name": "unordered-list",
+          "component": "IconUnorderedList"
+        },
+        {
+          "name": "font-colors",
+          "component": "IconFontColors"
+        },
+        {
+          "name": "formula",
+          "component": "IconFormula"
+        },
+        {
+          "name": "strikethrough",
+          "component": "IconStrikethrough"
+        },
+        {
+          "name": "original-size",
+          "component": "IconOriginalSize"
+        },
+        {
+          "name": "brush",
+          "component": "IconBrush"
+        },
+        {
+          "name": "align-center",
+          "component": "IconAlignCenter"
+        },
+        {
+          "name": "align-left",
+          "component": "IconAlignLeft"
+        },
+        {
+          "name": "align-right",
+          "component": "IconAlignRight"
+        },
+        {
+          "name": "highlight",
+          "component": "IconHighlight"
+        },
+        {
+          "name": "italic",
+          "component": "IconItalic"
+        },
+        {
+          "name": "line-height",
+          "component": "IconLineHeight"
+        },
+        {
+          "name": "copy",
+          "component": "IconCopy"
+        },
+        {
+          "name": "delete",
+          "component": "IconDelete"
+        },
+        {
+          "name": "sort-ascending",
+          "component": "IconSortAscending"
+        },
+        {
+          "name": "sort-descending",
+          "component": "IconSortDescending"
+        },
+        {
+          "name": "oblique-line",
+          "component": "IconObliqueLine"
+        },
+        {
+          "name": "paste",
+          "component": "IconPaste"
+        },
+        {
+          "name": "quote",
+          "component": "IconQuote"
+        },
+        {
+          "name": "redo",
+          "component": "IconRedo"
+        },
+        {
+          "name": "undo",
+          "component": "IconUndo"
+        },
+        {
+          "name": "scissor",
+          "component": "IconScissor"
+        },
+        {
+          "name": "zoom-in",
+          "component": "IconZoomIn"
+        },
+        {
+          "name": "zoom-out",
+          "component": "IconZoomOut"
+        },
+        {
+          "name": "sort",
+          "component": "IconSort"
+        },
+        {
+          "name": "underline",
+          "component": "IconUnderline"
+        },
+        {
+          "name": "link",
+          "component": "IconLink"
+        },
+        {
+          "name": "circular",
+          "component": "IconCircular"
+        },
+        {
+          "name": "attachment",
+          "component": "IconAttachment"
+        },
+        {
+          "name": "display-inline-block",
+          "component": "IconDisplayInlineBlock"
+        },
+        {
+          "name": "display-inline",
+          "component": "IconDisplayInline"
+        },
+        {
+          "name": "display-flex",
+          "component": "IconDisplayFlex"
+        },
+        {
+          "name": "display-block",
+          "component": "IconDisplayBlock"
+        },
+        {
+          "name": "justify-space-between-row",
+          "component": "IconJustifySpaceBetweenRow"
+        },
+        {
+          "name": "justify-space-between-column",
+          "component": "IconJustifySpaceBetweenColumn"
+        },
+        {
+          "name": "justify-space-around-row",
+          "component": "IconJustifySpaceAroundRow"
+        },
+        {
+          "name": "justify-space-around-column",
+          "component": "IconJustifySpaceAroundColumn"
+        },
+        {
+          "name": "justify-flex-start-row",
+          "component": "IconJustifyFlexStartRow"
+        },
+        {
+          "name": "justify-flex-start-column",
+          "component": "IconJustifyFlexStartColumn"
+        },
+        {
+          "name": "justify-flex-end-row",
+          "component": "IconJustifyFlexEndRow"
+        },
+        {
+          "name": "justify-flex-end-column",
+          "component": "IconJustifyFlexEndColumn"
+        },
+        {
+          "name": "justify-center-row",
+          "component": "IconJustifyCenterRow"
+        },
+        {
+          "name": "justify-center-column",
+          "component": "IconJustifyCenterColumn"
+        },
+        {
+          "name": "direction-row-reverse",
+          "component": "IconDirectionRowReverse"
+        },
+        {
+          "name": "direction-row",
+          "component": "IconDirectionRow"
+        },
+        {
+          "name": "direction-column-reverse",
+          "component": "IconDirectionColumnReverse"
+        },
+        {
+          "name": "direction-column",
+          "component": "IconDirectionColumn"
+        },
+        {
+          "name": "align-stretch-row",
+          "component": "IconAlignStretchRow"
+        },
+        {
+          "name": "align-stretch-column",
+          "component": "IconAlignStretchColumn"
+        },
+        {
+          "name": "align-flex-start-row",
+          "component": "IconAlignFlexStartRow"
+        },
+        {
+          "name": "align-flex-start-column",
+          "component": "IconAlignFlexStartColumn"
+        },
+        {
+          "name": "align-flex-end-row",
+          "component": "IconAlignFlexEndRow"
+        },
+        {
+          "name": "align-flex-end-column",
+          "component": "IconAlignFlexEndColumn"
+        },
+        {
+          "name": "align-center-row",
+          "component": "IconAlignCenterRow"
+        },
+        {
+          "name": "align-center-column",
+          "component": "IconAlignCenterColumn"
+        },
+        {
+          "name": "align-baseline-row",
+          "component": "IconAlignBaselineRow"
+        },
+        {
+          "name": "align-baseline-column",
+          "component": "IconAlignBaselineColumn"
+        },
+        {
+          "name": "card-view",
+          "component": "IconCardView"
+        },
+        {
+          "name": "border-bottom",
+          "component": "IconBorderBottom"
+        },
+        {
+          "name": "border-horizontal",
+          "component": "IconBorderHorizontal"
+        },
+        {
+          "name": "border-outer",
+          "component": "IconBorderOuter"
+        },
+        {
+          "name": "border-left",
+          "component": "IconBorderLeft"
+        },
+        {
+          "name": "border-top",
+          "component": "IconBorderTop"
+        },
+        {
+          "name": "border-inner",
+          "component": "IconBorderInner"
+        },
+        {
+          "name": "vertical-align-middle",
+          "component": "IconVerticalAlignMiddle"
+        },
+        {
+          "name": "border-verticle",
+          "component": "IconBorderVerticle"
+        },
+        {
+          "name": "border-right",
+          "component": "IconBorderRight"
+        },
+        {
+          "name": "pic-left",
+          "component": "IconPicLeft"
+        },
+        {
+          "name": "pic-right",
+          "component": "IconPicRight"
+        },
+        {
+          "name": "radius-upleft",
+          "component": "IconRadiusUpleft"
+        },
+        {
+          "name": "radius-upright",
+          "component": "IconRadiusUpright"
+        },
+        {
+          "name": "radius-bottomleft",
+          "component": "IconRadiusBottomleft"
+        },
+        {
+          "name": "radius-bottomright",
+          "component": "IconRadiusBottomright"
+        },
+        {
+          "name": "column-height",
+          "component": "IconColumnHeight"
+        },
+        {
+          "name": "column-width",
+          "component": "IconColumnWidth"
+        },
+        {
+          "name": "font-size",
+          "component": "IconFontSize"
+        },
+        {
+          "name": "radius-setting",
+          "component": "IconRadiusSetting"
+        }
+      ]
+    },
+    {
+      "key": "direction",
+      "title": "方向",
+      "icons": [
+        {
+          "name": "double-left",
+          "component": "IconDoubleLeft"
+        },
+        {
+          "name": "double-up",
+          "component": "IconDoubleUp"
+        },
+        {
+          "name": "double-right",
+          "component": "IconDoubleRight"
+        },
+        {
+          "name": "double-down",
+          "component": "IconDoubleDown"
+        },
+        {
+          "name": "expand",
+          "component": "IconExpand"
+        },
+        {
+          "name": "shrink",
+          "component": "IconShrink"
+        },
+        {
+          "name": "right",
+          "component": "IconRight"
+        },
+        {
+          "name": "left",
+          "component": "IconLeft"
+        },
+        {
+          "name": "down",
+          "component": "IconDown"
+        },
+        {
+          "name": "up",
+          "component": "IconUp"
+        },
+        {
+          "name": "menu-fold",
+          "component": "IconMenuFold"
+        },
+        {
+          "name": "menu-unfold",
+          "component": "IconMenuUnfold"
+        },
+        {
+          "name": "rotate-left",
+          "component": "IconRotateLeft"
+        },
+        {
+          "name": "rotate-right",
+          "component": "IconRotateRight"
+        },
+        {
+          "name": "drag-arrow",
+          "component": "IconDragArrow"
+        },
+        {
+          "name": "left-circle",
+          "component": "IconLeftCircle"
+        },
+        {
+          "name": "up-circle",
+          "component": "IconUpCircle"
+        },
+        {
+          "name": "right-circle",
+          "component": "IconRightCircle"
+        },
+        {
+          "name": "down-circle",
+          "component": "IconDownCircle"
+        },
+        {
+          "name": "up-circle-fill",
+          "component": "IconUpCircleFill"
+        },
+        {
+          "name": "down-circle-fill",
+          "component": "IconDownCircleFill"
+        },
+        {
+          "name": "left-circle-fill",
+          "component": "IconLeftCircleFill"
+        },
+        {
+          "name": "right-circle-fill",
+          "component": "IconRightCircleFill"
+        },
+        {
+          "name": "swap",
+          "component": "IconSwap"
+        },
+        {
+          "name": "to-bottom",
+          "component": "IconToBottom"
+        },
+        {
+          "name": "to-left",
+          "component": "IconToLeft"
+        },
+        {
+          "name": "to-right",
+          "component": "IconToRight"
+        },
+        {
+          "name": "to-top",
+          "component": "IconToTop"
+        },
+        {
+          "name": "caret-down",
+          "component": "IconCaretDown"
+        },
+        {
+          "name": "caret-left",
+          "component": "IconCaretLeft"
+        },
+        {
+          "name": "caret-right",
+          "component": "IconCaretRight"
+        },
+        {
+          "name": "caret-up",
+          "component": "IconCaretUp"
+        },
+        {
+          "name": "arrow-fall",
+          "component": "IconArrowFall"
+        },
+        {
+          "name": "arrow-rise",
+          "component": "IconArrowRise"
+        },
+        {
+          "name": "arrow-down",
+          "component": "IconArrowDown"
+        },
+        {
+          "name": "arrow-left",
+          "component": "IconArrowLeft"
+        },
+        {
+          "name": "arrow-right",
+          "component": "IconArrowRight"
+        },
+        {
+          "name": "arrow-up",
+          "component": "IconArrowUp"
+        },
+        {
+          "name": "arrow-multiple",
+          "component": "IconArrowMultiple"
+        },
+        {
+          "name": "multiple",
+          "component": "IconMultiple"
+        },
+        {
+          "name": "right-square",
+          "component": "IconRightSquare"
+        },
+        {
+          "name": "up-square",
+          "component": "IconUpSquare"
+        },
+        {
+          "name": "down-square",
+          "component": "IconDownSquare"
+        },
+        {
+          "name": "left-square",
+          "component": "IconLeftSquare"
+        }
+      ]
+    },
+    {
+      "key": "media",
+      "title": "影音",
+      "icons": [
+        {
+          "name": "music",
+          "component": "IconMusic"
+        },
+        {
+          "name": "backward",
+          "component": "IconBackward"
+        },
+        {
+          "name": "forward",
+          "component": "IconForward"
+        },
+        {
+          "name": "fullscreen-exit",
+          "component": "IconFullscreenExit"
+        },
+        {
+          "name": "fullscreen",
+          "component": "IconFullscreen"
+        },
+        {
+          "name": "live-broadcast",
+          "component": "IconLiveBroadcast"
+        },
+        {
+          "name": "play-arrow",
+          "component": "IconPlayArrow"
+        },
+        {
+          "name": "play-arrow-fill",
+          "component": "IconPlayArrowFill"
+        },
+        {
+          "name": "pause",
+          "component": "IconPause"
+        },
+        {
+          "name": "skip-next",
+          "component": "IconSkipNext"
+        },
+        {
+          "name": "skip-next-fill",
+          "component": "IconSkipNextFill"
+        },
+        {
+          "name": "skip-previous",
+          "component": "IconSkipPrevious"
+        },
+        {
+          "name": "skip-previous-fill",
+          "component": "IconSkipPreviousFill"
+        },
+        {
+          "name": "sound",
+          "component": "IconSound"
+        },
+        {
+          "name": "sound-fill",
+          "component": "IconSoundFill"
+        },
+        {
+          "name": "mute",
+          "component": "IconMute"
+        },
+        {
+          "name": "mute-fill",
+          "component": "IconMuteFill"
+        },
+        {
+          "name": "play-circle",
+          "component": "IconPlayCircle"
+        },
+        {
+          "name": "play-circle-fill",
+          "component": "IconPlayCircleFill"
+        },
+        {
+          "name": "pause-circle",
+          "component": "IconPauseCircle"
+        },
+        {
+          "name": "pause-circle-fill",
+          "component": "IconPauseCircleFill"
+        },
+        {
+          "name": "record-stop",
+          "component": "IconRecordStop"
+        },
+        {
+          "name": "stop-independent",
+          "component": "IconStopIndependent"
+        },
+        {
+          "name": "record",
+          "component": "IconRecord"
+        }
+      ]
+    },
+    {
+      "key": "interaction",
+      "title": "交互",
+      "icons": [
+        {
+          "name": "star",
+          "component": "IconStar"
+        },
+        {
+          "name": "star-fill",
+          "component": "IconStarFill"
+        },
+        {
+          "name": "heart",
+          "component": "IconHeart"
+        },
+        {
+          "name": "heart-fill",
+          "component": "IconHeartFill"
+        },
+        {
+          "name": "thumb-down",
+          "component": "IconThumbDown"
+        },
+        {
+          "name": "thumb-down-fill",
+          "component": "IconThumbDownFill"
+        },
+        {
+          "name": "thumb-up",
+          "component": "IconThumbUp"
+        },
+        {
+          "name": "thumb-up-fill",
+          "component": "IconThumbUpFill"
+        },
+        {
+          "name": "at",
+          "component": "IconAt"
+        },
+        {
+          "name": "cloud-download",
+          "component": "IconCloudDownload"
+        },
+        {
+          "name": "cloud-upload",
+          "component": "IconCloudUpload"
+        },
+        {
+          "name": "cloud-sync",
+          "component": "IconCloudSync"
+        },
+        {
+          "name": "code-block",
+          "component": "IconCodeBlock"
+        },
+        {
+          "name": "code-square",
+          "component": "IconCodeSquare"
+        },
+        {
+          "name": "code",
+          "component": "IconCode"
+        },
+        {
+          "name": "customer-service",
+          "component": "IconCustomerService"
+        },
+        {
+          "name": "home",
+          "component": "IconHome"
+        },
+        {
+          "name": "import",
+          "component": "IconImport"
+        },
+        {
+          "name": "list",
+          "component": "IconList"
+        },
+        {
+          "name": "message",
+          "component": "IconMessage"
+        },
+        {
+          "name": "message-add",
+          "component": "IconMessageAdd"
+        },
+        {
+          "name": "message-banned",
+          "component": "IconMessageBanned"
+        },
+        {
+          "name": "more",
+          "component": "IconMore"
+        },
+        {
+          "name": "more-vertical",
+          "component": "IconMoreVertical"
+        },
+        {
+          "name": "poweroff",
+          "component": "IconPoweroff"
+        },
+        {
+          "name": "refresh",
+          "component": "IconRefresh"
+        },
+        {
+          "name": "reply",
+          "component": "IconReply"
+        },
+        {
+          "name": "scan",
+          "component": "IconScan"
+        },
+        {
+          "name": "search",
+          "component": "IconSearch"
+        },
+        {
+          "name": "select-all",
+          "component": "IconSelectAll"
+        },
+        {
+          "name": "select-area",
+          "component": "IconSelectArea"
+        },
+        {
+          "name": "settings",
+          "component": "IconSettings"
+        },
+        {
+          "name": "share-alt",
+          "component": "IconShareAlt"
+        },
+        {
+          "name": "share-external",
+          "component": "IconShareExternal"
+        },
+        {
+          "name": "share-internal",
+          "component": "IconShareInternal"
+        },
+        {
+          "name": "send",
+          "component": "IconSend"
+        },
+        {
+          "name": "send-fill",
+          "component": "IconSendFill"
+        },
+        {
+          "name": "download",
+          "component": "IconDownload"
+        },
+        {
+          "name": "export",
+          "component": "IconExport"
+        },
+        {
+          "name": "translate",
+          "component": "IconTranslate"
+        },
+        {
+          "name": "sync",
+          "component": "IconSync"
+        },
+        {
+          "name": "upload",
+          "component": "IconUpload"
+        },
+        {
+          "name": "voice",
+          "component": "IconVoice"
+        },
+        {
+          "name": "eye",
+          "component": "IconEye"
+        },
+        {
+          "name": "eye-invisible",
+          "component": "IconEyeInvisible"
+        },
+        {
+          "name": "save",
+          "component": "IconSave"
+        },
+        {
+          "name": "history",
+          "component": "IconHistory"
+        },
+        {
+          "name": "launch",
+          "component": "IconLaunch"
+        },
+        {
+          "name": "keyboard",
+          "component": "IconKeyboard"
+        },
+        {
+          "name": "enter",
+          "component": "IconEnter"
+        },
+        {
+          "name": "add-child",
+          "component": "IconAddChild"
+        },
+        {
+          "name": "move",
+          "component": "IconMove"
+        },
+        {
+          "name": "user-delete",
+          "component": "IconUserDelete"
+        },
+        {
+          "name": "usergroup-add",
+          "component": "IconUsergroupAdd"
+        },
+        {
+          "name": "usergroup-delete",
+          "component": "IconUsergroupDelete"
+        },
+        {
+          "name": "disconnect",
+          "component": "IconDisconnect"
+        },
+        {
+          "name": "cast-screen",
+          "component": "IconCastScreen"
+        }
+      ]
+    },
+    {
+      "key": "tip",
+      "title": "提示",
+      "icons": [
+        {
+          "name": "exclamation-circle",
+          "component": "IconExclamationCircle"
+        },
+        {
+          "name": "exclamation-circle-fill",
+          "component": "IconExclamationCircleFill"
+        },
+        {
+          "name": "exclamation-polygon-fill",
+          "component": "IconExclamationPolygonFill"
+        },
+        {
+          "name": "exclamation",
+          "component": "IconExclamation"
+        },
+        {
+          "name": "info-circle",
+          "component": "IconInfoCircle"
+        },
+        {
+          "name": "info-circle-fill",
+          "component": "IconInfoCircleFill"
+        },
+        {
+          "name": "info",
+          "component": "IconInfo"
+        },
+        {
+          "name": "minus-circle",
+          "component": "IconMinusCircle"
+        },
+        {
+          "name": "minus-circle-fill",
+          "component": "IconMinusCircleFill"
+        },
+        {
+          "name": "minus",
+          "component": "IconMinus"
+        },
+        {
+          "name": "minus-square",
+          "component": "IconMinusSquare"
+        },
+        {
+          "name": "plus-circle",
+          "component": "IconPlusCircle"
+        },
+        {
+          "name": "plus-circle-fill",
+          "component": "IconPlusCircleFill"
+        },
+        {
+          "name": "plus",
+          "component": "IconPlus"
+        },
+        {
+          "name": "plus-square",
+          "component": "IconPlusSquare"
+        },
+        {
+          "name": "question-circle",
+          "component": "IconQuestionCircle"
+        },
+        {
+          "name": "question-circle-fill",
+          "component": "IconQuestionCircleFill"
+        },
+        {
+          "name": "question",
+          "component": "IconQuestion"
+        },
+        {
+          "name": "check-circle",
+          "component": "IconCheckCircle"
+        },
+        {
+          "name": "check-circle-fill",
+          "component": "IconCheckCircleFill"
+        },
+        {
+          "name": "check",
+          "component": "IconCheck"
+        },
+        {
+          "name": "check-square",
+          "component": "IconCheckSquare"
+        },
+        {
+          "name": "clock-circle",
+          "component": "IconClockCircle"
+        },
+        {
+          "name": "close-circle",
+          "component": "IconCloseCircle"
+        },
+        {
+          "name": "close-circle-fill",
+          "component": "IconCloseCircleFill"
+        },
+        {
+          "name": "close",
+          "component": "IconClose"
+        },
+        {
+          "name": "close-square",
+          "component": "IconCloseSquare"
+        },
+        {
+          "name": "stop",
+          "component": "IconStop"
+        },
+        {
+          "name": "warning",
+          "component": "IconWarning"
+        }
+      ]
+    },
+    {
+      "key": "brand",
+      "title": "商标",
+      "icons": [
+        {
+          "name": "pangea",
+          "component": "IconPangea"
+        },
+        {
+          "name": "hisense",
+          "component": "IconHisense"
+        },
+        {
+          "name": "hichat",
+          "component": "IconHichat"
+        },
+        {
+          "name": "lark-color",
+          "component": "IconLarkColor"
+        },
+        {
+          "name": "tiktok-color",
+          "component": "IconTiktokColor"
+        },
+        {
+          "name": "xigua-color",
+          "component": "IconXiguaColor"
+        },
+        {
+          "name": "faceBook-circle-fill",
+          "component": "IconFaceBookCircleFill"
+        },
+        {
+          "name": "facebook-square-fill",
+          "component": "IconFacebookSquareFill"
+        },
+        {
+          "name": "facebook",
+          "component": "IconFacebook"
+        },
+        {
+          "name": "google-circle-fill",
+          "component": "IconGoogleCircleFill"
+        },
+        {
+          "name": "google",
+          "component": "IconGoogle"
+        },
+        {
+          "name": "google-plus",
+          "component": "IconGooglePlus"
+        },
+        {
+          "name": "qq-circle-fill",
+          "component": "IconQqCircleFill"
+        },
+        {
+          "name": "qq",
+          "component": "IconQq"
+        },
+        {
+          "name": "qq-zone",
+          "component": "IconQqZone"
+        },
+        {
+          "name": "twitter-circle-fill",
+          "component": "IconTwitterCircleFill"
+        },
+        {
+          "name": "twitter",
+          "component": "IconTwitter"
+        },
+        {
+          "name": "weibo-circle-fill",
+          "component": "IconWeiboCircleFill"
+        },
+        {
+          "name": "weibo",
+          "component": "IconWeibo"
+        },
+        {
+          "name": "alipay-circle",
+          "component": "IconAlipayCircle"
+        },
+        {
+          "name": "wechat",
+          "component": "IconWechat"
+        },
+        {
+          "name": "wechatpay",
+          "component": "IconWechatpay"
+        },
+        {
+          "name": "code-sandbox",
+          "component": "IconCodeSandbox"
+        },
+        {
+          "name": "codepen",
+          "component": "IconCodepen"
+        },
+        {
+          "name": "github",
+          "component": "IconGithub"
+        },
+        {
+          "name": "gitlab",
+          "component": "IconGitlab"
+        },
+        {
+          "name": "android",
+          "component": "IconAndroid"
+        },
+        {
+          "name": "windows",
+          "component": "IconWindows"
+        },
+        {
+          "name": "ie",
+          "component": "IconIe"
+        },
+        {
+          "name": "chrome",
+          "component": "IconChrome"
+        },
+        {
+          "name": "aliwangwang",
+          "component": "IconAliwangwang"
+        },
+        {
+          "name": "dingding",
+          "component": "IconDingding"
+        },
+        {
+          "name": "taobao",
+          "component": "IconTaobao"
+        },
+        {
+          "name": "html5",
+          "component": "IconHtml5"
+        },
+        {
+          "name": "youtube",
+          "component": "IconYoutube"
+        },
+        {
+          "name": "skype",
+          "component": "IconSkype"
+        },
+        {
+          "name": "medium",
+          "component": "IconMedium"
+        },
+        {
+          "name": "medium-workmark",
+          "component": "IconMediumWorkmark"
+        },
+        {
+          "name": "linkedin",
+          "component": "IconLinkedin"
+        },
+        {
+          "name": "dropbox",
+          "component": "IconDropbox"
+        },
+        {
+          "name": "amazon",
+          "component": "IconAmazon"
+        },
+        {
+          "name": "ant-design",
+          "component": "IconAntDesign"
+        },
+        {
+          "name": "ant-cloud",
+          "component": "IconAntCloud"
+        },
+        {
+          "name": "aliyun",
+          "component": "IconAliyun"
+        },
+        {
+          "name": "zhihu",
+          "component": "IconZhihu"
+        },
+        {
+          "name": "slack",
+          "component": "IconSlack"
+        },
+        {
+          "name": "slack-square",
+          "component": "IconSlackSquare"
+        },
+        {
+          "name": "behance",
+          "component": "IconBehance"
+        },
+        {
+          "name": "behance-square",
+          "component": "IconBehanceSquare"
+        },
+        {
+          "name": "dribbble",
+          "component": "IconDribbble"
+        },
+        {
+          "name": "dribbble-square",
+          "component": "IconDribbbleSquare"
+        },
+        {
+          "name": "instagram",
+          "component": "IconInstagram"
+        },
+        {
+          "name": "yuque",
+          "component": "IconYuque"
+        },
+        {
+          "name": "alibaba",
+          "component": "IconAlibaba"
+        },
+        {
+          "name": "yahoo",
+          "component": "IconYahoo"
+        },
+        {
+          "name": "reddit",
+          "component": "IconReddit"
+        },
+        {
+          "name": "sketch",
+          "component": "IconSketch"
+        }
+      ]
+    },
+    {
+      "key": "ai",
+      "title": "AI",
+      "icons": [
+        {
+          "name": "ai-assistant",
+          "component": "IconAiAssistant"
+        },
+        {
+          "name": "ai-assistant-fill",
+          "component": "IconAiAssistantFill"
+        },
+        {
+          "name": "search-ai",
+          "component": "IconSearchAi"
+        },
+        {
+          "name": "edit-ai",
+          "component": "IconEditAi"
+        },
+        {
+          "name": "book-ai",
+          "component": "IconBookAi"
+        },
+        {
+          "name": "code-ai",
+          "component": "IconCodeAi"
+        },
+        {
+          "name": "global-ai",
+          "component": "IconGlobalAi"
+        },
+        {
+          "name": "folder-ai",
+          "component": "IconFolderAi"
+        },
+        {
+          "name": "image-ai",
+          "component": "IconImageAi"
+        },
+        {
+          "name": "file-ai",
+          "component": "IconFileAi"
+        },
+        {
+          "name": "audio-ai",
+          "component": "IconAudioAi"
+        },
+        {
+          "name": "video-ai",
+          "component": "IconVideoAi"
+        },
+        {
+          "name": "question-ai",
+          "component": "IconQuestionAi"
+        },
+        {
+          "name": "academic-ai",
+          "component": "IconAcademicAi"
+        },
+        {
+          "name": "summary-ai",
+          "component": "IconSummaryAi"
+        },
+        {
+          "name": "mcp",
+          "component": "IconMcp"
+        }
+      ]
+    },
+    {
+      "key": "other",
+      "title": "其他",
+      "icons": [
+        {
+          "name": "focus",
+          "component": "IconFocus"
+        },
+        {
+          "name": "frame",
+          "component": "IconFrame"
+        },
+        {
+          "name": "mult-table",
+          "component": "IconMultTable"
+        }
+      ]
+    }
+  ]
+}

@@ -34,6 +34,7 @@ import {
   IconLayout,
   IconApps,
   IconGithub,
+  IconFaceSmileFill,
 } from '@arco-iconbox/vue-pangea-mobile';
 import { componentMenuItems } from '@/pages/Components/registry';
 
@@ -79,6 +80,7 @@ const modules = ref<ModuleDef[]>([
     title: '设计系统',
     menu: [
       { key: '/foundations', title: 'Design Tokens', icon: IconPalette },
+      { key: '/icons', title: '图标', icon: IconFaceSmileFill },
       { key: '/templates', title: '页面模板', icon: IconLayout },
       { key: 'components-group', title: '组件', icon: IconApps, children: componentChildren },
     ],

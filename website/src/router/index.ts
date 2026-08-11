@@ -28,6 +28,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Foundations/index.vue'),
         meta: { title: '设计基础' },
       },
+      {
+        path: 'icons',
+        name: 'icons',
+        component: () => import('@/pages/Icons/index.vue'),
+        meta: { title: '图标' },
+      },
       // 组件预览模块：每个组件一页
       {
         path: 'components',

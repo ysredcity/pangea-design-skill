@@ -37,6 +37,7 @@ const stats = [
   { value: String(catalog.counts.components), label: '组件选型' },
   { value: '9', label: '质量门禁' },
   { value: '74', label: '组件文档' },
+  { value: '517', label: '图标' },
 ];
 
 // ── 为什么需要（痛点 → 解法）──
