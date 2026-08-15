@@ -23,6 +23,28 @@
 
 ---
 
+## [1.3.1] - 2026-08-15
+
+> 安全修复：**移除「会话开始即自动装依赖 / 起 dev server」的 hook**。它绕过「用户确认后再执行」的基线，上传第三方平台时被安全扫描判定为 **P0「指令覆盖」**、导致 1.3.0 的包**被拒绝分发**。功能能力无损失——装依赖与起服务改为在用户要求预览时于当轮执行。
+
+### Security
+
+- **移除会话开始即自动执行的 hook `pm-dev-server`**（脚手架 `.kiro/hooks/`）：它在 `SessionStart` 时自动 `npm install` 并启动 dev server，**绕过「用户确认后再执行」的基线**——上传第三方平台时被安全扫描判定为 **P0「指令覆盖」并拒绝分发**。它同时也与本 skill 顶部的**两阶段强制门自相矛盾**（阶段一明确禁止 `npm install` / 起 dev server）。
+  - 装依赖与起 dev server 改为**在用户要求预览时、于当轮对话中执行**（「工程初始化流程」第二回合）：PM 依然不碰终端，只是把「自动」换成「你说要看效果时我就做」。
+  - `SKILL.md` 与 `project-structure.md` 加了**禁止再引入 `SessionStart` + 执行类动作 hook** 的说明与理由，避免被重新加回。
+  - 保留的 `pm-compile-check`（`PostFileSave`）由**用户自己的保存动作**触发，只做校验（读 dev 输出 + 类型检查），不装依赖、不起服务；其中 `npx vue-tsc` 改为 `npm run type-check`（新增该脚本），避免 `npx` 触发远程拉取。
+
+### Fixed
+
+- **打包脚本 `pack-skill.sh` 会虚报文件数、且可能静默漏文件**：`git ls-files --cached` 读的是 **index**——文件删了但没 `git add` 时它**仍会列出该条目**，`zip -q` 又把 "name not matched" 警告吞掉，于是 zip 少打文件却退出码 0，而文件数是按 git 列表 `wc -l` 算的（实测 git 列表 148 / zip 实际 147）。修复：① 收集时过滤磁盘上已不存在的条目；② 打包后**断言 `unzip -Z1 | wc -l` 等于待打包条数**，不等即失败。
+
+### Verified
+
+- 重扫前自查：`.kiro/hooks/` 只剩 `pm-compile-check.json`（`PostFileSave`，仅校验、不装依赖不起服务）；全 skill 检索 `SessionStart` / `UserPromptSubmit` / `PreToolUse` / `npx`，剩余命中均为说明性或禁止性文字，无自动执行配置。
+- 重新打包并复核产物：`pm-dev-server` 残留 0 处、hook 内 `npx` 0 处、`type-check` 脚本在位，入包条目数与待打包数一致。脚手架 + website 双 `npm run gate` 通过。
+
+---
+
 ## [1.3.0] - 2026-08-15
 
 > 一次较大的能力补齐：页面模板 5 → **8**（分步表单页 / 详情页 / 审批详情页）、新增**「产品专属业务组件」层**（首个落地 MSC 附件上传）、新增**对话框宽度档位**硬约束，并修掉两阶段门与脚手架的几个阻塞性缺陷。

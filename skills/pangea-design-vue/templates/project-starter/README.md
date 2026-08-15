@@ -24,16 +24,22 @@ Pangea 前端工程脚手架样例：Vue 3 + Vite + TypeScript + Vue Router + Ar
 
 ## 起步
 
-一键起项目（degit）：
+**推荐：直接复制本目录**（不依赖外网）：
 
 ```bash
-npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
+cp -R <skill 目录>/templates/project-starter my-pangea-app
 cd my-pangea-app
 npm install
 npm run dev        # 本地预览；npm run build 产出生产包
 ```
 
-或直接复制本目录后 `npm install && npm run dev`。
+备选（拿不到本地模板时，需能访问 GitHub）：
+
+```bash
+npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
+```
+
+> 三个核心包（组件库 / 主题包 / 图标包）都在**公共 npm registry**，无需配置私有源。
 
 > 已实测：`npm install` → `vue-tsc` 类型检查 → `vite build` 通过，产物含 Pangea 青绿主题变量。
 

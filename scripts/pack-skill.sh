@@ -54,7 +54,11 @@ FILE_LIST="$(mktemp)"
 trap 'rm -f "$FILE_LIST"' EXIT
 
 cd "$REPO_ROOT/skills"
-git ls-files --cached --others --exclude-standard "$SKILL_NAME" > "$FILE_LIST"
+# ⚠️ 必须过滤「索引里还在、但工作区已删且未暂存」的条目：
+#    git ls-files --cached 读的是 index，删文件后若没 `git add`，它仍会被列出，
+#    结果是 zip 静默跳过（-q 把 "name not matched" 警告也吞了）、而文件数按列表算 → 报告数虚高。
+git ls-files --cached --others --exclude-standard "$SKILL_NAME" \
+  | while IFS= read -r f; do [[ -f "$f" ]] && printf '%s\n' "$f"; done > "$FILE_LIST"
 COUNT="$(wc -l < "$FILE_LIST" | tr -d ' ')"
 
 if [[ "$COUNT" -eq 0 ]]; then
@@ -65,6 +69,13 @@ fi
 # -X 不写入额外的时间戳/属性，产物更干净稳定
 zip -q -X "$OUT" -@ < "$FILE_LIST"
 cd "$REPO_ROOT"
+
+# —— 入包条目数必须与待打包列表一致，否则说明有文件被静默跳过 ——
+ZIP_COUNT="$(unzip -Z1 "$OUT" | wc -l | tr -d ' ')"
+if [[ "$ZIP_COUNT" -ne "$COUNT" ]]; then
+  echo "✗ 入包条目数不符：待打包 $COUNT，实际入包 $ZIP_COUNT（有文件被跳过）" >&2
+  exit 1
+fi
 
 # —— 自检：该进的必须在，不该进的必须没有 ——
 echo "▸ 自检包内容"

@@ -157,8 +157,7 @@ import { IconGlobal } from '@arco-iconbox/vue-pangea-mobile';
 project/
 ├── .kiro/
 │   └── hooks/
-│       ├── pm-dev-server.json      # SessionStart: 自动启动开发环境
-│       └── pm-compile-check.json   # PostFileSave: 自动编译检查与修复
+│       └── pm-compile-check.json   # PostFileSave: 保存后校验编译/类型错误并修复
 ├── index.html
 ├── package.json
 ├── vite.config.ts            # 接入主题包 + 图标包
@@ -247,25 +246,27 @@ const routes = [
 
 | Hook | 触发时机 | 作用 |
 |---|---|---|
-| `pm-dev-server` | SessionStart | 会话开始时自动检查 `node_modules`、执行 `npm install`（如需）、启动 `npm run dev`、告知预览地址 |
 | `pm-compile-check` | PostFileSave（`.vue/.ts/.tsx/.less/.css`） | 文件保存后检查 dev server 输出，如有编译错误自动修复，不打扰 PM |
 
 ### PM 的操作流程
 
 ```
-PM 打开 Kiro → 自动启动 dev server → PM 说需求 → agent 生成/修改代码
-→ 自动编译检查 → PM 刷新浏览器看效果 → 继续下一轮
+PM 说需求 → agent 出需求文档并请 PM 确认（硬停止）
+→ PM 确认 → agent 建工程 / 装依赖 / 生成页面 / 起 dev server → 给出预览地址
+→ 之后每轮：PM 说改动 → agent 改 + 自动编译检查 → PM 刷新浏览器看效果
 ```
 
 PM 全程不需要：
 - 执行任何终端命令
 - 理解编译错误
-- 手动启动/重启 dev server
+- 手动启动/重启 dev server（agent 在需要预览时代为执行）
 - 知道 npm / Node.js 的具体用法
 
 ### 前提条件
 
-PM 的机器上需要提前安装 **Node.js**（≥18）。这是唯一的环境要求，安装一次即可（下载地址：https://nodejs.org/）。安装后所有后续操作均由 agent + hooks 自动完成。
+PM 的机器上需要提前安装 **Node.js**（≥18）。这是唯一的环境要求，安装一次即可（下载地址：https://nodejs.org/）。安装后所有后续操作都由 agent 代为执行——PM 不需要碰终端。
+
+> ⛔ **注意：不提供「会话开始即自动装依赖/起服务」的 hook。** 原先的 `pm-dev-server`（`SessionStart`）已移除：它绕过「用户确认后再执行」基线（平台安全扫描判定为**指令覆盖 P0**、拒绝分发），也与 SKILL.md 的两阶段门冲突（阶段一禁止 `npm install` / 起 dev server）。装依赖与起 dev server 改为**在 PM 要求预览时于当轮执行**。
 
 ### 目录结构（含 hooks）
 
@@ -273,8 +274,7 @@ PM 的机器上需要提前安装 **Node.js**（≥18）。这是唯一的环境
 project/
 ├── .kiro/
 │   └── hooks/
-│       ├── pm-dev-server.json      # SessionStart: 自动启动开发环境
-│       └── pm-compile-check.json   # PostFileSave: 自动编译检查与修复
+│       └── pm-compile-check.json   # PostFileSave: 保存后校验编译/类型错误并修复
 ├── index.html
 ├── package.json
 ├── vite.config.ts

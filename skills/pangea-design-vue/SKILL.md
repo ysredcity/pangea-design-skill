@@ -474,10 +474,13 @@ cp -R <skill 目录>/templates/project-starter <目标目录> && cd <目标目�
 
 本 skill 配套提供以下 Kiro hooks（位于 `.kiro/hooks/`），在 PM demo 模式下辅助 agent：
 
-- **`pm-dev-server`**（SessionStart）：会话开始时检查工程状态，自动安装依赖并启动 dev server。
-- **`pm-compile-check`**（PostFileSave）：文件保存后检查编译输出，若有错误提醒 agent 修复。
+- **`pm-compile-check`**（PostFileSave）：文件保存后检查编译 / 类型错误并自动修复。它由**用户自己的保存动作**触发，只做校验（读 dev 输出 + `vue-tsc`），不装依赖、不起服务。
 
-这些 hooks 让 PM demo 模式的体验更加无缝——即使 PM 关闭 Kiro 后重新打开，环境也能自动恢复。
+> ⛔ **不要新增「会话开始即自动执行」的 hook。** 曾经有一个 `pm-dev-server`（`SessionStart` → 自动 `npm install` + 自动起 dev server），**已移除**，原因有两条：
+> ① **安全**：会话一开始就自动装依赖、起服务，绕过了「用户确认后再执行」的基线，平台安全扫描会判定为**指令覆盖（P0）并拒绝分发**；
+> ② **自相矛盾**：本文件顶部的[两阶段强制门](#-最高优先级两阶段强制门先确认需求文档再写代码)明确禁止阶段一执行 `npm install` / 起 dev server，而该 hook 恰恰在会话开始就做这两件事。
+>
+> 装依赖与起 dev server 改为**在用户要求预览时、于当轮对话中执行**（流程见上文「工程初始化流程」第二回合）——PM 依然不需要碰终端，只是把「自动」换成了「你说要看效果时我就做」。新增 hook 时同样避开 `SessionStart` + 执行类动作的组合。
 
 ### 注意事项
 
