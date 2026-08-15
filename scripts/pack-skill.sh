@@ -77,6 +77,10 @@ MUST_HAVE=(
   "$SKILL_NAME/references/overview/requirement-intake.md"
   "$SKILL_NAME/references/overview/deployment.md"
   "$SKILL_NAME/references/_generated/catalog.json"
+  # 产品专属业务组件（这一层是新增未提交文件的高发区，务必自检）
+  "$SKILL_NAME/references/components-business/README.md"
+  "$SKILL_NAME/references/components-business/msc/attachment-upload.md"
+  "$SKILL_NAME/templates/project-starter/src/components/msc/MscAttachmentUpload.vue"
   "$SKILL_NAME/templates/project-starter/package.json"
   "$SKILL_NAME/templates/project-starter/vite.config.ts"
   "$SKILL_NAME/templates/project-starter/.env"
