@@ -35,6 +35,7 @@ import {
   IconApps,
   IconGithub,
   IconFaceSmileFill,
+  IconPuzzle,
 } from '@arco-iconbox/vue-pangea-mobile';
 import { componentMenuItems } from '@/pages/Components/registry';
 
@@ -64,7 +65,9 @@ const componentChildren: MenuItem[] = componentMenuItems;
 
 // 官网分两个模块，通过顶部横向菜单切换：
 // - 说明文档：介绍 / 使用指南 / 更新日志
-// - 设计系统：Design Tokens / 页面模板 / 组件（下挂各组件页二级菜单）
+// - 设计系统：Design Tokens / 图标 / 页面模板 / 组件 / MSC 组件（后两者各自下挂二级菜单）
+//   其中「MSC 组件」是 MSC（全球营销云中台）的**产品专属业务组件**，与通用组件同级但分组独立；
+//   这些组件默认不用，只在需求命中 MSC 触发词时才使用。
 const modules = ref<ModuleDef[]>([
   {
     key: 'docs',
@@ -83,6 +86,14 @@ const modules = ref<ModuleDef[]>([
       { key: '/icons', title: '图标', icon: IconFaceSmileFill },
       { key: '/templates', title: '页面模板', icon: IconLayout },
       { key: 'components-group', title: '组件', icon: IconApps, children: componentChildren },
+      // 产品专属业务组件：挂在「组件」之后，与通用组件同级但分组独立。
+      // 默认不用，只在需求命中该产品触发词时才使用；后续新增 MSC 组件往 children 里追加即可。
+      {
+        key: 'msc-group',
+        title: 'MSC 组件',
+        icon: IconPuzzle,
+        children: [{ key: '/msc/attachment-upload', title: '附件上传' }],
+      },
     ],
   },
 ]);

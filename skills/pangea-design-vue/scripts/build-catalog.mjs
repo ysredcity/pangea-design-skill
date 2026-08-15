@@ -18,6 +18,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const SKILL_ROOT = join(__dirname, '..');
 const PATTERNS_DIR = join(SKILL_ROOT, 'references', 'patterns');
 const SELECTION_DIR = join(SKILL_ROOT, 'references', 'component-selection');
+// 产品专属业务组件：按产品分子目录（components-business/<产品>/<组件>.md），需递归扫
+const BUSINESS_DIR = join(SKILL_ROOT, 'references', 'components-business');
 const OUT_DIR = join(SKILL_ROOT, 'references', '_generated');
 const OUT_FILE = join(OUT_DIR, 'catalog.json');
 
@@ -88,12 +90,18 @@ function extractMeta(text) {
   return Object.keys(meta).length ? meta : null;
 }
 
-function collect(dir) {
+/** 收集目录下带 meta 的 md；recursive=true 时递归子目录（业务组件按产品分子目录） */
+function collect(dir, recursive = false) {
   if (!existsSync(dir)) return [];
   const out = [];
-  for (const f of readdirSync(dir)) {
-    if (!f.endsWith('.md')) continue;
-    const full = join(dir, f);
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, e.name);
+    if (e.isDirectory()) {
+      if (recursive) out.push(...collect(full, true));
+      continue;
+    }
+    if (!e.name.endsWith('.md')) continue;
+    // 无 meta 块的文件（如各层 README）自然被跳过
     const meta = extractMeta(readFileSync(full, 'utf8'));
     if (!meta) continue;
     meta.doc = relative(SKILL_ROOT, full).split('\\').join('/'); // 统一正斜杠
@@ -102,19 +110,38 @@ function collect(dir) {
   return out;
 }
 
-const all = [...collect(PATTERNS_DIR), ...collect(SELECTION_DIR)];
+const all = [...collect(PATTERNS_DIR), ...collect(SELECTION_DIR), ...collect(BUSINESS_DIR, true)];
 const pageTemplates = all.filter((m) => m.kind === 'page-template');
 const components = all.filter((m) => m.kind === 'component');
+// 产品专属业务组件单独成组，并按产品聚合，便于 agent「先判断产品线、再取组件」
+const businessComponents = all.filter((m) => m.kind === 'business-component');
+const businessProducts = [];
+for (const c of businessComponents) {
+  let p = businessProducts.find((x) => x.product === c.product);
+  if (!p) {
+    p = { product: c.product, productName: c.productName || c.product, triggers: c.triggers || [], components: [] };
+    businessProducts.push(p);
+  }
+  p.components.push(c.id);
+}
 
 const catalog = {
   generatedAt: new Date().toISOString(),
-  counts: { pageTemplates: pageTemplates.length, components: components.length },
+  counts: {
+    pageTemplates: pageTemplates.length,
+    components: components.length,
+    businessComponents: businessComponents.length,
+  },
   pageTemplates,
   components,
+  /** ⛔ 业务组件默认不用：仅当需求命中对应产品的 triggers 时才允许使用 */
+  businessProducts,
+  businessComponents,
 };
 
 if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(OUT_FILE, JSON.stringify(catalog, null, 2) + '\n', 'utf8');
 console.log(
-  `catalog.json 生成完成：页面模板 ${pageTemplates.length} 个 / 组件 ${components.length} 个 → ${relative(SKILL_ROOT, OUT_FILE)}`
+  `catalog.json 生成完成：页面模板 ${pageTemplates.length} 个 / 组件 ${components.length} 个 / ` +
+    `业务组件 ${businessComponents.length} 个（${businessProducts.length} 个产品）→ ${relative(SKILL_ROOT, OUT_FILE)}`
 );

@@ -79,6 +79,8 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 
 **在需求文档确认后**，对文档中的每个页面按其「页型」走本决策树：**先判断场景与现有页面模板的匹配度**，据此选择「套用模板」还是「AI 自主设计」。核心原则：**能套模板就套模板；套不了也必须用设计系统的组件与 token，不自由发挥。**
 
+> 走决策树**之前**先过一道：需求是否命中某产品的触发词（见[产品专属业务组件](#产品专属业务组件默认不用命中产品才用)）？命中则该产品的对应场景改用其业务组件，未命中一律用通用组件。
+
 ```
 需求场景
   │
@@ -116,6 +118,26 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 
 > ⚑ **动手前先过 G0（需求文档已确认），生成或修改任何页面后，务必按 [质量门禁](references/overview/quality-gates.md)（G0–G9）逐项自检再交付**：编译、Token 规范、组件与图标分工、响应式、背景分层、交互四态、可访问性、生成层级、AI 代码常见陷阱（模板内 TS 注解 / 响应式用 computed / 模板 async）。
 > ⚠️ **先类型检查、再依赖 dev server**：Vite dev server 默认不做类型检查——模板内的非法语法（如内联函数带 TS 注解 `(v?: Date) =>`）不会阻止启动，却会让组件运行时编译失败、页面渲染成**空白页**。生成/修改后先跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无误，**不要只凭「dev server 起来了、无报错」就判定页面正常**。
+
+## 产品专属业务组件（默认不用，命中产品才用）
+
+Pangea 是**面向企业的通用设计系统**；部分产品在它之上延展了**只属于自己**的业务组件 / 模板。这些组件按产品隔离放在 [`references/components-business/`](references/components-business/README.md)。
+
+> ⛔ **默认不用。** 只有当用户需求**命中某产品的触发词**时，该产品的对应场景才优先使用它的业务组件；否则一律用 Pangea 通用组件。
+
+| 产品 | 触发词（命中即判定为该产品场景） | 业务组件 |
+|---|---|---|
+| **MSC · 全球营销云中台** | **MSC** / **全球营销云中台** / **营销云中台** / **营销中台** | **附件上传** `MscAttachmentUpload` → [文档](references/components-business/msc/attachment-upload.md)：表单里的附件上传，用**详细表格**呈现已上传附件（附件名称 / 文件大小 / 状态 / 操作）并支持**预览 · 下载 · 删除 · 批量下载**；替代原生 `a-upload` |
+
+**判定与执行**：
+
+1. 读需求 → 匹配上表触发词。命中 → 在该产品的对应场景**优先用业务组件**（这是产品内既定规范，别再用通用组件另做一套）；未命中 → **一律用通用组件**，不要因为"业务组件功能更全"就拿去给别的产品用。
+2. **拿不准就问用户**（例如只顺带提了一次产品名、或同时提到多个产品），不要自行推断。
+3. 判定为某产品场景时，在需求文档「全局约定」写明 `产品线：<产品名>`，让后续每页的组件选型有据可依。
+4. 组件源码在脚手架 `templates/project-starter/src/components/<产品 key>/`（如 `src/components/msc/`），复制时保留子目录与产品前缀。
+5. 机读索引：`catalog.json` 的 `businessProducts`（产品 + 触发词 + 组件清单）与 `businessComponents`（组件元数据）。
+
+**为什么要设这道门**：业务组件承载了特定产品的业务约定（字段口径、状态语义、操作集合），搬到别的产品会出现用户看不懂的列、与该产品自己的规范冲突，也会把"通用设计系统 / 产品定制"的边界糊掉。新增产品或组件的做法见[业务组件总览](references/components-business/README.md)。
 
 ## 图表（VChart）
 
@@ -365,7 +387,8 @@ app.mount('#app');
 
 - 页面模板：各 `references/patterns/page-*.md` 顶部 frontmatter 的 `meta`。
 - 常用组件：[references/component-selection/](references/component-selection/)（Table / Form / Modal / Card / Tabs / Select / Badge / Menu / Pagination / Alert）。
-- **机读汇总**：`references/_generated/catalog.json`（由 `scripts/build-catalog.mjs` 从上述 frontmatter 生成）——快速选型/过滤时读它。**改元数据后需重跑生成器**。字段规范见 [metadata-schema.md](references/overview/metadata-schema.md)。
+- **产品专属业务组件（默认不用）**：[references/components-business/](references/components-business/README.md)——按产品隔离，仅在需求命中该产品触发词时使用；catalog 里对应 `businessProducts` / `businessComponents`。
+- **机读汇总**：`references/_generated/catalog.json`（由 `scripts/build-catalog.mjs` 从上述 frontmatter 生成）——快速选型/过滤时读它，含 `pageTemplates` / `components` / `businessProducts` / `businessComponents`。**改元数据后需重跑生成器**。字段规范见 [metadata-schema.md](references/overview/metadata-schema.md)。
 
 ## PM Demo 模式（产品经理多轮迭代）
 

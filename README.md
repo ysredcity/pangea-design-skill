@@ -34,7 +34,9 @@ pangea-design-skill/
         │   ├── theme/design-tokens.md      # Pangea 全部设计 token（核心）
         │   ├── overview/                    # 工程结构 / 主题接入 / 安装 / 架构 / 配置 / i18n
         │   ├── components/  (72 篇)         # 组件 API（照搬上游）
-        │   └── patterns/    (5 篇)          # 组合模式（照搬上游）
+        │   ├── patterns/                     # 组合模式 + 页面模板
+        │   └── components-business/          # 产品专属业务组件（按产品隔离，默认不用）
+        │       └── msc/                      # MSC · 全球营销云中台
         └── templates/
             └── project-starter/            # 可运行脚手架（已接入主题包/图标包）
 ```

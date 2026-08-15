@@ -2,8 +2,8 @@ import { createRouter, createWebHashHistory, type RouteRecordRaw } from 'vue-rou
 
 // Pangea Design 官网（showcase）路由
 // - 全站使用 GlobalLayout（混合菜单）作为骨架，各页作为其子路由渲染在 <router-view /> 中。
-// - 两个模块（顶部横向菜单切换）：设计系统（介绍/使用指南/设计基础/页面模板/更新日志）
-//   与 组件预览（每个组件一页 /components/:id）。
+// - 两个模块（顶部横向菜单切换）：说明文档（介绍/使用指南/更新日志）、
+//   设计系统（Design Tokens/图标/页面模板/组件/MSC 组件——后者是产品专属业务组件）。
 // - hash 路由：产物可部署到任意静态托管，无需服务端 SPA 回退配置。
 const routes: RouteRecordRaw[] = [
   {
@@ -91,6 +91,17 @@ const routes: RouteRecordRaw[] = [
         path: 'templates/dashboard',
         component: () => import('@/generated/templates/pages/Dashboard/index.vue'),
         meta: { title: '仪表板示例' },
+      },
+      // MSC 组件：产品专属业务组件，挂在「设计系统」模块的侧边菜单下（默认不用，命中 MSC 才用）
+      {
+        path: 'msc',
+        redirect: '/msc/attachment-upload',
+      },
+      {
+        path: 'msc/attachment-upload',
+        name: 'msc-attachment-upload',
+        component: () => import('@/pages/Msc/AttachmentUpload.vue'),
+        meta: { title: 'MSC 附件上传' },
       },
       {
         path: 'changelog',

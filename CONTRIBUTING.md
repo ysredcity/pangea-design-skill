@@ -65,17 +65,20 @@ pangea-design-skill/
 2. 优先从官方 arco-design-vue skill 同步对应文件，保持「照搬」属性。
 3. 记录升级到的 `@arco-design/web-vue` 版本区间。
 
-### C. 新增定制业务组件 / 页面模板（后续规划）
+### C. 新增产品专属业务组件
 
-公司自研的二次封装组件与页型模板将放在（建议）：
-- 业务组件：`references/components-custom/`
-- 页面模板：`references/templates/`
+Pangea 是**面向企业的通用设计系统**；部分产品在它之上延展了只属于自己的业务组件。这些组件**按产品隔离**存放，并遵守「**默认不用、命中该产品触发词才用**」的门槛（理由见 [`references/components-business/README.md`](./skills/pangea-design-vue/references/components-business/README.md)）。
+- 文档：`references/components-business/<产品 key>/<组件>.md`（同目录 `README.md` 写产品说明 + **触发词** + 组件清单）
+- 源码：`templates/project-starter/src/components/<产品 key>/`，文件名带产品前缀（如 `MscAttachmentUpload.vue`）
 
 新增时：
-1. 每个组件/模板一个文档，front-matter 含 `name` 与 `description`，`user-invocable: false`。
-2. 文档结构对齐现有组件文档：简介 → 基本用法 → API（属性/事件/插槽）→ 常用模式 → 最佳实践。
-3. 组件应基于标准 Arco Vue + Pangea token 实现，示例遵循「关键约定」（Vue 3、`<script setup>`、kebab-case、`v-model`、禁用 React API）。
-4. 在 `SKILL.md` 索引表中登记新文件，并更新「后续补充」小节。
+1. 组件文档 front-matter 含 `name` / `description` / `user-invocable`，且 `meta` 块必须带 **`kind: business-component`** 与 **`product` / `productName` / `triggers`**；其余字段沿用[元数据规范](./skills/pangea-design-vue/references/overview/metadata-schema.md)。
+2. 文档要写清**为什么不用通用组件**（与被替代组件的对比表）、各形态、设计规范、API、使用要点与常见坑。
+3. 组件基于标准 Arco Vue + Pangea token 实现，遵循「关键约定」（Vue 3、`<script setup>`、kebab-case、`v-model`、禁用 React API）；**只呈现 + 抛语义事件**，不实现真实接口（demo 用 mock，交付接真实接口时组件不改）。
+4. 重跑 `node scripts/build-catalog.mjs`（收进 catalog 的 `businessComponents` / `businessProducts`）。
+5. 登记三处：`components-business/README.md` 的产品表、`SKILL.md`「产品专属业务组件」章节的表、以及（如需官网预览）website「设计系统」模块下的侧边菜单分组 + `sync-from-skill.mjs` 的 `BUSINESS_PRODUCTS`。
+
+> ⚠️ **不要把某个产品的业务组件改造成通用组件**，也不要拿去给别的产品用——它承载的是该产品的业务约定（字段口径、状态语义、操作集合）。
 
 ### D. 修改 SKILL.md 索引
 
