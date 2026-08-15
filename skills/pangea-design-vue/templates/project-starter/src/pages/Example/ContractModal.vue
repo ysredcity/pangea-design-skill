@@ -57,7 +57,7 @@ async function handleBeforeOk(): Promise<boolean> {
     v-model:visible="visible"
     title="创建合同"
     title-align="start"
-    :width="712"
+    :width="720"
     :body-style="{ maxHeight: '60vh', overflowY: 'auto' }"
     :ok-loading="submitting"
     ok-text="确定"

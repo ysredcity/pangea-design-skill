@@ -20,6 +20,10 @@ Vue 3 不再支持 IE，Arco Design Vue 也不支持 IE。
 
 ## 安装
 
+> **不需要私有 registry。** 组件库、主题包、图标包（`@arco-design/web-vue`、`@arco-themes/vue-pangea-3-linear`、`@arco-iconbox/vue-pangea-mobile`）都发布在**公共 npm registry**，直接 `npm install` 即可，**不用配 `.npmrc` 或公司内源**。装不上先排查网络 / 代理 / Node 版本（需 Node ≥ 18），不要改 registry。
+>
+> 实际起项目请直接复制脚手架 `templates/project-starter/`（依赖与配置都已装好、已实测通过），见 [project-structure.md](project-structure.md)「快速开始」。本节是手工从零接入时的参考。
+
 ```bash
 npm install @arco-design/web-vue @arco-themes/vue-pangea-3-linear
 yarn add @arco-design/web-vue @arco-themes/vue-pangea-3-linear

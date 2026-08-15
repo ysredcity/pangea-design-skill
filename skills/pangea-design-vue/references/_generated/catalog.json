@@ -1,10 +1,92 @@
 {
-  "generatedAt": "2026-07-25T02:25:51.947Z",
+  "generatedAt": "2026-08-15T02:29:40.253Z",
   "counts": {
-    "pageTemplates": 5,
+    "pageTemplates": 8,
     "components": 10
   },
   "pageTemplates": [
+    {
+      "id": "page-approval-detail",
+      "kind": "page-template",
+      "title": "审批详情页",
+      "status": "stable",
+      "whenToUse": [
+        "流程审批详情",
+        "待我审批打开的单据",
+        "需展示审批记录与处理意见",
+        "公司流程审批场景（强制）"
+      ],
+      "whenNotToUse": [
+        "无审批流的普通数据查看→详情页",
+        "录入/编辑→表单类模板"
+      ],
+      "keyStructure": [
+        "页头(流程标题+状态tag+全屏/打印/传阅)",
+        "提交人信息行(头像/姓名/部门/提交时间)",
+        "左侧悬浮快速审批",
+        "灰底+白卡分区",
+        "业务详情卡(复用DetailContent含只读子表单)",
+        "审批流程卡(Tabs：流程处理/流程图占位/传阅记录 + 显示审批记录与以发起人身份操作同行 + 记录表格 + 处理区(行序随操作变化))",
+        "传阅对话框",
+        "以发起人身份操作对话框"
+      ],
+      "variants": [
+        "可处理（显示处理区）",
+        "只读查看（actionable=false 隐藏处理区）",
+        "全屏沉浸（模拟邮件/待办入口）",
+        "六种操作各自的处理区行序（通过/转办/沟通/驳回/不通过/加签）"
+      ],
+      "composeWith": [
+        "a-tabs",
+        "a-checkbox",
+        "a-table",
+        "a-radio-group",
+        "a-textarea",
+        "a-upload",
+        "a-tag",
+        "a-avatar",
+        "a-link",
+        "a-modal",
+        "a-select",
+        "a-dropdown",
+        "a-tooltip",
+        "a-alert"
+      ],
+      "composeBoundary": [
+        "页面用灰底白卡不设白底",
+        "业务详情复用 DetailContent 需 embedded",
+        "处理区为左label右内容边框网格",
+        "记录表最后一列承载意见+附件链接",
+        "两个对话框复用同一套 pg-approval-grid 样式"
+      ],
+      "controls": {
+        "size": "default",
+        "headerButtons": "small",
+        "table": "medium",
+        "circulateModal": "520",
+        "originModal": "720"
+      },
+      "pitfalls": [
+        "页面根设白底导致白卡失去区隔",
+        "处理区用 a-descriptions 难放 textarea+按钮",
+        "审批记录表格列宽未固定导致意见列被压缩",
+        "快速审批悬浮标在窄屏挡内容",
+        "全屏只靠 z-index 盖不住Layout需Teleport到body",
+        "tab下边框自己再加一条会与Arco的::before重复",
+        "处理区不同操作行的顺序不同不能用固定超集+v-if显隐",
+        "处理意见行在v-for内模板ref会变数组须用函数ref",
+        "传阅对象未选中时确定必须禁用"
+      ],
+      "previewRoute": "/approval-detail",
+      "source": "src/pages/ApprovalDetail/index.vue",
+      "tags": [
+        "审批",
+        "流程",
+        "详情",
+        "强制模板"
+      ],
+      "doc": "references/patterns/page-approval-detail.md"
+    },
     {
       "id": "page-card-list",
       "kind": "page-template",
@@ -55,6 +137,71 @@
         "展示"
       ],
       "doc": "references/patterns/page-card-list.md"
+    },
+    {
+      "id": "page-detail",
+      "kind": "page-template",
+      "title": "详情页",
+      "status": "stable",
+      "whenToUse": [
+        "查看已录入数据",
+        "列表页「查看详情」入口",
+        "需在抽屉或弹窗中展示详情",
+        "只读展示含附件与子表单"
+      ],
+      "whenNotToUse": [
+        "需要录入或编辑→表单类模板",
+        "仅少量键值且无分组→直接用 a-descriptions"
+      ],
+      "keyStructure": [
+        "页头(返回+标题+删除/编辑)",
+        "详情内容组件(可复用)",
+        "折叠分组",
+        "只读字段label在上值在下",
+        "整行长文本",
+        "只读附件列表",
+        "只读子表单表格"
+      ],
+      "variants": [
+        "独立页面",
+        "a-drawer 抽屉",
+        "a-modal 对话框"
+      ],
+      "composeWith": [
+        "a-collapse",
+        "a-grid",
+        "a-table",
+        "a-drawer",
+        "a-modal",
+        "a-tooltip",
+        "a-button"
+      ],
+      "composeBoundary": [
+        "内容组件不含页头由容器提供",
+        "embedded 模式去掉外层padding",
+        "栅格断点看视口不看容器宽度需显式传 cols",
+        "空值统一占位"
+      ],
+      "controls": {
+        "size": "default",
+        "table": "medium"
+      },
+      "pitfalls": [
+        "详情页里放录入控件",
+        "抽屉内沿用3列过挤",
+        "空值留白无占位",
+        "附件图标自造SVG"
+      ],
+      "previewRoute": "/detail",
+      "source": "src/pages/DetailPage/index.vue",
+      "tags": [
+        "详情",
+        "只读",
+        "抽屉",
+        "弹窗",
+        "附件"
+      ],
+      "doc": "references/patterns/page-detail.md"
     },
     {
       "id": "page-form",
@@ -142,6 +289,7 @@
       ],
       "composeBoundary": [
         "a-anchor 绑定 scroll-container",
+        "a-anchor 必须 change-hash=false（hash 路由）",
         "分组间 16px 间距",
         "栅格响应式",
         "窄屏(≤992px)隐藏锚点"
@@ -150,6 +298,7 @@
         "size": "default"
       },
       "pitfalls": [
+        "a-anchor 默认改写 location.hash 会顶掉 hash 路由导致点锚点变空白页（必须 change-hash=false）",
         "隐藏 collapse header 边框线",
         "content 去左右 padding",
         "caret 图标 left:0"
@@ -198,7 +347,9 @@
         "a-textarea"
       ],
       "composeBoundary": [
-        "宽度≤1000px",
+        "宽度只有 520/720/1000 三档不超过 1000",
+        "本模板用 720",
+        "1000 档仅当弹窗内含表格",
         "列数≤3",
         "body 设 max-height 内联滚动保证底部按钮可见",
         "用 on-before-ok 控制校验后关闭"
@@ -207,6 +358,8 @@
         "size": "default"
       },
       "pitfalls": [
+        "写 712/800/960 这类非档位宽度",
+        "弹窗里没表格却用 1000 档",
         "栅格用响应式断点不写死 span",
         "窄屏宽度不超视口"
       ],
@@ -267,6 +420,68 @@
         "表格"
       ],
       "doc": "references/patterns/page-simple-list.md"
+    },
+    {
+      "id": "page-step-form",
+      "kind": "page-template",
+      "title": "分步表单页",
+      "status": "stable",
+      "whenToUse": [
+        "大型复杂数据录入",
+        "录入需拆成多个阶段",
+        "同时存在多种录入交互",
+        "需逐步校验与最终复核"
+      ],
+      "whenNotToUse": [
+        "字段较少→基础表单页",
+        "一屏可填完但需分组定位→分组表单页",
+        "弹窗轻量→对话框表单"
+      ],
+      "keyStructure": [
+        "页头两行(操作栏+步骤条)",
+        "步骤条居中最大900px",
+        "每步内折叠分组",
+        "最多3列响应式栅格",
+        "只读/可编辑子表单表格",
+        "末步复核(a-descriptions)"
+      ],
+      "variants": [
+        "三步(信息→明细附件→确认)",
+        "步数可增减"
+      ],
+      "composeWith": [
+        "a-steps",
+        "a-collapse",
+        "a-form",
+        "a-grid",
+        "a-table",
+        "a-upload",
+        "a-descriptions"
+      ],
+      "composeBoundary": [
+        "步骤条放页头不随内容滚动",
+        "分步用 v-show 保留已填状态",
+        "每步只校验本步字段",
+        "末步为只读复核不放录入"
+      ],
+      "controls": {
+        "size": "default"
+      },
+      "pitfalls": [
+        "用 v-if 会丢失已填数据与校验",
+        "一次校验全表单会误报后续步骤",
+        "步骤条不要放进滚动区"
+      ],
+      "previewRoute": "/step-form",
+      "source": "src/pages/StepForm/index.vue",
+      "tags": [
+        "表单",
+        "分步",
+        "步骤条",
+        "大型录入",
+        "子表单"
+      ],
+      "doc": "references/patterns/page-step-form.md"
     }
   ],
   "components": [
@@ -473,8 +688,9 @@
         "侧向持久面板→a-drawer"
       ],
       "variants": [
-        "确认弹窗",
-        "弹窗表单",
+        "确认弹窗(400)",
+        "弹窗表单(520/720)",
+        "含表格弹窗(1000)",
         "全屏 fullscreen"
       ],
       "composeWith": [
@@ -482,7 +698,10 @@
         "a-button"
       ],
       "composeBoundary": [
-        "宽度≤1000px 列≤3",
+        "宽度只有 520/720/1000 三档且不超过 1000",
+        "1000 档仅当弹窗内含表格等宽组件",
+        "确认类(simple)固定 400 不传 width",
+        "列≤3",
         "body max-height 内联滚动保证底部按钮可见",
         "on-before-ok 返回 Promise 控制校验后关闭",
         "窄屏宽不超视口"
@@ -491,6 +710,10 @@
         "size": "default"
       },
       "pitfalls": [
+        "写 712/800/960 这类非档位宽度",
+        "弹窗里没表格却用 1000 档",
+        "给确认类弹窗传 width",
+        "arco-modal 是 content-box 导致 simple 模式 400 实际渲染成 464（需 box-sizing:border-box 覆盖）",
         "关闭图标用 Arco 默认不替换",
         "unmount-on-close 重置状态"
       ],

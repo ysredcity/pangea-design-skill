@@ -12,9 +12,9 @@ meta:
   keyStructure: [a-modal, 标题(title-align=start), 2列栅格垂直表单, 取消/确定底部按钮]
   variants: [1列(字段极少), 2列, 3列(字段较多)]
   composeWith: [a-modal, a-form, a-grid, a-input, a-select, a-switch, a-textarea]
-  composeBoundary: [宽度≤1000px, 列数≤3, body 设 max-height 内联滚动保证底部按钮可见, 用 on-before-ok 控制校验后关闭]
+  composeBoundary: [宽度只有 520/720/1000 三档不超过 1000, 本模板用 720, 1000 档仅当弹窗内含表格, 列数≤3, body 设 max-height 内联滚动保证底部按钮可见, 用 on-before-ok 控制校验后关闭]
   controls: { size: default }
-  pitfalls: [栅格用响应式断点不写死 span, 窄屏宽度不超视口]
+  pitfalls: [写 712/800/960 这类非档位宽度, 弹窗里没表格却用 1000 档, 栅格用响应式断点不写死 span, 窄屏宽度不超视口]
   previewRoute: /
   source: src/pages/Example/ContractModal.vue
   tags: [表单, 弹窗]
@@ -56,7 +56,8 @@ meta:
 - **列数不超过 3 列**：字段少 → 1 列；中等 → 2 列；较多 → 3 列。**列用响应式断点**而非写死 `:span`：2 列用 `:xs="24" :sm="12"`、3 列用 `:xs="24" :sm="12" :lg="8"`（窄屏自动降为 1 列），整行字段（textarea）用 `:span="24"`。
 - **宽度不超过 1000px**：随列数增长，参考 1 列≈`520px`、2 列≈`720px`、3 列≈`960px`，**上限 `1000px`**。
 - **弹窗需有最大高度，保证底部按钮始终可见**：给 body 设 `max-height`（如 `60vh`）+ `overflow-y: auto`，内容多时**body 内联滚动**，header/footer 固定不动。用 `:body-style="{ maxHeight: '60vh', overflowY: 'auto' }"` 实现（Arco Modal 的 header/footer 本就在 body 外，不随滚动）。
-- **窄屏防溢出（响应式）**：固定 `width` 不能超过视口；窄屏（如 `≤768px`）改用更小宽度或 `fullscreen`。可绑定动态宽度，如 `:width="isNarrow ? '100%' : 712"`（配合窗口宽度监听），或直接用 `fullscreen` 属性。
+- **宽度只取档位值（硬约束）**：**520 / 720 / 1000**，不得超过 1000。本模板用 **720**（2 列栅格、字段数中等）；字段很少可降到 **520**（不传 `width` 即 520）；**只有弹窗内含表格等宽组件时**才允许 **1000**。不要写 712 / 800 / 960 这类非档位值。详见 [modal 选型](../component-selection/modal.md)。
+- **窄屏防溢出（响应式）**：固定 `width` 不能超过视口；窄屏（如 `≤768px`）改用更小宽度或 `fullscreen`。可绑定动态宽度，如 `:width="isNarrow ? '100%' : 720"`（配合窗口宽度监听），或直接用 `fullscreen` 属性。
 - 参考选型（可据实际微调）：
 
   | 字段数 | 列数 | 宽度 |
@@ -132,7 +133,7 @@ async function handleBeforeOk(): Promise<boolean> {
     v-model:visible="visible"
     title="创建合同"
     title-align="start"
-    :width="712"
+    :width="720"
     :body-style="{ maxHeight: '60vh', overflowY: 'auto' }"
     :ok-loading="submitting"
     ok-text="确定"

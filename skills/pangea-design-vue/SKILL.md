@@ -1,6 +1,6 @@
 ---
 name: pangea-design-vue
-description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或需要把生成的 Vue 工程部署 / 嵌入到飞书 aily、妙搭 Miaoda、Coze 等平台（嵌入式单文件构建），或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖生成前的需求规格化（把一句话需求或 PRD 转成面向界面架构的需求文档、有限轮澄清；**必须先输出文档并经用户确认后，下一轮才写代码——禁止同一轮既出文档又出工程**）、页面模板与选型决策、安装、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字体、间距、圆角、阴影、组件 token）、暗黑模式、全局注册、按需加载、国际化、Vue 3 Composition API 约定、组件属性/事件/插槽、示例、表单、表格、弹窗、导航、数据录入、数据展示、图表（VChart）、反馈和响应式布局。"
+description: "⚠️ 硬约束（最高优先级）：任何「生成 / 新建系统、模块、页面」的需求，**必须先输出「界面架构需求文档」并经用户明确确认，确认后的下一轮才写代码；禁止同一轮里既出需求文档又动工程**（脚手架初始化、复制模板、`npm install`、写 `.vue`/路由/菜单都算）。本 skill 是海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海信集团 B 端 / 中后台产品（管理后台、业务系统、数据平台等），基于 `@arco-design/web-vue` + 定制主题包 `@arco-themes/vue-pangea-3-linear`。当用户要求构建海信 B 端/中后台的 Vue 页面、管理后台、业务系统界面、列表页/表单页/分步表单页/详情页/审批详情页/仪表盘，或使用 Pangea 主题/公司组件库编写前端代码，或需要把生成的 Vue 工程部署 / 嵌入到飞书 aily、妙搭 Miaoda、Coze 等平台（嵌入式单文件构建），或提到 Pangea、Pangea 3 Linear、`@arco-themes/vue-pangea-3-linear`、`@arco-design/web-vue`、`a-button`、`a-table`、`a-form`、`a-modal`、`a-select`、`Message`、任意 Arco Vue 组件名、VChart 图表时使用。覆盖需求规格化、页面模板与选型决策、主题包接入、Pangea 设计 token（品牌青绿主色、语义色、字号、间距、圆角、对话框宽度档位）、暗黑模式、响应式布局、图表（VChart）与质量门禁。"
 ---
 
 # Pangea Design Vue Skill
@@ -13,7 +13,7 @@ description: "海信集团 Pangea 设计体系的 Vue 3 前端参考，面向海
 
 | 阶段 | 你要做的 | 你**禁止**做的 |
 |---|---|---|
-| **阶段一（本轮）** | 有限轮澄清（最多 1–2 轮，一次性打包问）→ 输出**界面架构需求文档** → **明确请用户确认或修改** → **结束本轮回复，停下等待** | ❌ 创建 / 修改任何工程文件（含脚手架初始化、`degit`、`npm install`、写 `.vue`/路由/菜单）<br>❌ 在同一条回复里继续进入生成<br>❌ 说「已确认，我继续」自问自答 |
+| **阶段一（本轮）** | 有限轮澄清（最多 1–2 轮，一次性打包问）→ 输出**界面架构需求文档** → **明确请用户确认或修改** → **结束本轮回复，停下等待** | ❌ 创建 / 修改任何工程文件（含脚手架初始化、**复制 `templates/project-starter/`**、`degit`、`npm install`、起 dev server、写 `.vue`/路由/菜单）<br>❌ 在同一条回复里继续进入生成<br>❌ 说「已确认，我继续」自问自答 |
 | **阶段二（用户确认后的下一轮）** | 按已确认文档逐页生成 → 类型检查 → 质量门禁 → 交付 | ❌ 偏离已确认文档（要改先说明） |
 
 **判定「已确认」的唯一标准**：用户在**看到需求文档之后**给出明确肯定答复（如「确认」「可以」「按这个做」「开始开发」）。以下都**不算**确认：用户最初那句需求、用户回答澄清问题、用户说「继续」但还没看到文档、你自己推断"应该没问题"。
@@ -52,7 +52,7 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 ### 工程结构与生成层级铁律
 
 - 技术栈：Vue 3 + Vite + TS + Vue Router + `@arco-design/web-vue` + Pangea 主题包/图标包。
-- **产出页面不能独立运行**，必须落在完整工程里。**始终基于脚手架 `templates/project-starter/` 起步**（已实测 install/build/dev 通过；`npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app` 可一键起），不要只交付孤立 `.vue` 文件。详见 [project-structure.md](references/overview/project-structure.md)。
+- **产出页面不能独立运行**，必须落在完整工程里。**始终基于脚手架 `templates/project-starter/` 起步**（已实测 install/build/dev 通过）：**首选把 skill 自带的该目录直接复制到目标位置**（不依赖外网）；拿不到本地模板时才退到 `npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app`（需 GitHub 出网，沙箱/内网可能失败）。不要只交付孤立 `.vue` 文件。详见 [project-structure.md](references/overview/project-structure.md)。
 - **主题包** `@arco-themes/vue-pangea-3-linear` 通过 `@arco-plugins/vite-vue` 的 `theme` 选项接入（脚手架已内置）；`less` 为必需 devDep；`main.ts` 显式 `import` 主题 `theme.css` 以保证运行时 CSS 变量。
 - **图标分工（铁律）**：组件内建的**功能性图标**（Modal 关闭、Select 下拉箭头、DatePicker 日历等）用 **Arco 默认，不替换**（不启用 `iconBox` 全局替换，否则会破坏组件内部样式）；**业务/内容图标**从 Pangea 图标包**命名导入**（如 `import { IconGlobal } from '@arco-iconbox/vue-pangea-mobile'`），`font-size` 控制大小、`color` 控制颜色；不确定图标名就问用户，不臆造。
 - **全局 Layout 是稳定骨架，具体页面是它内部的路由子页面**：页面放 `src/pages/<PageName>/index.vue`，注册为全局 Layout 路由的 `children`，渲染在 Layout 的 `<router-view/>` 中。
@@ -87,7 +87,11 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
   │    ├─ 数据以卡片形式呈现（图文/资源/应用墙）  → 套用「卡片列表页」page-card-list.md
   │    ├─ 字段少、轻量、弹窗内录入/编辑（不跳转）  → 套用「对话框表单」page-modal-form.md
   │    ├─ 字段较多、单一表单、独立页面录入/编辑    → 套用「基础表单页」page-form.md
-  │    ├─ 字段极多、需分组 + 锚点定位的长表单     → 套用「分组表单页」page-grouped-form.md
+  │    ├─ 字段极多、一次填完、需分组 + 锚点定位    → 套用「分组表单页」page-grouped-form.md
+  │    ├─ 大型复杂录入、需拆成阶段逐步填写 +
+  │    │  多种录入交互（含可编辑子表单/上传）      → 套用「分步表单页」page-step-form.md
+  │    ├─ 查看已录入数据（只读展示，页面/抽屉/弹窗）→ 套用「详情页」page-detail.md
+  │    ├─ **流程审批的详情与处理（公司强制）**      → 套用「审批详情页」page-approval-detail.md
   │    │
   │    └─ 高匹配（结构基本一致，仅字段/列不同）
   │         → 直接复制模板，替换字段/列/数据，不改结构与样式约定
@@ -118,7 +122,7 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
 需要数据可视化（折线、柱状、饼图、仪表盘指标图等）时，**优先使用 VChart 图表库**（VisActor 出品，开源）：仓库 https://github.com/VisActor/VChart 。
 
 - **按需引入，不进基础依赖**：`@visactor/vchart` **不在脚手架基础依赖里**（体积约 2MB，保持 base 轻量）。需要图表时才安装：`npm i @visactor/vchart`。
-- **用脚手架的 `LazyChart` 封装**（`src/components/LazyChart.vue`）：它**动态 import** vchart——装了就渲染，没装显示占位提示且**不影响 dev/build**。`vite.config.ts` 已把该包按可选依赖处理（未装时 `external` + `optimizeDeps.exclude`，保证「没装图表库也能构建」）。用法：`<LazyChart :spec="chartSpec" height="240px" />`，`spec` 为 VChart 配置对象。
+- **用脚手架的 `LazyChart` 封装**（`src/components/LazyChart.vue`）：它**动态 import** vchart——装了就渲染，没装显示占位提示且**不影响 dev/build**。`vite.config.ts` 已把该包按可选依赖处理：**build** 侧 `external` + `optimizeDeps.exclude`；**dev** 侧还额外注册了一个 `apply: 'serve'` 的解析兜底插件，把未安装的包指向「一 import 就抛错」的虚拟模块。⚠️ 这个 dev 兜底是必须的——`optimizeDeps.exclude` 只跳过预构建，**dev 的 import 分析仍会解析裸包名**，解析失败会让整个模块返回 **HTTP 500**，`LazyChart` 里的 `try/catch` 根本执行不到，结果是**引用图表的页面整页加载失败**（表现为对应菜单"点了没反应"）。用法：`<LazyChart :spec="chartSpec" height="240px" />`，`spec` 为 VChart 配置对象。
 - **图表配色接入 Pangea 调色板**：系列色取 Pangea 色板；但注意 **VChart 在 canvas 上渲染，需要字面色值**（不能用 CSS 变量 `var(--x)`）——从 design-tokens.md 基础色板取对应 `-6` 阶 hex（primary `#00aaa6`、arcoblue `#165dff`、gold `#f7ba1e`、purple `#722ed1` 等）定义系列色数组；主色系列用品牌青绿 `#00aaa6`。
 - 图表容器、卡片外框仍用 Arco 组件（`a-card` 等）+ Pangea token 承载；环形图中心文字用绝对定位 div 覆盖更稳。
 - 不确定 VChart 具体 API 时参考其官方文档；图表**数据用 mock**（demo）或对接既有接口（开发交付），不实现后端。
@@ -175,7 +179,7 @@ app.mount('#app');
 - **卡片 / 磁贴网格用 CSS grid 自适应**：`grid-template-columns: repeat(auto-fill, minmax(<最小宽>, 1fr))`，随容器宽度自动增减列数，不写死列数。
 - **表格窄屏保可用**：设 `:scroll="{ x }"` 横向滚动，或隐藏次要列、改卡片/列表展示。
 - **操作栏 / 筛选行允许换行**：工具栏用 `flex-wrap`，避免按钮组与搜索框在窄屏互相挤压溢出。
-- **固定像素宽度需设上限并防溢出**：弹窗、面板等固定宽度必须 `≤` 视口宽度（如 modal 在窄屏改用更小宽度或全屏）；侧栏、锚点等辅助区在窄屏可隐藏或下移。
+- **固定像素宽度需设上限并防溢出**：弹窗、面板等固定宽度必须 `≤` 视口宽度（如 modal 在窄屏改用更小宽度或全屏）；侧栏、锚点等辅助区在窄屏可隐藏或下移。对话框宽度另有**硬性档位约束**（520 / 720 / 1000，确认类 400），见下文「对话框宽度」。
 - 优先用 Arco Grid 的断点属性表达响应式，能不写媒体查询就不写；确需媒体查询时放在组件 scoped 样式里。详见 [responsive-design.md](references/patterns/responsive-design.md)。
 
 ### 页面背景（全局准则）
@@ -185,6 +189,23 @@ app.mount('#app');
 - **常规内容页**（列表页、表单页、详情页等，页面本身是一整块内容）：页面根元素设白底 `background: var(--color-bg-1)`，铺满内容区。内容区的左上圆角 + overflow 会把白底裁出圆角，自动复现「白面板悬浮在灰底」的观感。
 - **仪表板 / 工作台类聚合页**（多个独立区块拼合）：页面根**保持透明**（露出灰底），页内每个区块用**白底卡片**承载（`a-card` 白底、**去边框** `:bordered="false"`）——灰底 + 无边框白卡是这类页的标准做法，靠底色差异而非边框线区隔区块。卡片建议用**大圆角** `var(--border-radius-large)` + **极轻阴影**（如 `box-shadow: 0 1px 4px rgba(0,0,0,0.05)`）增强区隔与层次；卡内强调图标可用「浅底色芯片」（强调色 10% 透明度做底、同色图标）提升设计感。
 - 灰底取 `--color-fill-2`（与 Layout body 一致），白底取 `--color-bg-1`，均用变量，不写死 hex。
+
+### 对话框宽度（全局准则，硬约束）
+
+对话框宽度**只有三个档位**，且**不允许超过 1000**：
+
+| 档位 | 用在什么场景 |
+|---|---|
+| **520** | 默认档。字段少的轻量录入、单个选择/输入、简单信息展示（`a-modal` 不传 `width` 就是 520） |
+| **720** | 字段较多需要 2 列栅格、或内容较长需要更多横向空间 |
+| **1000** | **仅当弹窗内含表格等宽组件时**（只读子表单表格、可编辑明细表格、宽数据列表）才允许使用 |
+
+- **不得写 712 / 800 / 960 / 1200 这类非档位值**，也**不得超过 1000**（更宽的内容说明它不该待在弹窗里 → 改用独立页面，见 [page-form.md](references/patterns/page-form.md)）。
+- **1000 档要能说出理由**：弹窗里没有表格就不要用 1000，降到 720 或 520。
+- **确认类弹窗固定 400**：删除确认、操作确认、风险提示等用 `Modal.confirm / warning / info / error / success`（simple 模式），规范宽度 **400px**，**不要传 `width`**。
+  - ⚠️ 脚手架已内置一条全局覆盖 `.arco-modal-simple { box-sizing: border-box }`（`src/styles/arco-overrides.less`）。原因：`.arco-modal` 是 **content-box**，simple 模式把 `padding: 24px 32px 32px` 加在**根节点**上，Arco 自带的 `width: 400px` 在 content-box 下实际渲染成 **464px**；改 border-box 后 400 才是真实视觉宽度。**复制脚手架时勿丢这个文件与 `main.ts` 里的引入。**
+- 窄屏仍要防溢出：固定宽度不能超过视口，窄屏改小宽度或 `fullscreen`。
+- **机检**：`npm run check:tokens`（含在 `npm run gate`）会扫 `<a-modal>` 的字面 `width`，非档位或 >1000 直接报错；`width="auto"`、`fullscreen`、绑定表达式跳过。
 
 ## Skill 索引
 
@@ -329,6 +350,9 @@ app.mount('#app');
 | 对话框表单 | [page-modal-form.md](references/patterns/page-modal-form.md) | 字段少、轻量的弹窗内录入/编辑：a-modal + 2 列栅格垂直表单 + 取消/确定；不跳转独立页面 |
 | 基础表单页 | [page-form.md](references/patterns/page-form.md) | 字段较多的独立数据录入/编辑页：顶部操作栏（返回+标题+提交）+ 可选提示 + 垂直表单（多列栅格，含 input/select/switch/datepicker/radio/子表单） |
 | 分组表单页 | [page-grouped-form.md](references/patterns/page-grouped-form.md) | 字段极多的长表单：折叠分组（a-collapse）+ 右侧锚点导航（a-anchor）快速定位 + 多样表单形态；分组多、表单长时使用 |
+| 分步表单页 | [page-step-form.md](references/patterns/page-step-form.md) | **大型复杂录入**：页头步骤条（a-steps）分步推进 + 每步折叠分组 + 多种录入交互（基础控件 / 只读子表单 / 可编辑子表单 / 上传）+ 逐步校验 + 末步复核提交 |
+| 详情页 | [page-detail.md](references/patterns/page-detail.md) | **查看已录入数据**：只读字段（label 在上/值在下）+ 长文本 + 只读附件列表 + 只读子表单表格；**内容抽成组件，可被独立页面 / a-drawer 抽屉 / a-modal 对话框复用** |
+| 审批详情页 | [page-approval-detail.md](references/patterns/page-approval-detail.md) | **流程审批场景的公司强制模板**：页头（流程标题 + 状态 tag + 打印/传阅）+ 提交人信息行 + 悬浮快速审批 + 灰底白卡（业务详情复用 DetailContent + 审批流程区：Tabs / 显示审批记录 / 审批记录表格 / 处理区） |
 | 表单模式 | [form-patterns.md](references/patterns/form-patterns.md) | 复杂表单、校验、动态字段、表单提交 |
 | 表格模式 | [table-patterns.md](references/patterns/table-patterns.md) | 远程表格、插槽、行选择、分页 |
 | 弹窗模式 | [modal-patterns.md](references/patterns/modal-patterns.md) | 弹窗表单、确认、全局反馈 |
@@ -377,21 +401,40 @@ Agent 对 PM 的反馈应简洁、非技术性：
 
 ### 工程初始化流程（首次对话）
 
-当 PM 首次提出需求且当前目录无已有工程时：
+当 PM 首次提出需求且当前目录无已有工程时，**严格按下面的回合边界执行**——注意「初始化工程 / `npm install` / 起 dev server」全部属于**第二回合**，第一回合只出文档：
 
-1. **确认目标目录**：询问 PM 要把 demo 放哪（或用默认路径如 `~/pangea-demos/<需求名>`）。
-2. **初始化**：从 `templates/project-starter` 创建工程（`npx degit` 或复制）。
-3. **安装依赖**：后台执行 `npm install`，等待完成。
-4. **启动 dev server**：后台执行 `npm run dev`，监听输出确认 `Local: http://localhost:xxxx` 就绪。
-5. **需求规格化并确认（硬停止）**：先按 [需求规格化](references/overview/requirement-intake.md) 把 PM 的需求转成「界面架构需求文档」（有限轮澄清），**发给 PM 请其确认后结束本轮、停下等待**；PM 明确确认后的**下一轮**才继续第 6 步。建议存到工程 `docs/requirement.md`。（问答对 PM 用非技术语言，聚焦「要哪些页面、每页长什么样」。）
-6. **生成页面**：按已确认的需求文档写页面 + 路由 + mock 数据。
-7. **类型检查把关**：跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，有错先修复至通过——**不要只依赖 dev server 判断**（Vite 不做类型检查，模板内 TS 注解等错误会让页面空白）。
+**第一回合（本轮只做这两步，然后停下）**
+
+1. **需求规格化并确认（硬停止）**：按 [需求规格化](references/overview/requirement-intake.md) 把 PM 的需求转成「界面架构需求文档」（有限轮澄清，最多 1–2 轮、一次性打包问）→ **发给 PM 请其确认或修改** → **结束本轮回复，停下等待**。问答对 PM 用非技术语言，聚焦「要哪些页面、每页长什么样」。
+2. **顺便问一下目标目录**（可与澄清问题一起打包问）：demo 放哪（或用默认路径如 `~/pangea-demos/<需求名>`）。
+   > ⚠️ 本回合**不要**创建工程、不要 `degit` / 复制脚手架、不要 `npm install`、不要起 dev server、不要写任何 `.vue`/路由/菜单——这正是[顶部两阶段门](#-最高优先级两阶段强制门先确认需求文档再写代码)禁止的行为。文档此时先放在会话里；工程建好后再落盘到 `docs/requirement.md`。
+
+**第二回合（PM 明确确认文档之后）**
+
+3. **初始化工程**：从 skill 自带的 `templates/project-starter/` **复制**到目标目录（详见下方「起步方式」）。
+4. **安装依赖**：后台执行 `npm install`，等待完成。
+5. **生成页面**：按已确认的需求文档写页面 + 路由 + mock 数据，并把需求文档存到 `docs/requirement.md`。
+6. **类型检查把关**：跑 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，有错先修复至通过——**不要只依赖 dev server 判断**（Vite 不做类型检查，模板内 TS 注解等错误会让页面空白）。
+7. **启动 dev server**：后台执行 `npm run dev`，监听输出确认 `Local: http://localhost:xxxx` 就绪。
 8. **交付预览地址**：告诉 PM 打开浏览器访问具体路由。
 
 若当前目录已有工程（PM 继续上次的迭代）：
 
 1. **检查 dev server 是否在运行**：是 → 直接进入修改流程；否 → 自动启动。
 2. **检查 `node_modules`**：不存在 → 先 `npm install`。
+
+#### 起步方式（优先本地复制，不要默认走网络）
+
+**首选：复制 skill 自带的模板目录**——skill 包里已经带了 `templates/project-starter/`，直接复制即可，不依赖任何外网：
+
+```bash
+cp -R <skill 目录>/templates/project-starter <目标目录> && cd <目标目录> && npm install
+```
+
+**备选（仅当拿不到本地模板时）**：`npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app`。
+
+> ⚠️ `degit` 需要访问 GitHub，**在无外网出口的沙箱 / 内网环境会失败**，而此时本地模板其实就在 skill 包里——所以别把 degit 当默认路径。
+> `npm install` 仍需访问 npm registry；三个核心包（`@arco-design/web-vue`、`@arco-themes/vue-pangea-3-linear`、`@arco-iconbox/vue-pangea-mobile`）都在**公共 npm registry** 上，无需配置私有源。若 `npm install` 失败，先查网络 / 代理 / Node 版本，不要去改 registry。
 
 ### 多页面路由导航提示
 

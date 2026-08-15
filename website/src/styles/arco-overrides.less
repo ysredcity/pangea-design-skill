@@ -1,0 +1,19 @@
+/**
+ * Arco 全局样式覆盖（非 scoped，全局生效）
+ * ------------------------------------------------------------------
+ * 只放**跨页面的设计约束级**覆盖；页面局部样式请写在各自组件的 <style scoped> 里。
+ * 引入位置：src/main.ts（在主题 theme.css 之后）。
+ */
+
+/* 确认类对话框（Modal.confirm / warning / info / error / success —— simple 模式）宽度 = 400px。
+ *
+ * 为什么需要这条覆盖：Arco 的 `.arco-modal` 是 **content-box**。
+ *   - 普通对话框：水平内边距在 `.arco-modal-body` 上，根节点 padding 为 0
+ *     → `width: 520/720/1000` 就是实际视觉宽度，无需处理。
+ *   - simple 模式：Arco 把 `padding: 24px 32px 32px` 加在**根节点**上，并设 `width: 400px`
+ *     → content-box 下实际渲染成 400 + 32 + 32 = **464px**，比规范宽 64px。
+ * 改成 border-box 后，Arco 自带的 `width: 400px` 才等于规范要求的视觉宽度 400px。
+ * 因此确认类弹窗**不需要也不应该再传 width**，保持默认即可。 */
+.arco-modal-simple {
+  box-sizing: border-box;
+}

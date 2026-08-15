@@ -1,6 +1,6 @@
 import { fileURLToPath, URL } from 'node:url';
 import { createRequire } from 'node:module';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import { vitePluginForArco } from '@arco-plugins/vite-vue';
 
@@ -15,6 +15,29 @@ try {
   chartInstalled = true;
 } catch {
   chartInstalled = false;
+}
+
+// 未安装图表库时，dev 下把它解析到一个「一 import 就抛错」的虚拟模块。
+// 为什么必须这么做：`optimizeDeps.exclude` 只是跳过预构建，**dev 的 import 分析仍会去解析
+// 这个裸包名**，解析不到就直接给整个模块返回 HTTP 500 —— LazyChart 里的 try/catch 根本没机会执行，
+// 结果是「引用了图表的页面整页加载失败」（表现为对应菜单点了没反应）。
+// 换成抛错的虚拟模块后，await import() 会 reject → 被 catch 捕获 → 正常显示「图表未启用」占位。
+// build 侧已由 rollupOptions.external 兜住，所以这个插件只在 serve 生效。
+// 与脚手架 templates/project-starter/vite.config.ts 保持一致。
+function optionalChartDevFallback(): Plugin {
+  const VIRTUAL_ID = '\0virtual:pangea-optional-chart-missing';
+  return {
+    name: 'pangea-optional-chart-fallback',
+    apply: 'serve',
+    enforce: 'pre',
+    resolveId(id) {
+      return id === OPTIONAL_CHART ? VIRTUAL_ID : null;
+    },
+    load(id) {
+      if (id !== VIRTUAL_ID) return null;
+      return `throw new Error('[pangea] 未安装 ${OPTIONAL_CHART}：运行 \`npm i ${OPTIONAL_CHART}\` 后图表才会渲染');`;
+    },
+  };
 }
 
 // Arco 官方插件：组件样式按需加载 + 注入 Pangea 主题包。
@@ -32,6 +55,8 @@ export default defineConfig({
     vitePluginForArco({
       theme: '@arco-themes/vue-pangea-3-linear',
     }),
+    // 图表库未安装时才需要 dev 解析兜底；已安装则不注册（走真实包）
+    ...(chartInstalled ? [] : [optionalChartDevFallback()]),
   ],
   resolve: {
     alias: {

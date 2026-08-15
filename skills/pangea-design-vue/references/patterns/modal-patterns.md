@@ -8,6 +8,20 @@ user-invocable: false
 
 详细 API 参考 [modal.md](../components/feedback/modal.md)、[drawer.md](../components/feedback/drawer.md) 和 [message.md](../components/feedback/message.md)。
 
+## 宽度档位（硬约束，先看这条）
+
+| 场景 | 宽度 | 写法 |
+|---|---|---|
+| 确认类（删除确认 / 操作确认 / 风险提示） | **400** | `Modal.confirm / warning / info / error / success`，**不传 `width`** |
+| 轻量录入、单选/单输入、简单信息展示 | **520** | `<a-modal>` 不传 `width`（默认即 520） |
+| 字段较多需 2 列栅格、内容较长 | **720** | `:width="720"` |
+| **弹窗内含表格等宽组件**（只读子表单、可编辑明细、宽列表） | **1000** | `:width="1000"` |
+
+- **只有这三档 + 确认类 400，且不允许超过 1000**。不要写 712 / 800 / 960 / 1200；装不进 1000 的内容不该待在弹窗里 → 改独立页面（[page-form.md](page-form.md)）。
+- **1000 档要能说出理由**：没有表格就降到 720 / 520。
+- ⚠️ 确认类那 400 需要一条全局覆盖才是真实宽度：`.arco-modal` 是 **content-box**，simple 模式把 `padding: 24px 32px 32px` 加在根节点上，Arco 自带 `width: 400px` 实际渲染成 **464px**。脚手架已内置 `.arco-modal-simple { box-sizing: border-box }`（`src/styles/arco-overrides.less`，在 `main.ts` 引入），复制模板时勿丢。
+- **机检**：`npm run check:tokens`（含在 `npm run gate`）会扫 `<a-modal>` 字面 `width`，非档位或 >1000 报错；`width="auto"` / `fullscreen` / 绑定表达式跳过。
+
 ## 受控弹窗
 
 ```vue

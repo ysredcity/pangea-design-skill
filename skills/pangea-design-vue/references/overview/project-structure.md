@@ -29,10 +29,12 @@ Vue 3 + Vite + TypeScript + Vue Router + `@arco-design/web-vue` + Pangea 主题�
 
 产出的**页面组件不能独立运行**——它依赖一个完整工程（`main.ts`/`vite.config.ts`/`router`/全局 Layout/已装依赖）。请始终基于脚手架 `templates/project-starter/` 起步，不要只交付孤立的 `.vue` 文件。
 
-**方式一：degit 一键起项目（推荐）**
+**方式一：复制 skill 自带的模板目录（推荐，不依赖外网）**
+
+skill 包里已经带了 `templates/project-starter/`，直接复制即可：
 
 ```bash
-npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
+cp -R <skill 目录>/skills/pangea-design-vue/templates/project-starter my-pangea-app
 cd my-pangea-app
 npm install
 npm run dev          # 本地预览
@@ -42,7 +44,25 @@ npm run dev          # 本地预览
 # npm run build:history History：需服务端 SPA fallback
 ```
 
-**方式二：直接复制** `templates/project-starter/` 目录，再 `npm install && npm run dev`。
+**方式二（备选，仅当拿不到本地模板时）：degit 从 GitHub 拉**
+
+```bash
+npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-pangea-app
+```
+
+> ⚠️ `degit` 需要访问 GitHub，**在无外网出口的沙箱 / 内网环境会失败**——而这种环境下本地模板其实就在 skill 包里，所以**不要把 degit 当默认路径**。
+
+### 关于 `npm install`（不需要私有 registry）
+
+三个核心包都在**公共 npm registry** 上，**无需配置任何私有源 / `.npmrc`**：
+
+| 包 | 说明 |
+|---|---|
+| `@arco-design/web-vue` | 组件库（开源） |
+| `@arco-themes/vue-pangea-3-linear` | Pangea 主题包（已发布到公共 npm） |
+| `@arco-iconbox/vue-pangea-mobile` | Pangea 图标包（已发布到公共 npm） |
+
+`npm install` 失败时先排查**网络 / 代理 / Node 版本**（Vue 3 + Vite 5 需 Node ≥ 18），**不要去改 registry**——改了反而更容易装不上。
 
 起项目后，**新增页面 = 两步**（见下方「生成层级约定」）：新建 `src/pages/<PageName>/index.vue` + 在路由 `children` 追加子路由。PM demo 用 mock 数据；开发交付把 mock 换成接口请求，结构与路由不变。
 
@@ -76,9 +96,9 @@ npm run dev          # 本地预览
 
 > ⚠️ `less` 是**必需**的 devDependency：`@arco-plugins/vite-vue`（默认 `style: true`）会加载 `.less`，缺 `less` 时 `vite build` 会报 `Preprocessor dependency "less" not found`。
 
-> **可选：图表库 `@visactor/vchart`（按需引入，不在基础依赖里）。** 保持 base 轻量，需要图表时才装：`npm i @visactor/vchart`。脚手架已提供 `src/components/LazyChart.vue`（动态 import vchart，装了渲染、没装占位），并在 `vite.config.ts` 把它按可选依赖处理（未装时 `external` + `optimizeDeps.exclude`，保证「没装也能 build」）。用法 `<LazyChart :spec="spec" height="240px" />`。详见 SKILL.md「图表（VChart）」。
+> **可选：图表库 `@visactor/vchart`（按需引入，不在基础依赖里）。** 保持 base 轻量，需要图表时才装：`npm i @visactor/vchart`。脚手架已提供 `src/components/LazyChart.vue`（动态 import vchart，装了渲染、没装占位），并在 `vite.config.ts` 把它按可选依赖处理（未装时 build 走 `external` + `optimizeDeps.exclude`，dev 走 `apply: 'serve'` 的解析兜底插件把它指到抛错的虚拟模块）。**两侧都要处理**：只做 `optimizeDeps.exclude` 的话 dev 的 import 分析仍会去解析裸包名并对整个模块返回 500，导致引用图表的页面整页打不开。用法 `<LazyChart :spec="spec" height="240px" />`。详见 SKILL.md「图表（VChart）」。
 
-> **质量门禁命令**：生成/定稿页面后运行 `npm run gate`（= `check-tokens` 裸值机检 + `vue-tsc --noEmit` + `vite build`），并对照 [quality-gates.md](quality-gates.md) 的 G0–G9 自检（**G0：动手前需求文档须已经用户确认**）；`npm run check:tokens` 可单跑裸 hex / 写死圆角机检。
+> **质量门禁命令**：生成/定稿页面后运行 `npm run gate`（= `check-tokens` 裸值机检 + `vue-tsc --noEmit` + `vite build`），并对照 [quality-gates.md](quality-gates.md) 的 G0–G9 自检（**G0：动手前需求文档须已经用户确认**）；`npm run check:tokens` 可单跑裸 hex / 写死圆角 / **对话框宽度档位**机检。
 
 ### 主题包 + 图标包接入（推荐：Vite 插件）
 
@@ -144,7 +164,7 @@ project/
 ├── vite.config.ts            # 接入主题包 + 图标包
 ├── tsconfig.json
 └── src/
-    ├── main.ts               # createApp + ArcoVue + router + import 主题 theme.css + layout-menu.less
+    ├── main.ts               # createApp + ArcoVue + router + import 主题 theme.css + layout-menu.less + arco-overrides.less
     ├── App.vue               # 仅挂载 <router-view/>
     ├── vite-env.d.ts         # *.vue 类型 shim + vite/client + 图标包模块声明（TS 必需）
     ├── router/
@@ -156,6 +176,8 @@ project/
     ├── layouts/
     │   ├── GlobalLayout.vue   # 全局 Layout（标准版：header + sidebar + content）
     │   └── layout-menu.less   # 侧边栏菜单自定义样式（覆盖 Arco Menu 默认）
+    ├── styles/
+    │   └── arco-overrides.less # 跨页面的**设计约束级**全局覆盖（当前：确认类对话框 400px 宽）
     └── pages/
         └── <PageName>/
             └── index.vue      # 具体页面（全局 Layout 下的子路由）
@@ -173,6 +195,7 @@ project/
 - **系统名称单一来源 `src/config/app.ts` 的 `APP_NAME`**：Header 品牌名与**浏览器标签页 title** 都取它（`main.ts` 里 `document.title = APP_NAME`，并用 `router.afterEach` 随路由 `meta.title` 显示「页面名 · 系统名」）。**生成工程时替换 `APP_NAME`（以及 `index.html` 的首屏占位 `<title>`）为实际产品名**，不要在别处硬编码系统名。
 - **页面背景由页面自己设置**：内容区默认**透明**，漏出 body 层灰底（`--color-fill-2`）。常规内容页（列表/表单/详情）在页面根设白底 `background: var(--color-bg-1)`（内容区左上圆角会自动把白底裁成圆角，复现「白面板浮在灰底」）；仪表板/工作台类聚合页保持透明、用白底无边框卡片区隔区块。详见 SKILL.md「页面背景（全局准则）」。
 - 侧边栏与顶部模块菜单都用 Arco `<a-menu>` + 自定义样式覆盖（`src/layouts/layout-menu.less`）：侧边选中态为白背景 + `primary-7` + medium；顶部模块选中态为 `primary-6` 文字。
+- **`src/styles/arco-overrides.less`**：只放**跨页面的设计约束级**全局覆盖（非 scoped）。当前只有一条——`.arco-modal-simple { box-sizing: border-box }`，让确认类对话框的真实宽度等于规范的 **400px**（`.arco-modal` 是 content-box，simple 模式的根节点 `padding: 24px 32px 32px` 会把 Arco 自带的 `width: 400px` 撑成 464px）。**复制脚手架时勿丢该文件与 `main.ts` 里的引入。** 页面局部样式仍写在各组件 `<style scoped>` 里。
 - **具体页面**放在 `src/pages/<PageName>/index.vue`，作为全局 Layout 路由的**子路由**，渲染在其 `<router-view/>` 中。
 
 ### 新增一个页面 = 三步
@@ -220,7 +243,7 @@ const routes = [
 
 ### 脚手架内置 Kiro Hooks
 
-`templates/project-starter/` 已内置以下 hooks（位于 `.kiro/hooks/`），用 `degit` 或复制脚手架后即生效：
+`templates/project-starter/` 已内置以下 hooks（位于 `.kiro/hooks/`），复制脚手架（或 `degit`）后即生效：
 
 | Hook | 触发时机 | 作用 |
 |---|---|---|

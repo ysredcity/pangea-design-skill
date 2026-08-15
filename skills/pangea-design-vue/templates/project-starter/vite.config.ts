@@ -41,6 +41,27 @@ export default defineConfig(({ mode }) => {
       theme: '@arco-themes/vue-pangea-3-linear',
     }),
   ];
+  // 未安装图表库时，dev 下把它解析到一个「一 import 就抛错」的虚拟模块。
+  // 为什么必须这么做：`optimizeDeps.exclude` 只是跳过预构建，**dev 的 import 分析仍会去解析
+  // 这个裸包名**，解析不到就直接给整个模块返回 HTTP 500 —— LazyChart 里的 try/catch 根本没机会执行，
+  // 结果是「引用了图表的页面整页加载失败」（表现为该菜单点了没反应）。
+  // 换成抛错的虚拟模块后，await import() 会 reject → 被 catch 捕获 → 正常显示「图表未启用」占位。
+  // build 侧已由 rollupOptions.external 兜住，所以这个插件只在 serve 生效。
+  if (!chartInstalled) {
+    const VIRTUAL_ID = '\0virtual:pangea-optional-chart-missing';
+    plugins.push({
+      name: 'pangea-optional-chart-fallback',
+      apply: 'serve',
+      enforce: 'pre',
+      resolveId(id) {
+        return id === OPTIONAL_CHART ? VIRTUAL_ID : null;
+      },
+      load(id) {
+        if (id !== VIRTUAL_ID) return null;
+        return `throw new Error('[pangea] 未安装 ${OPTIONAL_CHART}：运行 \`npm i ${OPTIONAL_CHART}\` 后图表才会渲染');`;
+      },
+    });
+  }
 
   // 嵌入式模式：把 JS/CSS 全部内联进 index.html
   // 用 require 动态取，保证未安装该插件时（非 embed 构建）不影响其他命令

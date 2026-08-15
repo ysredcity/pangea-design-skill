@@ -49,6 +49,24 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/GroupedForm/index.vue'),
         meta: { title: '分组表单页' },
       },
+      {
+        path: 'step-form',
+        name: 'step-form',
+        component: () => import('@/pages/StepForm/index.vue'),
+        meta: { title: '分步表单页' },
+      },
+      {
+        path: 'detail',
+        name: 'detail',
+        component: () => import('@/pages/DetailPage/index.vue'),
+        meta: { title: '详情页' },
+      },
+      {
+        path: 'approval-detail',
+        name: 'approval-detail',
+        component: () => import('@/pages/ApprovalDetail/index.vue'),
+        meta: { title: '审批详情页' },
+      },
       // 👇 新页面在此追加为子路由
     ],
   },

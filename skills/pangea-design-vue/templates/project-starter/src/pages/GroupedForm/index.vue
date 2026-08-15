@@ -228,9 +228,12 @@ function handleBack() {
         </a-form>
       </div>
 
-      <!-- 右侧锚点导航 -->
+      <!-- 右侧锚点导航
+           ⚠️ 必须 :change-hash="false"：本工程默认 hash 路由（createWebHashHistory），
+           Arco Anchor 默认会把 location.hash 改写成 #group-xxx，等于把路由 hash 也顶掉了
+           → vue-router 匹配不到路由，页面直接变空白。关掉后只滚动、不动 URL。 -->
       <div class="pg-grouped-form__anchor">
-        <a-anchor :scroll-container="scrollContainer" :bounds="20">
+        <a-anchor :scroll-container="scrollContainer" :bounds="20" :change-hash="false">
           <a-anchor-link href="#group-basic" title="合同基本信息" />
           <a-anchor-link href="#group-basis" title="签订依据" />
           <a-anchor-link href="#group-detail" title="合同详情" />

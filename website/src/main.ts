@@ -6,6 +6,8 @@ import ArcoVue from '@arco-design/web-vue';
 import '@arco-themes/vue-pangea-3-linear/theme.css';
 // Pangea Layout 侧边栏菜单自定义样式（覆盖 Arco Menu 默认样式以匹配设计稿）
 import './layouts/layout-menu.less';
+// 跨页面的设计约束级全局覆盖（如确认类对话框 400px 宽），与脚手架保持一致
+import './styles/arco-overrides.less';
 import router from './router';
 import App from './App.vue';
 

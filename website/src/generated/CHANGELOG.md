@@ -4,7 +4,8 @@
 
 事实源与版本约定见 [CONTRIBUTING.md](./CONTRIBUTING.md)。当前基线：主题包 `@arco-themes/vue-pangea-3-linear` **v1.0.11**，peer `@arco-design/web-vue ^2.57.0`。
 
-> 本文件只记录 **skill 本身**（文档、规范、脚手架）的重要变更；官网 `website/`（showcase）的调整不在此列（其记录见 `PROJECT_CONTEXT.md` 台账）。逐日细粒度流水同样见台账；本文件按版本归组。
+> **阅读约定**：本文件只记录 **skill 本身**（文档、规范、脚手架）的**核心变化**，一条一行、按版本归组，供使用者快速判断"升级后有什么不一样"。
+> 具体做法与用法请看对应文档（模板规范在 `references/patterns/`，全局准则在 `SKILL.md`）；**排查过程、踩坑细节、逐项实测记录见 `PROJECT_CONTEXT.md` 台账**。官网 `website/` 的调整不在本文件之列（同样见台账）。
 
 ---
 
@@ -14,7 +15,7 @@
 
 **功能侧**
 - 新增定制业务组件文档（`references/components-custom/`）。
-- 继续补充更多页面模板（详情页、仪表盘固化模板、多条件高级列表页等）。
+- 继续补充更多页面模板（仪表盘固化模板、多条件高级列表页等）。
 - 提升从需求到原型的集成性，论证是否可以包含 PRD 部分的输出。
 - 通过套壳的方式，让原型能够边点击边查看交互描述，把 PRD 和原型混合交互式呈现，提升可读性。
 
@@ -23,90 +24,136 @@
 
 ---
 
-## [1.2.0] - 2026-08-02
+## [1.3.0] - 2026-08-11
 
-> 把**部署配置纳入 skill 一等公民**：默认改 Hash + 相对 base（静态托管/子路径开箱可用），新增嵌入式单文件构建（飞书 aily / 妙搭 / Coze / iframe），并由 agent 按环境自动选择——用户不需要在部署模式之间做选择。
+> 页面模板 5 → **8**（分步表单页 / 详情页 / 审批详情页），新增**对话框宽度档位**硬约束，并修掉两阶段门与脚手架的几个阻塞性缺陷。
 
-### Added
-- **部署指南 [`references/overview/deployment.md`](skills/pangea-design-vue/references/overview/deployment.md)**：三模式对照表、**环境识别信号表**（宿主是飞书 aily 时，其开发类任务由妙搭执行 ⇒ 产物落在静态托管 + `/page/<token>/` 子路径 + iframe ⇒ 判定嵌入式）、三层白屏根因与消除方式、体积权衡、白屏排错速查。
-- **嵌入式单文件构建 `npm run build:embed`**：`vite-plugin-singlefile`（固定 2.3.3）+ `cssCodeSplit: false` + `assetsInlineLimit` + `rollupOptions.output.inlineDynamicImports`，产出**单个 `dist/index.html`**（约 1.2MB / gzip ≈ 320KB，无任何外部 JS/CSS 引用）。**页面组件无需改写**——继续用 `() => import(...)` 懒加载即可。
-- **构建脚本**：`build:embed`、`build:history`、`gate:embed`；部署配置由 `.env` / `.env.embed` / `.env.history` 驱动（Vite `--mode`，跨平台，避免 `VAR=x cmd` 在 Windows 失效、以及变量只作用于 `&&` 前半句的坑）。
-- 需求文档「全局约定」新增 **`部署目标`** 字段（agent 按信号表自动填，**不额外占用澄清轮次**）。
-- 新增测试场景 `_tests/cases/S4-embed-deploy.md`（嵌入式部署产物可打开性，防白屏回归）。
+### Added — 页面模板
 
-### Changed
-- **⚠️ 默认路由模式由 History 改为 Hash，并显式设 `base: './'`**（脚手架行为变化）：产物可直接部署到任意静态托管的**任意子路径**，**不再需要服务端 SPA fallback**，消除"部署后刷新/深链接白屏"这类最常见故障。需要干净 URL 的团队用 `npm run build:history`（须自行配置 fallback）。
-- 质量门禁 **G1 增加交付项**：需部署时按目标模式构建，并**实测产物能渲染**（嵌入式 `file://` 打开逐路由点；默认模式放到静态服务器子路径访问）——「构建成功」≠「部署后能打开」。
-- `SKILL.md`：索引新增 deployment.md；PM Demo 补「dev 预览与交付构建是两套配置」且**部署模式由 agent 自动判断、不让用户选**；frontmatter 补 aily / 妙搭 / Coze 嵌入式关键词。
-- `project-structure.md` 同步：默认 Hash + 相对 base 说明、`.env*` 部署配置、三种构建命令与实测结论。
+- **审批详情页**（`references/patterns/page-approval-detail.md` + 脚手架 `src/pages/ApprovalDetail/`，路由 `/approval-detail`）：**流程审批场景的公司强制模板**。页头（流程标题 + 状态 tag + 全屏/打印/传阅）+ 提交人信息行 + 悬浮「快速审批」+ 灰底白卡（业务详情复用详情页 `DetailContent` ／ 审批流程区 `ApprovalProcess.vue`：Tabs「流程处理 / 流程图（占位嵌入区）/ 传阅记录（只读三列）」+ 审批记录表 + 处理区）+「传阅」「以发起人身份操作」两个对话框。页头「全屏」用于预览「从邮件/待办直接打开、看不到全局导航」的形态（实现须 `Teleport` 到 body，否则盖不住 Layout）。
+- 审批处理区的**行组成与顺序随所选操作变化**（通过 / 转办 / 沟通 / 驳回 / 不通过 / 加签各不相同），用 `ROW_LAYOUT` + `ACTION_CONFIG` 两张表**数据驱动行序**——不能用「固定超集 + `v-if` 显隐」，因为顺序也会变。
+- **详情页**（`references/patterns/page-detail.md` + 脚手架 `src/pages/DetailPage/`，路由 `/detail`）：**内容与容器解耦**——详情内容抽成 `DetailContent.vue`，同一份内容可被独立页面 / `a-drawer` / `a-modal` 三种容器复用。只读字段用「label 在上 / 值在下」表单式布局 + 只读附件列表 + 只读子表单表格。
+- **分步表单页**（`references/patterns/page-step-form.md` + 脚手架 `src/pages/StepForm/`，路由 `/step-form`）：支撑大型复杂录入——页头步骤条分步推进 + 每步折叠分组 + 多种录入交互（基础控件 / 只读子表单 / 可编辑子表单 / 上传）+ 逐步校验 + 末步复核提交。
+- `SKILL.md` 决策树与索引表、`catalog.json` 同步（页面模板 5 → **8**）。
+
+### Added — 设计约束：对话框宽度
+
+- **`a-modal` 宽度只有 520 / 720 / 1000 三档，且不得超过 1000**；**1000 档仅当弹窗内含表格等宽组件时**才可使用（520 是默认档，不传 `width` 即 520）。装不进 1000 的内容说明它不该待在弹窗里 → 改独立页面。
+- **确认类弹窗固定 400px**（`Modal.confirm | warning | info | error | success`，**不传 `width`**）。为此脚手架新增 `src/styles/arco-overrides.less`（`.arco-modal-simple { box-sizing: border-box }`）——`.arco-modal` 是 content-box，simple 模式根节点的 `padding` 会把 Arco 自带的 400 撑成 464。**复制脚手架时勿丢该文件与 `main.ts` 的引入。**
+- **约束进机检**：`check-tokens.mjs` 新增第 3 条规则——`<a-modal>` 的字面 `width` 非档位或 >1000 直接失败（`width="auto"` / `fullscreen` / 绑定表达式跳过）。
+- 既有模板改到档位上：对话框表单 `712 → 720`、详情页弹窗查看 `960 → 1000`、以发起人身份操作 `800 → 720`。
 
 ### Fixed
-- **嵌入式平台（妙搭）部署后白屏**：三层根因——① History 缺服务端 fallback；② `base: '/'` 在 `/page/<token>/` 子路径下资源 404（平台还会注入动态 `<base>`）；③ 路由懒加载 chunk 在「iframe + 动态 base + 子路径」下路径解析失败（**最关键**，前两层修好后仍白屏）。`build:embed` 三层一次性消除。
+
+- **脚手架 dev 下「工作台」菜单点不动**：可选依赖 `@visactor/vchart` 未安装时，`optimizeDeps.exclude` 只跳过预构建，**dev 的 import 分析仍会解析裸包名并让整个模块返回 HTTP 500**，`LazyChart` 的 `try/catch` 降级执行不到 → `/dashboard` 整页加载失败。新增 `apply: 'serve'` 的解析兜底插件（指向抛错的虚拟模块），恢复「图表未启用」占位。
+- **分组表单页点右侧锚点跳到空白页**：hash 路由下 Arco `a-anchor` 默认改写 `location.hash`，把路由 hash 顶掉。修复：加 `:change-hash="false"`。
+- **两阶段门被自家流程清单破坏**：`工程初始化流程` 原把「初始化工程 / `npm install` / 起 dev server」排在需求文档确认**之前**，照做必然违反顶部那道门（很可能就是此前「文档与工程同轮产出」的原因）。已改为显式回合分段——第一回合只出文档并停下，其余全部划入第二回合；门的禁止清单补上「复制模板」「起 dev server」。
+- **起步方式改为优先本地复制**：`degit` 需要 GitHub 出网、沙箱/内网会失败，而 skill 包内本就自带 `templates/project-starter/`。改为首推 `cp -R` 复制，degit 降为备选。
+- **澄清「不需要私有 registry」**：三个核心包都发布在**公共 npm**，工程内也没有 `.npmrc`。`getting-started.md` / `project-structure.md` 写明直接 `npm install`；装不上先查网络 / 代理 / Node 版本（≥ 18），**不要改 registry**。
+
+### Changed
+
+- **skill description 结构**：两阶段硬约束提到第一句。**未做长度压缩**——description 是触发匹配面，压缩会直接掉召回，且 703 字符远未触及 1024 上限；实际只删泛化尾部枚举并补上新模板 / 新约束的关键词。
+- **分步表单页细节**：第一步不再渲染「上一步」（用 `v-if` 而非 `disabled`）；步骤条改小尺寸并去掉描述文字（⚠️ Arco Steps 只有布尔属性 `small`，写 `size="small"` 静默无效）；字段栅格列数上限 4 → 3。
+- **审批详情页细节**：选人入口（添加转办人 / 沟通人 / 审批人）改为**纯占位、点击无效果**，实际项目接入组织架构的标准人员选择器；传阅记录表去掉「操作」列。
+- 决策树中分组表单页描述改为「字段极多、**一次填完**、需分组 + 锚点定位」，与分步表单页划清边界；只读子表单表格统一 `size="medium"`。
 
 ### Verified
-- 默认构建：部署到静态服务器子路径 `/page/token123/`，5 个路由（含 Hash 子路由）全部正常渲染，无资源 404。
-- `build:embed`：产物仅 `dist/index.html`、零外部引用；**直接 `file://` 打开，5 个路由全部正常渲染、无运行时报错**（复现"无服务端 + 无正确 base"的最严苛环境）。
-- `build:history`：产出绝对路径资源，构建通过（需服务端 fallback）。
-- 脚手架 `npm install` → `npm run gate` → `npm run dev` 全通过，`package-lock.json` 已更新。
+
+- 脚手架 + website 双 `npm run gate` 通过；三个新模板与本轮所有修复均经 Playwright 实测（对话框宽度实测为 720 / 1000 / 520 / 720 / 400，机检规则另用注入用例反向验证）。逐项实测记录见台账。
+
+---
+
+## [1.2.0] - 2026-08-02
+
+> 把**部署配置纳入 skill 一等公民**：默认改 Hash + 相对 base、新增嵌入式单文件构建（飞书 aily / 妙搭 / Coze / iframe），部署模式由 agent 按环境自动判断，不让用户选。
+
+### Added
+
+- **部署指南 `references/overview/deployment.md`**：三模式对照表、**环境识别信号表**、三层白屏根因与排错速查、体积权衡。
+- **嵌入式单文件构建 `npm run build:embed`**：产出**单个 `dist/index.html`**（约 1.2MB / gzip ≈ 320KB，零外部 JS/CSS 引用）；**页面组件无需改写**，继续用 `() => import(...)` 懒加载。
+- 构建脚本 `build:embed` / `build:history` / `gate:embed`；部署配置由 `.env` / `.env.embed` / `.env.history` 驱动（跨平台，避免 `VAR=x cmd` 在 Windows 失效）。
+- 需求文档「全局约定」新增 `部署目标` 字段（agent 按信号表自动填，不额外占澄清轮次）；新增测试场景 `_tests/cases/S4-embed-deploy.md`。
+
+### Changed
+
+- **⚠️ 默认路由模式由 History 改为 Hash，并显式设 `base: './'`**（脚手架行为变化）：产物可直接部署到任意静态托管的**任意子路径**，**不再需要服务端 SPA fallback**，消除「部署后刷新 / 深链接白屏」。需要干净 URL 的团队用 `npm run build:history`（须自行配 fallback）。
+- 质量门禁 **G1 增加交付项**：按目标模式构建后必须**实测产物能渲染**——「构建成功」≠「部署后能打开」。
+- `SKILL.md` / `project-structure.md` 同步：deployment.md 索引、「dev 预览与交付构建是两套配置」、部署模式由 agent 判断。
+
+### Fixed
+
+- **嵌入式平台（妙搭）部署后白屏**：三层根因——① History 缺服务端 fallback；② `base: '/'` 在 `/page/<token>/` 子路径下资源 404；③ **懒加载 chunk 在「iframe + 动态 base + 子路径」下路径解析失败**（最关键，前两层修好仍白屏）。`build:embed` 一次性消除三层。
+
+### Verified
+
+- 三种构建均实测：默认模式部署到子路径 5 个路由正常；`build:embed` 直接 `file://` 打开 5 个路由全部正常（复现「无服务端 + 无正确 base」的最严苛环境）；`build:history` 需服务端 fallback。
 
 ---
 
 ## [1.1.2] - 2026-07-23
 
-> 按实测反馈修正生成流程：需求文档确认改为**两阶段硬门**、需求文档对齐页面模板基准；系统名称单一来源 + 浏览器标题；单模块下去掉重复的模块名。
+> 按实测反馈修正生成流程：需求文档确认升级为**两阶段硬门**、需求文档必须对齐页面模板基准；系统名称单一来源 + 浏览器标题。
 
 ### Changed
-- **需求文档必须以页面模板结构为基准**（`references/overview/requirement-intake.md` 新增「命中页面模板时：以模板结构为基准」+ `SKILL.md` 需求规格化第 3 步）：写每页布局前先判断是否命中模板，命中则**逐区块照抄该模板文档的「## 页面结构」**，只允许**显式标注**的 `[增补]` / `[删减]`；无模板才写「自定义页型（无模板）」。修正实测问题——需求文档自行设计结构、生成时又套模板，导致产出与模板存在偏差。需求文档模板的每页新增「套用模板」字段。
-- **系统名称单一来源**：脚手架新增 `src/config/app.ts` 导出 `APP_NAME`，`GlobalLayout` 的 Header 品牌名改为引用它；生成工程时只需替换这一处（`project-structure.md` 已同步说明与目录树）。
+
+- **需求文档必须以页面模板结构为基准**（`requirement-intake.md` + `SKILL.md`）：写每页布局前先判断是否命中模板，命中则**逐区块照抄该模板的「## 页面结构」**，只允许**显式标注**的 `[增补]` / `[删减]`。修正实测问题——需求文档自行设计结构、生成时又套模板，导致产出与模板有偏差。
+- **系统名称单一来源**：脚手架新增 `src/config/app.ts` 的 `APP_NAME`，Header 品牌名引用它；生成工程时只需替换这一处。
 
 ### Fixed
-- **需求文档与工程被同一轮一起生成**（绕过确认闸门，实测多次出现）：把确认闸门升级为**两阶段强制门**并前置到 `SKILL.md` 最顶部（🚦 章节，附阶段职责与「禁止做」清单）——阶段一只出需求文档并**结束回复等待**，阶段二（用户确认后的下一轮）才允许创建/修改任何工程文件（含脚手架初始化、`degit`、`npm install`、写 `.vue`/路由/菜单）；明确**「已确认」的唯一标准**（用户看到文档后的明确肯定答复；初始需求、对澄清问题的回答均不算）；新增 **G0 生成前门禁**（`quality-gates.md`，动手前三问自检）；`requirement-intake.md` 确认闸门补硬停止说明、自检三问与错误反例；PM Demo 流程与「首次生成」行标注「仅在需求文档已确认后执行」；frontmatter 与速查同步。
-- **浏览器标签页标题写死 `Pangea App`**：改为取系统名称——`main.ts` 设 `document.title = APP_NAME`，并用 `router.afterEach` 配合路由 `meta.title` 显示「页面名 · 系统名」；`index.html` 的 `<title>` 降为首屏占位并注明生成时替换。
-- **单模块时侧边栏左上角模块名与 Header 系统名重复**：单模块下 Sidebar Head 整块隐藏（`v-if="isMultiModule"`），多模块仍显示当前模块名。
+
+- **需求文档与工程被同一轮一起生成**（绕过确认闸门，实测多次出现）：升级为**两阶段强制门**并前置到 `SKILL.md` 最顶部——阶段一只出文档并**结束回复等待**，阶段二才允许动工程；明确**「已确认」的唯一标准**（用户看到文档后的明确肯定答复；初始需求、对澄清问题的回答都不算）；新增 **G0 生成前门禁**。
+- **浏览器标签页标题写死 `Pangea App`**：改为取 `APP_NAME`，并用 `router.afterEach` 显示「页面名 · 系统名」。
+- **单模块时侧边栏左上角模块名与 Header 系统名重复**：单模块下 Sidebar Head 整块隐藏。
 
 ---
 
 ## [1.1.1] - 2026-07-23
 
-> 修复外部工具实测发现的「生成页面全空白」，强化生成流程：类型检查前置 + AI 模板陷阱防护。
+> 修复外部工具实测发现的「生成页面全空白」，并强化生成流程：类型检查前置 + AI 模板陷阱防护。
 
 ### Fixed
-- **生成页面空白**：`<template>` 内写 TypeScript 类型注解（如 `:disabled-date="(current?: Date) => ..."`、`@click="(e: MouseEvent) => ..."`）会让 Vue 模板运行时编译失败、`router-view` 渲染成**空白页**；而 Vite dev server 不做类型检查、不报错——根因是生成流程「先起 dev server、后跑类型检查」，buggy 代码未被拦截。
+
+- **生成页面空白**：`<template>` 内写 TS 类型注解（如 `@click="(e: MouseEvent) => ..."`）会让模板运行时编译失败、渲染成**空白页**，而 Vite dev server 不做类型检查、不报错——根因是生成流程「先起 dev server、后跑类型检查」，buggy 代码未被拦截。
 
 ### Added
-- **质量门禁 G9「AI 代码常见陷阱」**（`references/overview/quality-gates.md`）：① `<template>` 内禁 TS 类型注解（抽到 `<script setup>`）；② 响应式派生必须用 `computed()`，不用普通函数调用一次赋值；③ 模板内禁 `async`。含正反例与自查方式。
+
+- **质量门禁 G9「AI 代码常见陷阱」**：① `<template>` 内禁 TS 类型注解（抽到 `<script setup>`）；② 响应式派生必须用 `computed()`；③ 模板内禁 `async`。含正反例。
 
 ### Changed
-- **G1 增加执行顺序硬约束**：先跑通 `vue-tsc --noEmit`（或 `npm run gate`）确认无类型/模板错误，再启动或依赖 dev server；**不能只凭「dev server 起来了、无控制台报错」判定页面正常**。
-- `SKILL.md`：「关键约定」补两条（`<template>` 不写 TS 注解、响应式派生用 `computed`）；决策树门禁提示与索引更新为 **G1–G9** 并加「先类型检查再依赖 dev server」警告；PM Demo 流程（首次生成 / 每轮修改 / 空白排错 + 初始化步骤）插入 `vue-tsc` 把关。
-- 脚手架 `pm-compile-check` hook 提示补充：保存 `.vue` 后**额外跑 `vue-tsc`**，不要只看 dev server 输出（模板 TS 注解等错误 dev 不报却会空白）。
+
+- **G1 增加执行顺序硬约束**：先跑通 `vue-tsc --noEmit`（或 `npm run gate`）再启动 / 依赖 dev server；**不能只凭「dev server 起来了、无控制台报错」判定页面正常**。
+- `SKILL.md` 关键约定、决策树门禁提示（G1–G9）、PM Demo 流程与脚手架 `pm-compile-check` hook 同步插入 `vue-tsc` 把关。
 
 ---
 
 ## [1.1.0] - 2026-07-23
 
-> 大幅补齐海信 B 端 / 中后台体系：生成前**需求规格化**输入层、**质量门禁 + 组件/模板元数据**、**混合菜单**脚手架、页面模板体系与仪表板示例、图表按需引入、响应式与背景分层全局准则。skill 定位刷新为海信集团 B 端 / 中后台产品。
+> 大幅补齐海信 B 端 / 中后台体系：生成前**需求规格化**输入层、**质量门禁 + 组件/模板元数据**、**混合菜单**脚手架、页面模板体系与仪表板示例、图表按需引入、响应式与背景分层全局准则。
 
 ### Added
-- **需求规格化（生成前第一步）**：`references/overview/requirement-intake.md` + `SKILL.md`「生成前：需求规格化」章节——任意颗粒度输入（一句话～完整 PRD）先转成**面向界面架构的需求文档**（模块划分↔顶部模块 / 菜单导航↔左侧菜单 / 逐页 页型+布局+关键内容+交互 / 待确认假设），参考头脑风暴但**克制限轮**（一次性打包问、最多 1–2 轮、余下用默认假设），用户确认后再逐页生成。确立流程：**需求规格化 → 决策树选型 → 生成 → G1–G8 门禁**。
-- **质量门禁与元数据体系**：`references/overview/quality-gates.md`（生成后自检 G1–G8）、`metadata-schema.md`（元数据 frontmatter 规范）、`references/component-selection/`（10 个高频组件选型元数据）、5 个页面模板补 `meta` frontmatter、零依赖生成器 `scripts/build-catalog.mjs` → `references/_generated/catalog.json`；脚手架 `scripts/check-tokens.mjs` + `npm run gate`（check-tokens + vue-tsc + build）。
-- **混合菜单结构**（脚手架 `GlobalLayout.vue`）：顶部 Header 横向**模块菜单** + 左侧**当前模块多级菜单**，按场景判断单/多模块（单模块自动隐藏顶部）；一级菜单可选图标、二级菜单不用图标（去 Arco 图标缩进占位）。数据模型 `modules: { key, title, menu }[]`。
-- **页面模板**（累计 5 个）：卡片列表页（a-card 网格 + 高级筛选面板）、对话框表单、分组表单页（折叠分组 + 锚点导航）（+ 已有简单列表页、基础表单页）；**仪表板示例页（非固化模板）** `templates/project-starter/src/pages/Dashboard/index.vue`（KPI 卡 + 表格 + 分段占比条 + VChart 环形图，灰底 + 无边框白卡 + 响应式）。
+
+- **需求规格化（生成前第一步）**（`references/overview/requirement-intake.md` + `SKILL.md`）：任意颗粒度输入（一句话～完整 PRD）先转成**面向界面架构的需求文档**（模块划分 ↔ 顶部模块 / 菜单 ↔ 左侧菜单 / 逐页 页型+布局+交互 / 待确认假设），参考头脑风暴但**克制限轮**（一次性打包问、最多 1–2 轮）。确立流程：**需求规格化 → 决策树选型 → 生成 → 门禁**。
+- **质量门禁与元数据体系**：`quality-gates.md`（G1–G8）、`metadata-schema.md`、`references/component-selection/`（10 个高频组件选型元数据）、页面模板补 `meta` frontmatter、生成器 `scripts/build-catalog.mjs` → `catalog.json`；脚手架 `check-tokens.mjs` + `npm run gate`。
+- **混合菜单结构**（脚手架 `GlobalLayout.vue`）：顶部横向**模块菜单** + 左侧**当前模块多级菜单**，单模块自动隐藏顶部；数据模型 `modules: { key, title, menu }[]`。
+- **页面模板累计 5 个**：新增卡片列表页、对话框表单、分组表单页（折叠分组 + 锚点导航）；另加**仪表板示例页**（非固化模板）。
 - **页面生成决策树**（`SKILL.md`）：按场景与模板匹配度决定「套模板 / 增补 / AI 自主设计」，自主设计也须用设计系统组件 + token。
-- **图表（VChart）按需引入**：`@visactor/vchart` **不进基础依赖**，经 `src/components/LazyChart.vue`（动态 import + 优雅降级）+ `vite.config.ts` 可选依赖处理（未装也能 build）；需要时 `npm i @visactor/vchart`。
-- **响应式适配 & 页面背景分层（全局准则）**（`SKILL.md`）：栅格断点（`:xs/:sm/:lg`）/ 卡片自适应网格 / 表格横滚 / 工具栏换行 / 固定宽防溢出；内容区默认透明、背景由各页面自设（常规页白底、仪表板灰底无边框白卡）。
-- 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`（会议室预约系统，综合检验多个页面模板选型与组装）。
+- **图表（VChart）按需引入**：`@visactor/vchart` 不进基础依赖，经 `LazyChart.vue`（动态 import + 优雅降级）+ `vite.config.ts` 可选依赖处理，未装也能 build。
+- **响应式适配 & 页面背景分层（全局准则）**（`SKILL.md`）：栅格断点 / 卡片自适应网格 / 表格横滚 / 工具栏换行 / 固定宽防溢出；内容区默认透明、背景由各页面自设。
+- 新增测试场景 `_tests/cases/S3-meeting-room-booking.md`。
 
 ### Changed
-- **skill 定位刷新为「海信集团 B 端 / 中后台产品」**（管理后台、业务系统、数据平台、内部工具）：`SKILL.md` 新增「定位与适用范围」章节，frontmatter description 更新。
-- **图标分工根因修复**：移除 `vite.config.ts` 中 `vitePluginForArco` 的 `iconBox` 全局替换选项（它会连带替换 Arco 组件内建功能性图标、破坏组件内部样式）；确立分工「功能性/组件内建图标用 Arco 默认，业务/内容图标从图标包命名导入」；删除治标的 `arco-fixes.less`；同步 `project-structure.md`/`SKILL.md`/`README.md`/`getting-started.md`/`theming.md`。
-- **非颜色 token 化**：确认主题包只把**颜色 + 圆角**注入为运行时 CSS 变量；`GlobalLayout.vue`/`layout-menu.less` 硬编码圆角改 `var(--border-radius-*)`；`design-tokens.md` 补「哪些 token 是运行时 CSS 变量」。
-- **背景分层调整**：脚手架 `GlobalLayout` 内容区背景由白改**透明**，背景责任下放到各页面（内容页加白底、仪表板示例改透明 + 无边框白卡）。
-- **全局 Layout / 菜单细节**：状态样式对齐设计稿（侧边选中白底 + `primary-7` + medium；顶部模块选中 `primary-6` + 下划线）、Header 图标/Logo/平台名、折叠按钮胶囊 + 悬停、固定视口高度仅内容区滚动。
+
+- **skill 定位刷新为「海信集团 B 端 / 中后台产品」**：`SKILL.md` 新增「定位与适用范围」，description 更新。
+- **图标分工根因修复**：移除 `vitePluginForArco` 的 `iconBox` 全局替换（它会连带替换 Arco 组件内建功能性图标、破坏组件样式），确立分工「功能性图标用 Arco 默认，业务图标从图标包命名导入」，并删掉治标的 `arco-fixes.less`。
+- **非颜色 token 化**：主题包只把**颜色 + 圆角**注入为运行时 CSS 变量；脚手架硬编码圆角改 `var(--border-radius-*)`；`design-tokens.md` 补说明。
+- **背景分层调整**：Layout 内容区背景由白改**透明**，背景责任下放到各页面。
+- 全局 Layout / 菜单细节对齐设计稿（选中态配色、Header、折叠按钮胶囊、仅内容区滚动）。
 
 ### Fixed
-- **菜单覆盖样式需 `!important`**（脚手架 `layout-menu.less`）：Arco 组件样式懒加载注入在全局 less 之后，部分覆盖仅靠特异性不稳——顶部模块菜单关键属性、侧边一级选中色 `primary-7`（Arco `.arco-menu-light .arco-menu-item.arco-menu-selected` 特异性 0,4,0）统一补 `!important`，不依赖注入顺序。
-- **顶部模块菜单竖向滚动条**：Arco 基础 `.arco-menu-inner{overflow:auto}` 叠加自定义强制 48px 高，内容略超出会冒出竖滚动条——对模块菜单 inner 补 `overflow:hidden`。
+
+- **菜单覆盖样式需 `!important`**：Arco 组件样式懒加载注入在全局 less 之后，部分覆盖仅靠特异性不稳。
+- **顶部模块菜单竖向滚动条**：Arco `.arco-menu-inner{overflow:auto}` 叠加强制 48px 高会冒滚动条，改 `overflow:hidden`。
 
 ---
 
@@ -115,21 +162,24 @@
 > 首个成型版本：从 skill 初始化到可运行脚手架、标准化全局 Layout、首批页面模板与 PM Demo 模式。
 
 ### Added
-- 初始化 `skills/pangea-design-vue/` skill（派生自官方 arco-design-vue skill）：`SKILL.md`（品牌说明 / 关键约定 / 主题取值铁律 / 完整组件索引）、`references/theme/design-tokens.md`（Pangea 全量设计 token + 完整基础色板 15 色系 × 10 阶）、`references/overview/`（`theming.md`/`getting-started.md`/`project-structure.md` 定制 + `architecture.md`/`config-provider.md`/`internationalization.md` 照搬）、72 篇组件文档 + 模式文档（API 照搬上游）。
-- 建立治理框架：`CONTRIBUTING.md`（贡献/维护规则、事实源约定、提交检查）+ `CHANGELOG.md`。
-- **可运行脚手架** `templates/project-starter/`：Vue 3 + Vite + TS + Vue Router + Arco Vue，已内置并接入主题包 `@arco-themes/vue-pangea-3-linear` 与图标包 `@arco-iconbox/vue-pangea-mobile`；含 `package-lock.json`；支持 `npx degit ysredcity/pangea-design-skill/skills/pangea-design-vue/templates/project-starter my-app` 一键起项目。
-- **PM Demo 模式**：`SKILL.md` 新增章节（agent 全托管工程生命周期，PM 只需对话 + 浏览器预览）；脚手架 `.kiro/hooks/` 内置 `pm-dev-server`（SessionStart 自动起 dev server）+ `pm-compile-check`（PostFileSave 自动编译检查）。
-- **标准化全局 Layout**：基于 Figma「Pangea Design PC Templates / 菜单-展开」重写 `GlobalLayout.vue`（Header 48px + 可折叠侧边栏 200px + 内容区）+ 侧边栏自定义样式 `layout-menu.less`。
-- **页面模板**：简单列表页、基础表单页（`references/patterns/page-simple-list.md`、`page-form.md`），基于 Figma；脚手架含示例页 + 路由 + 菜单。
-- **纯前端铁律**：产出始终是完整 Vue 纯前端工程，范围仅限前端，不产出/不涉及后端代码或服务；demo 用 mock、开发对接既有接口但不实现后端。写入 `SKILL.md`/`project-structure.md`/`CONTRIBUTING.md`。
-- 模式文档「本地补充」（通用最佳实践，非上游照搬）：`patterns/form-patterns.md`（提交与校验二选一，避免重复校验）、`patterns/table-patterns.md`（分页 `total` 与真实数据联动；插槽 `record` 为 `any` 的 TS7053 规避——改用接受 `string` 的 helper 查表）。源自场景测试 S1/S2 实测。
-- 效果测试材料 `_tests/`（S1 请假管理、S2 商品管理，多页 + 路由 + 共享 mock store；本地保留、不入 Git）。
+
+- 初始化 `skills/pangea-design-vue/`（派生自官方 arco-design-vue skill）：`SKILL.md`、`design-tokens.md`（Pangea 全量 token + 基础色板 15 色系 × 10 阶）、`references/overview/`、72 篇组件文档 + 模式文档。
+- 治理框架：`CONTRIBUTING.md` + `CHANGELOG.md`。
+- **可运行脚手架 `templates/project-starter/`**：Vue 3 + Vite + TS + Vue Router + Arco Vue，已接入主题包与图标包，含 `package-lock.json`。
+- **PM Demo 模式**：agent 全托管工程生命周期（PM 只需对话 + 浏览器预览）；脚手架内置 `pm-dev-server` / `pm-compile-check` hooks。
+- **标准化全局 Layout**：基于 Figma 重写 `GlobalLayout.vue`（Header 48px + 可折叠侧边栏 200px + 内容区）+ `layout-menu.less`。
+- **页面模板**：简单列表页、基础表单页；脚手架含示例页 + 路由 + 菜单。
+- **纯前端铁律**：产出始终是完整 Vue 纯前端工程，**不产出、不涉及后端代码或服务**；demo 用 mock，开发交付对接既有接口。
+- 模式文档本地补充：`form-patterns.md`（提交与校验二选一）、`table-patterns.md`（分页 `total` 联动、插槽 `record` 的 TS7053 规避）。
+- 效果测试材料 `_tests/`（S1 请假管理、S2 商品管理；本地保留、不入 Git）。
 
 ### Changed
-- `design-tokens.md` 补全**基础色板**（15 色系 × 10 阶）并明确以主题包运行时（`theme.css`/`tokens.less`）为唯一事实源；Figma 与主题包在 Cyan 色系及 `red-7` 的差异统一以主题包为准。
-- 图标引用统一到 Pangea 图标包命名导入，清理定制文档中默认 Arco 图标 / iconfont 残留。
-- `project-structure.md`/`SKILL.md`/`CONTRIBUTING.md`：登记生成层级（页面为全局 Layout 子路由）与脚手架可运行性要点（`less` 必需、`main.ts` 显式引 `theme.css`、`vite-env.d.ts`）。
+
+- `design-tokens.md` 补全基础色板，并明确**以主题包运行时为唯一事实源**（Figma 与主题包差异一律以主题包为准）。
+- 图标引用统一到 Pangea 图标包命名导入，清理默认 Arco 图标 / iconfont 残留。
+- 登记生成层级（页面为全局 Layout 子路由）与脚手架可运行性要点（`less` 必需、显式引 `theme.css`、`vite-env.d.ts`）。
 
 ### Fixed
-- 修复脚手架三处「跑不起来 / 样式不生效」缺口：新增 `src/vite-env.d.ts`（`*.vue` shim + 图标包 `declare module`）、`main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`、`package.json` 补 `less` devDep。经 `npm install` + `vue-tsc` + `vite build` + `npm run dev` 实测通过，产物 CSS 含青绿 `--primary-6: 0, 170, 166`。
-- 修复场景测试暴露的表格插槽 `record` 无类型导致的 TS7053，并把经验回流到 `table-patterns.md`。
+
+- 修复脚手架三处「跑不起来 / 样式不生效」缺口：新增 `src/vite-env.d.ts`、`main.ts` 显式引 `theme.css`、`package.json` 补 `less`。
+- 修复表格插槽 `record` 无类型导致的 TS7053，并把经验回流到 `table-patterns.md`。

@@ -12,9 +12,9 @@ meta:
   keyStructure: [顶部操作栏, 左侧折叠分组(a-collapse), 右侧锚点导航(a-anchor), 多样表单形态]
   variants: [折叠分组+锚点]
   composeWith: [a-collapse, a-anchor, a-form, a-grid, a-table]
-  composeBoundary: [a-anchor 绑定 scroll-container, 分组间 16px 间距, 栅格响应式, 窄屏(≤992px)隐藏锚点]
+  composeBoundary: [a-anchor 绑定 scroll-container, a-anchor 必须 change-hash=false（hash 路由）, 分组间 16px 间距, 栅格响应式, 窄屏(≤992px)隐藏锚点]
   controls: { size: default }
-  pitfalls: [隐藏 collapse header 边框线, content 去左右 padding, caret 图标 left:0]
+  pitfalls: [a-anchor 默认改写 location.hash 会顶掉 hash 路由导致点锚点变空白页（必须 change-hash=false）, 隐藏 collapse header 边框线, content 去左右 padding, caret 图标 left:0]
   previewRoute: /grouped-form
   source: src/pages/GroupedForm/index.vue
   tags: [表单, 分组, 长表单]
@@ -79,6 +79,8 @@ meta:
 - 链接项对应各分组：选中项 `semibold` + `color-text-1` + primary 轴线指示；默认项 `color-text-2`
 - 点击链接平滑滚动到对应分组
 - **需绑定滚动容器**：`:scroll-container` 指向左侧主区的滚动元素
+- ⚠️ **必须 `:change-hash="false"`**：本工程默认 **hash 路由**（`createWebHashHistory`），而 Arco Anchor 默认会把 `location.hash` 改写成 `#group-xxx`——这等于把**路由的 hash 也顶掉了**，vue-router 匹配不到路由，**点一下锚点整页直接变空白**。关掉后只滚动、不动 URL。（history 路由下不会白屏，但仍会污染 URL，建议同样关掉。）
+- 锚点目标：给每个 `a-collapse-item` 加 `id="group-xxx"`，`a-anchor-link` 的 `href` 指向它
 - **响应式**：锚点是辅助导航，窄屏（`≤992px`）用媒体查询隐藏（`display: none`），主表单纵向铺满；折叠面板与字段栅格在窄屏自动收敛
 
 ## Vue 代码模板
@@ -317,7 +319,8 @@ function handleBack() {
 
       <!-- 右侧锚点导航 -->
       <div class="pg-grouped-form__anchor">
-        <a-anchor :scroll-container="scrollContainer" :bounds="20">
+        <!-- hash 路由下必须 change-hash=false，否则点锚点会顶掉路由 hash → 空白页 -->
+        <a-anchor :scroll-container="scrollContainer" :bounds="20" :change-hash="false">
           <a-anchor-link href="#group-basic" title="合同基本信息" />
           <a-anchor-link href="#group-basis" title="签订依据" />
           <a-anchor-link href="#group-detail" title="合同详情" />
@@ -454,4 +457,6 @@ function handleBack() {
 |---|---|
 | 基础列表，单关键词搜索 | [简单列表页](page-simple-list.md) |
 | 字段多、单一表单录入/编辑 | [基础表单页](page-form.md) |
-| **字段极多、需分组 + 锚点定位的长表单** | **本模板（分组表单页）** |
+| **字段极多、一次填完、需分组 + 锚点定位** | **本模板（分组表单页）** |
+| 录入需拆成多个阶段、逐步校验、含可编辑子表单 | [分步表单页](page-step-form.md) |
+| 查看已录入数据（只读，页面/抽屉/弹窗） | [详情页](page-detail.md) |

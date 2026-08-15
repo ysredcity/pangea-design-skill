@@ -73,6 +73,21 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '分组表单页' },
       },
       {
+        path: 'templates/step-form',
+        component: () => import('@/generated/templates/pages/StepForm/index.vue'),
+        meta: { title: '分步表单页' },
+      },
+      {
+        path: 'templates/detail',
+        component: () => import('@/generated/templates/pages/DetailPage/index.vue'),
+        meta: { title: '详情页' },
+      },
+      {
+        path: 'templates/approval-detail',
+        component: () => import('@/generated/templates/pages/ApprovalDetail/index.vue'),
+        meta: { title: '审批详情页' },
+      },
+      {
         path: 'templates/dashboard',
         component: () => import('@/generated/templates/pages/Dashboard/index.vue'),
         meta: { title: '仪表板示例' },

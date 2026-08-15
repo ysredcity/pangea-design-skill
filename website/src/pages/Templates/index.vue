@@ -17,6 +17,9 @@ const routeMap: Record<string, string> = {
   'page-modal-form': '/templates/simple-list', // 弹窗表单在列表页中触发
   'page-form': '/templates/basic-form',
   'page-grouped-form': '/templates/grouped-form',
+  'page-step-form': '/templates/step-form',
+  'page-detail': '/templates/detail',
+  'page-approval-detail': '/templates/approval-detail',
 };
 
 const templates = catalog.pageTemplates;

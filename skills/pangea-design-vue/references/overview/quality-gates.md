@@ -44,12 +44,13 @@ user-invocable: false
 
 **检查**：
 - 颜色**只用语义 token / 调色板变量**（`var(--color-*)`、`rgb(var(--x-n))`），**无裸 hex/rgb**（图表 canvas 例外，见 SKILL「图表」）。
+- **对话框宽度落在档位上**：520 / 720 / 1000（1000 仅当弹窗内含表格等宽组件），确认类弹窗 400 且不传 `width`；详见 SKILL「对话框宽度」。
 - 圆角**只用** `var(--border-radius-small/medium/large)`，不写死 px。
 - 间距为 **4 的倍数**档位；字号落 `12/13/14/16/20/24`；字重落 `400/500/600/700`。
 - **无自造组件**、不引入其它 UI 库。
 
 **怎么查**：
-- 机检：`npm run check:tokens`（脚手架 `scripts/check-tokens.mjs`）——扫 `src` 样式中的裸 `#hex` 与写死圆角（`.vue` 只扫 `<style>`，图表 canvas 的 JS 调色板 hex 为允许例外）。
+- 机检：`npm run check:tokens`（脚手架 `scripts/check-tokens.mjs`）——三条规则：① `src` 样式中的裸 `#hex`（`.vue` 只扫 `<style>`，图表 canvas 的 JS 调色板 hex 为允许例外）；② 写死圆角；③ **`<a-modal>` 宽度必须落在 520 / 720 / 1000 档位且不超过 1000**（1000 档仅当弹窗内含表格等宽组件；确认类弹窗用 `Modal.*` 走默认 400、不传 `width`；`width="auto"` / `fullscreen` / 绑定表达式跳过）。
 - 人检：scoped `<style>` 里颜色/圆角是否全走变量。
 - 依据：[design-tokens.md](../theme/design-tokens.md)（含「哪些 token 是运行时 CSS 变量」——只有颜色 + 圆角是 CSS 变量）。
 

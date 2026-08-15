@@ -64,6 +64,9 @@ const modules = ref<ModuleDef[]>([
     menu: [
       { key: '/contract-form', title: '基础表单页' },
       { key: '/grouped-form', title: '分组表单页' },
+      { key: '/step-form', title: '分步表单页' },
+      { key: '/detail', title: '详情页' },
+      { key: '/approval-detail', title: '审批详情页' },
     ],
   },
 ]);
