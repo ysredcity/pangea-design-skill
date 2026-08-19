@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "sync": "node scripts/sync-from-skill.mjs",
     "build:icons": "node scripts/build-icon-catalog.mjs",
+    "shoot:templates": "python3 scripts/shoot_templates.py",
     "check:tokens": "node scripts/check-tokens.mjs",
     "gate": "node scripts/check-tokens.mjs && vue-tsc --noEmit && vite build"
   },

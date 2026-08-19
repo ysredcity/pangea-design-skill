@@ -60,12 +60,12 @@ interface ModuleDef {
   menu: MenuItem[];
 }
 
-// 各组件页作为「组件」下的二级菜单，来自站点组件清单 registry（按分组排序平铺）
+// 各组件页作为「通用组件」下的二级菜单，来自站点组件清单 registry（按分组排序平铺）
 const componentChildren: MenuItem[] = componentMenuItems;
 
 // 官网分两个模块，通过顶部横向菜单切换：
 // - 说明文档：介绍 / 使用指南 / 更新日志
-// - 设计系统：Design Tokens / 图标 / 页面模板 / 组件 / MSC 组件（后两者各自下挂二级菜单）
+// - 设计系统：Design Tokens / 图标 / 页面模板 / 通用组件 / MSC 组件（后两者各自下挂二级菜单，默认折叠）
 //   其中「MSC 组件」是 MSC（全球营销云中台）的**产品专属业务组件**，与通用组件同级但分组独立；
 //   这些组件默认不用，只在需求命中 MSC 触发词时才使用。
 const modules = ref<ModuleDef[]>([
@@ -85,8 +85,8 @@ const modules = ref<ModuleDef[]>([
       { key: '/foundations', title: 'Design Tokens', icon: IconPalette },
       { key: '/icons', title: '图标', icon: IconFaceSmileFill },
       { key: '/templates', title: '页面模板', icon: IconLayout },
-      { key: 'components-group', title: '组件', icon: IconApps, children: componentChildren },
-      // 产品专属业务组件：挂在「组件」之后，与通用组件同级但分组独立。
+      { key: 'components-group', title: '通用组件', icon: IconApps, children: componentChildren },
+      // 产品专属业务组件：挂在「通用组件」之后，同级但分组独立。
       // 默认不用，只在需求命中该产品触发词时才使用；后续新增 MSC 组件往 children 里追加即可。
       {
         key: 'msc-group',
@@ -154,19 +154,11 @@ const selectedKeys = computed(() => {
     .sort((a, b) => b.length - a.length)[0];
   return [prefix || p];
 });
-// 官网默认展开当前模块下的所有分组（如「组件」一级菜单默认展开）
-const defaultOpenKeys = computed(() => {
-  const keys: string[] = [];
-  const walk = (items: MenuItem[]) =>
-    items.forEach((it) => {
-      if (it.children && it.children.length) {
-        keys.push(it.key);
-        walk(it.children);
-      }
-    });
-  walk(sidebarMenu.value);
-  return keys;
-});
+// 侧边分组（通用组件 / MSC 组件）**默认折叠**：
+// 不传 a-menu 的 default-open-keys 即全部收起。原先这里无条件把所有分组 key 都 push 进去，
+// 导致两个分组永远展开、侧边栏被十几个组件项撑得很长。
+// 当前所在分组不会因折叠而"迷路"——Arco 会给该分组的 header 加 arco-menu-selected。
+// 用户手动展开后由 a-menu 自己维护开合状态；切换顶部模块时菜单按 :key 重挂载，自动复位为折叠。
 
 function onModuleClick(key: string) {
   const m = modules.value.find((x) => x.key === key);
@@ -234,7 +226,6 @@ function onMenuItemClick(key: string) {
           <a-menu
             :key="activeModuleKey"
             :selected-keys="selectedKeys"
-            :default-open-keys="defaultOpenKeys"
             :style="{ width: '100%' }"
             @menu-item-click="onMenuItemClick"
           >

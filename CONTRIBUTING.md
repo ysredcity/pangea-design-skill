@@ -86,6 +86,7 @@ Pangea 是**面向企业的通用设计系统**；部分产品在它之上延展
 
 ### E. 工程脚手架与全局 Layout（生成层级）
 
+- **模板 UI 改了要重拍官网缩略图**：`website/src/assets/template-shots/*.jpg` 是「页面模板」列表页的卡片缩略图（提交入库，官网构建不依赖 playwright）。改动 `templates/project-starter/src/pages/**` 的视觉后，在 website 下跑 `npm run sync` 再跑 `npm run shoot:templates`（需 dev server 在跑；前置 `pip install playwright pillow && playwright install chromium`）。
 - **脚手架 `templates/project-starter/` 与 `references/overview/project-structure.md` 必须保持一致**：改依赖版本、主题/图标包接入方式、目录结构或生成层级时，两处同步更新。
 - 依赖引用固定为：主题包 `@arco-themes/vue-pangea-3-linear`、图标包 `@arco-iconbox/vue-pangea-mobile`，经 `@arco-plugins/vite-vue` 的 `theme` / `iconBox` 选项接入。
 - **脚手架是「已验证可运行」基线**，必须保持 `npm install && npm run build && npm run dev` 通过。改依赖/配置后**必须重新跑通这三步**，并更新 `package-lock.json`（随仓库提交，保证可复现）。
