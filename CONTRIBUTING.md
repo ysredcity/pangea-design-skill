@@ -26,7 +26,8 @@
 ```
 pangea-design-skill/
 ├── CONTRIBUTING.md                # 本文件：治理与贡献规则
-├── CHANGELOG.md                   # 变更记录
+├── CHANGELOG.md                   # 变更记录（写给使用者：每版交付了什么）
+├── PROJECT_CONTEXT.md             # 工程台账（写给维护者：全部上下文与过程）
 └── skills/
     └── pangea-design-vue/
         ├── SKILL.md               # 入口：约定 + 主题铁律 + 完整索引（定制）
@@ -112,7 +113,7 @@ Pangea 是**面向企业的通用设计系统**；部分产品在它之上延展
 - [ ] 新增/移动/删除文件后，`SKILL.md` 索引已同步、链接可达。
   - 可用：`grep -oE '\]\(references/[^)]+\)' SKILL.md | sed -E 's/\]\(|\)//g' | while read f; do [ -f "skills/pangea-design-vue/$f" ] || echo "MISSING: $f"; done`
 - [ ] 示例代码符合「关键约定」，无硬编码颜色、无 React API。
-- [ ] 已在 `CHANGELOG.md` 追加条目（含主题包/组件库版本信息）。
+- [ ] 已按「[七、CHANGELOG 与工程台账的分工](#七changelog-与工程台账的分工)」把内容记到**正确的文件**：对使用者可见的能力/行为变化进 `CHANGELOG.md`，过程与细节进 `PROJECT_CONTEXT.md`。
 
 ---
 
@@ -143,3 +144,23 @@ skill 需要以 zip 形式上传智能体平台时，用：
 | 当前基线 | 主题包 `@arco-themes/vue-pangea-3-linear` v1.0.11、图标包 `@arco-iconbox/vue-pangea-mobile` v1.0.24、peer `@arco-design/web-vue ^2.57.0` |
 
 拿不准就回到主题包和 `design-tokens.md`，不要猜。
+---
+
+## 七、CHANGELOG 与工程台账的分工
+
+两个文件读者不同，**不要互相灌内容**。
+
+| | `CHANGELOG.md` | `PROJECT_CONTEXT.md`（台账） |
+|---|---|---|
+| 读者 | **skill 使用者** | **维护者（日常迭代）** |
+| 回答什么 | 这个版本多了什么能力、升级后有什么不一样 | 这个工程当前是什么状态、为什么这么做、别再踩哪些坑 |
+| 粒度 | 一条一行，能力/约束/行为变化 | 想多细写多细：过程、根因、实测数据、教训 |
+
+**只进台账、不进 CHANGELOG**（最常写错的四类）：
+
+1. **同一版本内对新增内容的返工与修正**。使用者拿到的只有最终状态，"我们把自己这版新加的东西修好了"对他没有信息量——直接把最终状态写进该版本的 `Added` 即可。修「**上一个已发布版本**」的缺陷则相反，属于本版交付内容，要写。
+2. **根因排查与踩坑细节**（某个 Arco 类名的行为、CSS 层叠陷阱、脚本读 index 还是工作区……）。使用者需要的是结论，结论应落在对应的规范文档里；排查过程进台账。
+3. **逐项实测记录**（Playwright 步骤、量到的像素值与颜色值）。
+4. **不随包分发的东西**：仓库工具（`scripts/`）、官网 `website/`、`_tests/`。它们不在 `pangea-design-vue/` 包内，使用者看不到。
+
+**判断方法**：把这条写进去之前问一句——*使用者不知道这件事，会不会用错、或错过一个能力？* 不会，就只进台账。
