@@ -151,6 +151,13 @@ import { IconGlobal } from '@arco-iconbox/vue-pangea-mobile';
 
 > 命名导入不依赖 `vitePluginForArco` 的 `iconBox` 选项，因此**脚手架已去掉 iconBox 全局替换**，业务图标照常命名导入即可。图标名不确定时向用户确认，不要臆造图标；优先复用 Pangea 图标包中的图标。
 
+⚠️ **把图标包的图标套进 `arco-icon-hover`（圆形悬停底）时，必须自己给图标加 `position: relative`。** 那个圆底是**绝对定位的 `::before`**，Arco 靠 `.arco-icon-hover .arco-icon { position: relative }` 把图标垫到圆底之上；图标包的图标 class 是 `van-icon-*`、**不是 `.arco-icon`**，吃不到这条规则，于是灰底圆直接压在图标上——现象是"hover 时图标变白 / 不见了"。
+
+```css
+/* 图标包图标 + arco-icon-hover 的必备补丁 */
+.my-icon-btn :deep(svg) { position: relative; }
+```
+
 ## 目录结构
 
 ```

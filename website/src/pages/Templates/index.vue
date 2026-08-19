@@ -28,20 +28,45 @@ for (const [path, url] of Object.entries(shotModules)) {
   shots[path.split('/').pop()!.replace('.jpg', '')] = url;
 }
 
-/**
- * 展示顺序 = **使用顺序**（列表 → 表单 → 详情 → 审批 → 仪表板），
- * 不是 catalog 的 id 字母序（那会让审批详情页排第一、简单列表页排第七）。
- */
-const ORDER: { id: string; route: string }[] = [
-  { id: 'page-simple-list', route: '/templates/simple-list' },
-  { id: 'page-card-list', route: '/templates/card-list' },
+/** catalog 模板 id → 官网预览路由 */
+const ROUTES: Record<string, string> = {
+  'page-simple-list': '/templates/simple-list',
+  'page-card-list': '/templates/card-list',
+  'page-tree-table': '/templates/tree-table',
   // 对话框表单没有独立页面：在简单列表页点「创建」弹出（缩略图只截对话框本体）
-  { id: 'page-modal-form', route: '/templates/simple-list' },
-  { id: 'page-form', route: '/templates/basic-form' },
-  { id: 'page-grouped-form', route: '/templates/grouped-form' },
-  { id: 'page-step-form', route: '/templates/step-form' },
-  { id: 'page-detail', route: '/templates/detail' },
-  { id: 'page-approval-detail', route: '/templates/approval-detail' },
+  'page-modal-form': '/templates/simple-list',
+  'page-form': '/templates/basic-form',
+  'page-grouped-form': '/templates/grouped-form',
+  'page-step-form': '/templates/step-form',
+  'page-detail': '/templates/detail',
+  'page-approval-detail': '/templates/approval-detail',
+  dashboard: '/templates/dashboard',
+};
+
+/**
+ * 按**页面类型**分组展示；组内顺序 = 使用顺序（由简到繁）。
+ * 不用 catalog 的 id 字母序（那会让审批详情页排第一、简单列表页排第七）。
+ */
+const GROUPS: { key: string; title: string; desc: string; ids: string[] }[] = [
+  {
+    key: 'list',
+    title: '列表页',
+    desc: '数据的浏览、检索与批量操作入口',
+    ids: ['page-simple-list', 'page-card-list', 'page-tree-table'],
+  },
+  {
+    key: 'form',
+    title: '表单页',
+    desc: '数据录入与编辑，按字段规模与流程复杂度递进',
+    ids: ['page-modal-form', 'page-form', 'page-grouped-form', 'page-step-form'],
+  },
+  {
+    key: 'detail',
+    title: '详情页',
+    desc: '查看已录入数据，以及带流程语义的审批处理',
+    ids: ['page-detail', 'page-approval-detail'],
+  },
+  { key: 'other', title: '其他', desc: '非固化模板，作为组装参考', ids: ['dashboard'] },
 ];
 
 /** 仪表板不是固化模板，不在 catalog 里，手工补一条挂在最后 */
@@ -52,34 +77,32 @@ const DASHBOARD = {
   status: '示例',
   statusColor: 'arcoblue',
   when: '工作台聚合页 · KPI 卡 + 表格 + 占比条 + VChart 环形图 · 灰底无边框白卡',
-  variants: ['非固化模板', '图表按需'],
 };
 
-const MAX_TAGS = 2; // 标签只留一行，超出用「+N」收起，避免换行把卡片顶高
+// 说明：卡片为了压缩尺寸，不再展示 variants 标签行（那一行 + 间距约占 40px）。
+// variants 属于次要元数据，完整信息在 skill 的模板文档里；这里只保留 标题 + 适用场景 + 预览。
 
-const cards = computed(() => {
+/** 分组 + 组内卡片；catalog 里没有的 id 直接跳过，不产生坏卡片 */
+const groups = computed(() => {
   const byId = new Map(catalog.pageTemplates.map((t) => [t.id, t]));
-  const list = ORDER.flatMap((o) => {
-    const t = byId.get(o.id);
-    if (!t) return []; // catalog 里没有就跳过，不产生坏卡片
-    const variants = t.variants || [];
-    return [
-      {
-        id: t.id,
-        route: o.route,
-        title: t.title,
-        status: t.status,
-        statusColor: 'green',
-        when: (t.whenToUse || []).join(' · '),
-        tags: variants.slice(0, MAX_TAGS),
-        more: Math.max(0, variants.length - MAX_TAGS),
-      },
-    ];
-  });
-  return [
-    ...list,
-    { ...DASHBOARD, tags: DASHBOARD.variants.slice(0, MAX_TAGS), more: 0 },
-  ];
+  return GROUPS.map((g) => ({
+    ...g,
+    cards: g.ids.flatMap((id) => {
+      if (id === 'dashboard') return [DASHBOARD];
+      const t = byId.get(id);
+      if (!t) return [];
+      return [
+        {
+          id: t.id,
+          route: ROUTES[t.id],
+          title: t.title,
+          status: t.status,
+          statusColor: 'green',
+          when: (t.whenToUse || []).join(' · '),
+        },
+      ];
+    }),
+  })).filter((g) => g.cards.length);
 });
 </script>
 
@@ -94,9 +117,16 @@ const cards = computed(() => {
         </p>
       </header>
 
-      <div class="pg-tpl__grid">
+      <section v-for="g in groups" :key="g.key" class="pg-tpl__group">
+        <div class="pg-tpl__group-head">
+          <h2 class="pg-tpl__group-title">{{ g.title }}</h2>
+          <span class="pg-tpl__group-count">{{ g.cards.length }}</span>
+          <span class="pg-tpl__group-desc">{{ g.desc }}</span>
+        </div>
+
+        <div class="pg-tpl__grid">
         <a-card
-          v-for="c in cards"
+          v-for="c in g.cards"
           :key="c.id"
           class="pg-tpl__card"
           :bordered="true"
@@ -106,6 +136,14 @@ const cards = computed(() => {
           <template #cover>
             <div class="pg-tpl__shot">
               <img :src="shots[c.id]" :alt="`${c.title} 预览缩略图`" loading="lazy" />
+              <!-- 悬停遮罩：预览按钮收进这里，省掉卡片底部一整行
+                   focus-within 一并触发，否则键盘 Tab 到按钮时它是不可见的 -->
+              <div class="pg-tpl__overlay">
+                <a-button type="primary" size="small">
+                  预览
+                  <template #icon><IconRight /></template>
+                </a-button>
+              </div>
             </div>
           </template>
 
@@ -115,21 +153,9 @@ const cards = computed(() => {
           </div>
 
           <p class="pg-tpl__card-when">{{ c.when }}</p>
-
-          <div class="pg-tpl__variants">
-            <a-tag v-for="v in c.tags" :key="v" size="small">{{ v }}</a-tag>
-            <a-tag v-if="c.more" size="small">+{{ c.more }}</a-tag>
-          </div>
-
-          <div class="pg-tpl__card-foot">
-            <!-- 整张卡也可点；按钮保留为可聚焦的正式控件（键盘可达） -->
-            <a-button type="primary" size="small">
-              预览
-              <template #icon><IconRight /></template>
-            </a-button>
-          </div>
         </a-card>
-      </div>
+        </div>
+      </section>
     </div>
   </div>
 </template>
@@ -160,11 +186,44 @@ const cards = computed(() => {
   color: var(--color-text-2);
 }
 
+/* ===== 分组 ===== */
+.pg-tpl__group {
+  margin-top: 32px;
+}
+
+.pg-tpl__group-head {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--color-border-2);
+}
+
+.pg-tpl__group-title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-1);
+}
+
+/* 组内数量：轻量计数，不用 tag 免得抢标题的视觉重量 */
+.pg-tpl__group-count {
+  font-size: 13px;
+  color: var(--color-text-3);
+}
+
+.pg-tpl__group-desc {
+  margin-left: 4px;
+  font-size: 13px;
+  color: var(--color-text-3);
+}
+
+/* 列宽收窄（原 300 → 240）：1120 容器下由 3 列变 4 列，卡片整体更小、一屏能看全 */
 .pg-tpl__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-  margin-top: 28px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
   align-items: stretch;
 }
 
@@ -179,19 +238,41 @@ const cards = computed(() => {
   cursor: pointer;
 }
 
-/* ② card body 吃掉剩余高度，内部同样竖向 flex，好让 footer 吸底 */
+/* ② card body 吃掉剩余高度；内边距收紧（Arco 默认 16px 上下偏松） */
 .pg-tpl__card :deep(.arco-card-body) {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 12px 14px 14px;
 }
 
-/* ③ 截图区用固定宽高比，不用固定 px，窄屏也等比 */
+/* ③ 截图区用固定宽高比，不用固定 px，窄屏也等比
+ *    16/9 比原来的 16/10 更矮（图是 16:10 拍的，靠 object-fit: cover 裁掉底部一点，不用重拍） */
 .pg-tpl__shot {
-  aspect-ratio: 16 / 10;
+  position: relative;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--color-fill-2);
   border-bottom: 1px solid var(--color-border-2);
+}
+
+/* 悬停遮罩：默认透明且不吃鼠标事件，hover / 键盘聚焦时浮现 */
+.pg-tpl__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-mask-bg);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.pg-tpl__card:hover .pg-tpl__overlay,
+.pg-tpl__card:focus-within .pg-tpl__overlay {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .pg-tpl__shot img {
@@ -221,32 +302,16 @@ const cards = computed(() => {
   text-overflow: ellipsis;
 }
 
-/* 说明锁 2 行：line-clamp 截断 + min-height 占位，短文本也占满两行 */
+/* 说明锁 2 行：line-clamp 截断 + min-height 占位，短文本也占满两行 → 卡片等高 */
 .pg-tpl__card-when {
-  margin: 8px 0 10px;
+  margin: 6px 0 0;
   font-size: 13px;
-  line-height: 22px;
-  min-height: 44px;
+  line-height: 20px;
+  min-height: 40px;
   color: var(--color-text-2);
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-}
-
-/* 标签锁 1 行 */
-.pg-tpl__variants {
-  display: flex;
-  gap: 6px;
-  min-height: 24px;
-  margin-bottom: 16px;
-  overflow: hidden;
-}
-
-/* footer 吸底 → 同行/跨行的「预览」按钮都在同一水平线 */
-.pg-tpl__card-foot {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: auto;
 }
 </style>

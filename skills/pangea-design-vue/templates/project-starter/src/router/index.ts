@@ -26,6 +26,12 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '简单列表页' },
       },
       {
+        path: 'tree-table',
+        name: 'tree-table',
+        component: () => import('@/pages/TreeTable/index.vue'),
+        meta: { title: '左树右表列表页' },
+      },
+      {
         path: 'card-list',
         name: 'card-list',
         component: () => import('@/pages/CardList/index.vue'),

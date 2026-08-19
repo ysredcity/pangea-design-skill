@@ -92,6 +92,9 @@ MUST_HAVE=(
   "$SKILL_NAME/references/components-business/README.md"
   "$SKILL_NAME/references/components-business/msc/attachment-upload.md"
   "$SKILL_NAME/templates/project-starter/src/components/msc/MscAttachmentUpload.vue"
+  # 最新加入的页面模板同理（新增未提交时最容易漏）
+  "$SKILL_NAME/references/patterns/page-tree-table.md"
+  "$SKILL_NAME/templates/project-starter/src/pages/TreeTable/index.vue"
   "$SKILL_NAME/templates/project-starter/package.json"
   "$SKILL_NAME/templates/project-starter/vite.config.ts"
   "$SKILL_NAME/templates/project-starter/.env"

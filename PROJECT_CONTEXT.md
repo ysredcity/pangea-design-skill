@@ -1,7 +1,7 @@
 # 项目上下文台账（PROJECT_CONTEXT）
 
 > **这是本项目的单一事实源（Single Source of Truth）。** 每次新会话开始时先读它；完成里程碑、做出重要决策、或新增/移动文件后**及时更新它**。
-> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-15。
+> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-19。
 
 ---
 
@@ -341,3 +341,34 @@ pangea-design-skill/
   - ⚠️ **踩了一个很典型的坑（值得记住）**：初版 9 张里**第 1 张「简单列表页」拍成了官网首页**。根因是脚本等的 `.pg-layout__content` **在所有路由下都存在、毫无区分度**；再叠加「只改 hash 时浏览器不重新加载文档 → Playwright 的 `goto` 立即 resolve、`networkidle` 早已满足」，于是探活时打开的首页还在屏上就被截了。**修法两条**：① 每个 target 声明**该页独有的根类名**做 `ready`（`.pg-simple-list` / `.pg-card-list` / `.pg-form-page` / `.pg-grouped-form` / `.pg-step-form` / `.pg-detail` / `.pg-approval` / `.pg-dash`）；② `goto` 后强制 `reload(wait_until="networkidle")`，让等待真正等到这一页。→ **教训：hash 路由下等通用容器等于没等；等待选择器必须对目标页唯一。**
   - **实测**（Playwright，5 个断点 1600/1280/1100/820/480）：每个断点下 9 张卡 `uniqueHeights` 与 `uniqueFootOffset` **都只有一个值**（3 列 441 / 2 列 441 / 1 列 533、480 时 373），顺序全部正确，点卡片能跳转，无 console/page error；9 张图 md5 去重后仍是 9（无拍错/拍重）。website gate 通过。
   - CONTRIBUTING「提交前检查」补一条：改了脚手架页面视觉后要 `npm run sync` + `npm run shoot:templates` 重拍缩略图。
+- 2026-08-19 **v1.4.0：新增页面模板「左树右表列表页」（第 9 个）** + 两项 website 调整。
+  - **模板定位与选型判断（关键，写进了决策树）**：适用**主子表结构**——左树选中主表主数据、右表展示其子表数据。**判断标准：新建子数据是否必须指定父级**。是（归属）→ 用本模板；否（层级只是筛选维度）→ 简单列表页加个筛选项就够，不要上主子表。来源 Figma `219:4241`。
+  - **右侧直接沿用简单列表页的形态**（操作栏 创建/导入/导出/打印 + 表格 + 分页 规格一致），不另造一套；本模板的增量价值只在「左树 + 主子联动」。
+  - **三条联动契约（本模板最容易做错，已写进文档与代码注释）**：① 树选中项是右侧数据**唯一来源**，切主数据必须**重拉 + 分页复位 + 清空已勾选**——不复位会出现"切到只有 8 条的主数据却停在第 3 页→右侧空白"，不清空勾选会把上一条主数据的选中带过来导致误批量操作；② **未选主数据时不摆空表格**，给 `a-empty` 引导（否则用户分不清"没数据"还是"没选"）；③ 子表「创建」必须依附当前主数据，否则产生挂空子记录。
+  - 其他实现要点：树搜索前端过滤但**保留命中节点父链**（只留命中节点层级会断）；节点级「编辑/新增子级/删除」用 `#extra` + **hover 才显形**（常驻太吵），图标必须 `@click.stop` 否则点操作会顺带选中节点；删除主数据的确认文案**明确提示级联删除子数据**；`a-tree` 要加 **`block-node`** 才是整行高亮（与设计稿一致）。设计稿只画了左上角 `+`，节点级增删改属**增补**（需求明确要求主子各自 CRUD），文档已标注。
+  - **实测**（Playwright，脚手架 :5199）：未选→空状态无表格；选「上海分公司」出表格且数据随主数据变；**翻到第 2 页 + 勾选 1 行后切到「北京分公司」→ 分页复位 1、勾选归 0、数据正确切换**；树搜索「杭州」保留父链；节点 hover 出更多三项且删除弹级联提示确认；行更多为 编辑/删除；无 console error；左栏实测 261px ≈ 设计稿 260。
+  - **同步范围**：`page-tree-table.md`（含 meta）+ 脚手架页/路由/菜单 + SKILL.md 决策树与索引 + catalog（**8→9**）+ website（`sync-from-skill.mjs` 的 `EXAMPLE_PAGES` 加 `TreeTable`、预览路由 `/templates/tree-table`、截图脚本加 target、模板列表归入「列表页」组）+ CHANGELOG **[1.4.0] - 2026-08-19**。双 gate 通过。
+- 2026-08-19 website 两项调整（**不进 CHANGELOG**）：
+  - ① **返回按钮**：文字「返回模板列表」→「**返回**」，样式改**半透明黑底 + 白字**（`--color-mask-bg` + `--color-white`，去掉边框与阴影，hover 加深到 0.85）——悬浮在任意模板页（白底/灰底）上都清晰且不抢戏。实测 `bg: rgba(29,33,41,0.6)` / `color: rgb(255,255,255)` / `border: 0px`。
+  - ② **模板列表按页面类型分组**：列表页(3) / 表单页(4) / 详情页(2) / 其他(1)，组内保持由简到繁的使用顺序；原来的扁平 `ORDER` 数组拆成 `GROUPS` + 独立的 `ROUTES` 映射。分组头 = 标题 + 轻量计数 + 一句说明 + 下边框。实测 10 张卡 `uniqueHeights` 仍只有一个值（247），等高没被分组破坏。
+  - 截图脚本新增通用 **`pre_click`** 字段：左树右表默认未选主数据、右侧是空状态，缩略图会看不出「左树+右表」→ 截图前先点一个树节点。缩略图现共 10 张 / 227KB。
+  - ⚠️ 又踩了一次「`fs_write` 与依赖它的 `execute_bash` 放在同一并行块里 → 脚本还没落盘就执行」，这次表现为**用旧脚本重拍了一遍**（输出看起来正常、但改动未生效）。**并行块里不要放有依赖关系的调用。**
+- 2026-08-19 左树右表模板 5 项细节返工（归入 **[1.4.0]** 就地订正，未单开版本）：
+  - ① **`#extra` 图标落在高亮区外**（用户感受是"按钮不在节点内"）。**根因（实测确认）**：Arco 把 `#extra` 渲染成 `.arco-tree-node` 的**直接子元素、排在 `.arco-tree-node-title` 之后**（title 结束于 x=430，extra 就在 430），而选中/hover 底色 `rgba(232,255,251,0.5)` 是加在 **title** 上的 → 图标天然在高亮块外。**修法**：`.arco-tree-node{position:relative}` + 图标 `position:absolute;right:8px;top:50%;translateY(-50%)`，并给 `.arco-tree-node-title-block` 加 `padding-right:28px` 防压字。`block-node` 下 title 是 block，**靠"缩短 title 宽度"腾位置做不到**，必须绝对定位。图标外层加 `arco-icon-hover` 拿 Arco 标准圆形悬停底（该类的圆背景在伪元素上，`border-radius` 读到 0 是正常的）。
+  - ② **`+` 按钮宽高不等（24×28）**。**先前的假设是错的**：一度以为「只给 `#icon` 插槽时标签内空白文本节点会让 Arco 判定有默认内容、不加 icon-only 类」——查 Arco 源码后确认判定条件是 `$slots.icon && !$slots.default`，类名叫 **`arco-btn-only-icon`（不是 `arco-btn-icon-only`）**，我第一次断言查错了名字才误判成 false。**真因**：主题里 `.arco-btn-size-small.arco-btn-only-icon{width:28px;height:28px}` 确实命中了，但按钮是工具条 flex 的子项，被撑满的搜索框挤到 **flex-shrink** → 计算宽度 23.89px。**修法**：`flex-shrink:0`。另确认 **`.arco-btn-shape-square` 在本主题没有任何 CSS 规则**，`shape="square"` 是无效属性，已移除（避免留下 cargo-cult 写法）。
+    - 教训：**断言"某个类不存在"之前先去 node_modules 核对类名**；以及"元素声明了 width 却量到更小值"优先怀疑 flex 收缩，而不是组件内部逻辑。
+  - ③④ **新增入口收敛**：`+` 改 `a-dropdown position="bl"` 承载「新增根级」+「新增子级」（后者 `:disabled="!selectedNode"`）；节点 `#extra` 菜单删掉「新增子级」，只剩 编辑/删除。`handleAddRoot` → `handleAdd(kind)`。
+  - ⑤ **首屏占位**：本来就没预选（无需改逻辑），把 `a-empty` 换成 `#image` 插槽放 `IconList`（48px / `--color-text-4`）+ 文案「先从左侧列表选择」。
+  - **实测**（Playwright，:5199）：首屏 selected=0 / 无表格 / 占位图标 48px + 文案正确；`+` 28×28 且 `flex-shrink:0`；下拉未选中时「新增子级」`arco-dropdown-option-disabled`、选中后解除；`⋯` 带 `arco-icon-hover` 且矩形 `[424,444]` 完整落在 title `[228,452]` 内；节点菜单只剩 编辑/删除。三张截图肉眼复核通过。
+  - **同步范围**：脚手架 `TreeTable/index.vue` + `page-tree-table.md`（新增下拉规范、两个 Arco 坑、首屏不预选、代码片段与样式同步）+ website `sync` + 双 gate 通过 + 重拍缩略图（10 张 / 227KB）+ CHANGELOG 就地订正 1.4.0。
+  - 另记：Arco 树选中态类名是 **`.arco-tree-node-selected`**（在节点上），没有 `.arco-tree-node-title-selected`；写等待选择器时别猜。
+- 2026-08-19 左树右表节点「更多」图标再修 2 项（仍归入 **[1.4.0]**）：
+  - ① **去掉 `.arco-tree-node-title-block` 的 `padding-right: 28px`**（回到 Arco 默认 4px）。用户判断：图标盖在文字上不构成问题，为它给每个节点都空出一块反而更亏——只有超长文案才会被压到。
+  - ② **hover 时图标"变白看不见"的根因**：`.arco-icon-hover` 的圆形底是**绝对定位的 `::before`**（`--color-fill-2` = `#f2f3f5`，20×20，`--border-radius-circle`），Arco 靠 `.arco-icon-hover .arco-icon { position: relative }` 把图标垫到圆底之上；而 **iconbox 图标的 class 是 `van-icon-*`、不是 `.arco-icon`**，吃不到这条规则 → 静态流内的 svg 被绝对定位的 `::before` 压在下面，看起来就是图标消失/变白。**修法**：`.pg-tree-table__node-more :deep(svg){position:relative}`。实测 hover 后 svg `position: relative`、色 `rgb(0,170,166)`、圆底 `rgb(242,243,245)`，对比清晰。
+    - **这是通用坑，不只本模板**：已写进 `references/overview/project-structure.md` 的「图标使用（分工铁律）」章节——凡是把图标包图标套 `arco-icon-hover` 都要补这个 `position: relative`。与既有的"不启用 iconBox 全局替换（会破坏 icon-hover 圆底定位）"是同一族问题：**Arco 组件样式常按 `.arco-icon` 选择器写，换成图标包图标就会漏样式。**
+  - 同步：脚手架 + `page-tree-table.md` + `project-structure.md` + website `sync` + 双 gate 通过 + 重拍缩略图（10 张 / 227KB，视觉无变化）+ CHANGELOG 就地补进 1.4.0 的坑位清单与实测记录。
+- 2026-08-19 website 换浏览器图标（favicon，**不进 CHANGELOG**）：原先 `index.html` **完全没有 `<link rel="icon">`**、也没有 `public/` 目录（浏览器只能落到默认图标）。新建 `website/public/`，把 `_tests/cases/pangea.ico`（多尺寸 ICO，16/32/… 共 6 张，51740 B）复制为 `public/favicon.ico`，并在 `index.html` 加 `<link rel="icon" href="./favicon.ico" sizes="any" />`。**href 必须用相对 `./`**——website 是 `base: './'`（产物要能部署到任意子路径），写绝对 `/favicon.ico` 在子路径下会 404。实测：dev :5188 直取 `/favicon.ico` 返回 200 / `image/x-icon` / 51740 B（与源文件同尺寸），`dist/favicon.ico` 已随 build 落地、产物 HTML 中的 href 保持相对。gate 通过。
+  - 备注：headless shell **不会主动请求 favicon**，所以用「解析 link 标签 href + 直接 `request.get`」验证，别指望在网络记录里看到 favicon 请求。
+- 2026-08-19 打包 **v1.4.0** → `releases/pangea-design-vue_1.4.0.zip`（408K / **149 个文件**，包内根目录 `pangea-design-vue/`，可直接上传平台）。版本号由脚本从 CHANGELOG 首个 `## [x.y.z]` 自动取到 1.4.0。按【工作区当前状态】打包（本轮改动尚未 git 提交，这是脚本的预期行为）。
+  - 手工复核入包内容：`page-tree-table.md` / `TreeTable/index.vue` / `project-structure.md` / `catalog.json`（包内为 **页面模板 9 / 组件 10 / 业务组件 1**）均在，且 TreeTable 里「新增子级下拉 + `flex-shrink:0` + `:deep(svg)` 垫高」三处修法都在包内。
+  - 顺手把 `page-tree-table.md` 与 `TreeTable/index.vue` 加进 `scripts/pack-skill.sh` 的 `MUST_HAVE` 自检清单——它们当前是未跟踪文件，正属脚本注释里点明的「新增未提交 → 静默漏包」高发区，这次靠手查确认，之后由脚本兜住。

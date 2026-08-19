@@ -47,11 +47,15 @@ THUMB_RATIO = (16, 10)  # 与卡片 aspect-ratio 一致，先按比例裁再缩�
 
 # 顺序 = 列表页展示顺序（列表 → 表单 → 详情 → 审批 → 仪表板），与 Templates/index.vue 的 ORDER 一致
 # kind : "content" 截内容区 / "modal" 先点开对话框再只截对话框
+# pre_click: 可选，截图前先点一下（用于默认态不适合当缩略图的页面）
 # ready: **该页独有**的根类名。⚠️ 不能等 `.pg-layout__content`——它在所有路由下都存在，
 #        毫无区分度；曾因此把探活时打开的首页当成「简单列表页」拍了下来。
 TARGETS = [
     {"id": "page-simple-list", "route": "/templates/simple-list", "kind": "content", "ready": ".pg-simple-list"},
     {"id": "page-card-list", "route": "/templates/card-list", "kind": "content", "ready": ".pg-card-list"},
+    # 左树右表默认未选主数据、右侧是空状态引导 → 先点一个树节点，缩略图才体现「左树+右表」
+    {"id": "page-tree-table", "route": "/templates/tree-table", "kind": "content",
+     "ready": ".pg-tree-table", "pre_click": ".arco-tree-node-title"},
     {"id": "page-modal-form", "route": "/templates/simple-list", "kind": "modal", "ready": ".pg-simple-list", "trigger": "创建"},
     {"id": "page-form", "route": "/templates/basic-form", "kind": "content", "ready": ".pg-form-page"},
     {"id": "page-grouped-form", "route": "/templates/grouped-form", "kind": "content", "ready": ".pg-grouped-form"},
@@ -148,6 +152,11 @@ def main() -> int:
                         page.wait_for_timeout(600)
                     except Exception:
                         pass  # 没装图表库时是占位图，也照样截
+
+                # 某些页面的默认态不适合当缩略图（如左树右表未选主数据时右侧是空状态）
+                if t.get("pre_click"):
+                    page.click(t["pre_click"])
+                    page.wait_for_timeout(900)
 
                 if t["kind"] == "modal":
                     page.click(f"button:has-text('{t['trigger']}')")

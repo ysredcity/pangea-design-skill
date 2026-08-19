@@ -38,6 +38,7 @@ import {
   IconPuzzle,
 } from '@arco-iconbox/vue-pangea-mobile';
 import { componentMenuItems } from '@/pages/Components/registry';
+import TemplatePreviewBack from '@/components/TemplatePreviewBack.vue';
 
 const GITHUB_URL = 'https://github.com/ysredcity/pangea-design-skill';
 function openGithub() {
@@ -261,6 +262,10 @@ function onMenuItemClick(key: string) {
       <!-- Content -->
       <main class="pg-layout__content">
         <router-view />
+        <!-- 模板预览页的「返回模板列表」悬浮入口：只在 /templates/<模板> 下出现。
+             刻意放在官网侧而不是模板文件里——模板文件是 sync 的快照，改了会被覆盖，
+             也不该把官网导航混进交付给用户的模板代码。 -->
+        <TemplatePreviewBack :offset-left="sidebarWidth" />
       </main>
     </div>
   </div>

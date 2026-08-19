@@ -87,6 +87,8 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
   ├─ 是否命中现有页面模板？（见 references/patterns/ 的页面模板）
   │    ├─ 基础表格列表、单关键词/单条件搜索      → 套用「简单列表页」page-simple-list.md
   │    ├─ 数据以卡片形式呈现（图文/资源/应用墙）  → 套用「卡片列表页」page-card-list.md
+  │    ├─ **主子表结构**（先选主数据再看其子数据） → 套用「左树右表列表页」page-tree-table.md
+  │    │    （判断：新建子数据必须指定父级=归属→用它；层级只是筛选维度→简单列表页加筛选项）
   │    ├─ 字段少、轻量、弹窗内录入/编辑（不跳转）  → 套用「对话框表单」page-modal-form.md
   │    ├─ 字段较多、单一表单、独立页面录入/编辑    → 套用「基础表单页」page-form.md
   │    ├─ 字段极多、一次填完、需分组 + 锚点定位    → 套用「分组表单页」page-grouped-form.md
@@ -369,6 +371,7 @@ app.mount('#app');
 |---|---|---|
 | 简单列表页 | [page-simple-list.md](references/patterns/page-simple-list.md) | 基础表格列表页：标题 + 操作栏（按钮组+简单搜索）+ 表格（行选择）+ 分页；无复杂查询条件 |
 | 卡片列表页 | [page-card-list.md](references/patterns/page-card-list.md) | 以卡片呈现数据列表（图文/资源/应用墙）：标题 + 操作栏（按钮组+搜索/筛选）+ 卡片网格（a-card 自适应换行）+ 分页；数据比表格更适合卡片时使用 |
+| 左树右表列表页 | [page-tree-table.md](references/patterns/page-tree-table.md) | **主子表结构**：左树选中主表主数据 → 右侧表格展示其子表数据，主子各自增删改查；左树 260px（新增+搜索+a-tree）+ 右侧（操作栏+表格+分页），未选主数据时右侧给空状态引导 |
 | 对话框表单 | [page-modal-form.md](references/patterns/page-modal-form.md) | 字段少、轻量的弹窗内录入/编辑：a-modal + 2 列栅格垂直表单 + 取消/确定；不跳转独立页面 |
 | 基础表单页 | [page-form.md](references/patterns/page-form.md) | 字段较多的独立数据录入/编辑页：顶部操作栏（返回+标题+提交）+ 可选提示 + 垂直表单（多列栅格，含 input/select/switch/datepicker/radio/子表单） |
 | 分组表单页 | [page-grouped-form.md](references/patterns/page-grouped-form.md) | 字段极多的长表单：折叠分组（a-collapse）+ 右侧锚点导航（a-anchor）快速定位 + 多样表单形态；分组多、表单长时使用 |

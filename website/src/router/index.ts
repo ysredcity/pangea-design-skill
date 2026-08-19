@@ -63,6 +63,11 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '卡片列表页' },
       },
       {
+        path: 'templates/tree-table',
+        component: () => import('@/generated/templates/pages/TreeTable/index.vue'),
+        meta: { title: '左树右表列表页' },
+      },
+      {
         path: 'templates/basic-form',
         component: () => import('@/generated/templates/pages/ContractForm/index.vue'),
         meta: { title: '基础表单页' },
