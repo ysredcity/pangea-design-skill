@@ -184,56 +184,31 @@ app.mount('#app');
 - **`<template>` 里不写 TypeScript 类型注解**：模板中的内联函数（`v-on`/`v-bind`/作用域插槽）不能带 `: Type` / `?: Type`——如 `@click="(e: MouseEvent) => ..."`、`:disabled-date="(current?: Date) => ..."` 都会让模板编译失败、页面渲染成**空白页**（Vite dev server 不拦，只在运行时暴露）。把函数抽到 `<script setup>`（`const onClick = (e: MouseEvent) => {...}`），模板只写 `@click="onClick"`。
 - **响应式派生用 `computed()`**：对 `ref`/`reactive` 数据做过滤 / 排序 / 派生，用 `import { computed } from 'vue'` 的 `computed`，不要用普通 `function` 调用一次赋值（那样不会随依赖更新）。详见 [质量门禁 G9](references/overview/quality-gates.md)。
 
-### 主题取值铁律（Pangea 专属）
+### 全局设计规则（正文见 design.md）
 
-- **颜色只用语义 token 或 Pangea 调色板变量**，绝不硬编码 hex：
-  - 语义色：`var(--color-text-1)`、`var(--color-bg-2)`、`var(--color-border-2)`、`var(--color-fill-2)` 等。
-  - 品牌/状态色以 RGB 分量存储，需包 `rgb()`：`rgb(var(--primary-6))`、`rgba(var(--primary-6), 0.2)`、`rgb(var(--success-6))`。
-- **品牌主色是青绿色 `#00aaa6`（`--primary-6`）**，不是 Arco 默认蓝。交互主色用 `primary-6`，hover 用 `primary-5`，active 用 `primary-7`。
-- 间距用 4px 倍数档位，圆角按钮/输入框 4px、卡片/弹窗 8px，正文字号 14px。
-- 使用语义 token 而非调色板直接值，可自动适配暗黑模式（`body[arco-theme='dark']`）。
-- **数据可视化、多色标签/分类、图表系列等语义色不够用的场景**，从 design-tokens.md「基础色板」取扩展色（15 个色系 × 10 级，如 `rgb(var(--purple-6))`、`rgb(var(--cyan-6))`），仍用 `rgb(var(--x-n))` 变量而非硬编码。
-- 完整取值见 [design-tokens.md](references/theme/design-tokens.md)。
+跨页型 / 跨组件生效的设计规则**统一收在 [references/design.md](references/design.md)**，本文件只留结论，细则不再重复：
 
-### 响应式适配（全局准则）
-
-生成的**每个页面都必须做响应式适配**。中后台工作区常见 1280–1920，但内容区实际宽度会随侧边栏展开/折叠、浏览器分屏、笔记本小屏而变化，也要兼容约 1024 的窄屏——**不允许固定死宽导致字段挤压、内容溢出或非预期横向滚动**。
-
-- **表单多列栅格用 Arco Grid 断点，不写死 `:span`**：多列表单的 `a-col` 用响应式断点让列数随宽度收敛。标准配方——3 列表单用 `:xs="24" :sm="12" :lg="8"`（窄屏 1 列 / 平板 2 列 / 桌面 3 列），2 列表单用 `:xs="24" :sm="12"`；整行字段（textarea、子表单等）保持 `:span="24"`。断点：xs<576 / sm≥576 / md≥768 / lg≥992 / xl≥1200 / xxl≥1600。
-- **卡片 / 磁贴网格用 CSS grid 自适应**：`grid-template-columns: repeat(auto-fill, minmax(<最小宽>, 1fr))`，随容器宽度自动增减列数，不写死列数。
-- **表格窄屏保可用**：设 `:scroll="{ x }"` 横向滚动，或隐藏次要列、改卡片/列表展示。
-- **操作栏 / 筛选行允许换行**：工具栏用 `flex-wrap`，避免按钮组与搜索框在窄屏互相挤压溢出。
-- **固定像素宽度需设上限并防溢出**：弹窗、面板等固定宽度必须 `≤` 视口宽度（如 modal 在窄屏改用更小宽度或全屏）；侧栏、锚点等辅助区在窄屏可隐藏或下移。对话框宽度另有**硬性档位约束**（520 / 720 / 1000，确认类 400），见下文「对话框宽度」。
-- 优先用 Arco Grid 的断点属性表达响应式，能不写媒体查询就不写；确需媒体查询时放在组件 scoped 样式里。详见 [responsive-design.md](references/patterns/responsive-design.md)。
-
-### 页面背景（全局准则）
-
-全局 Layout 的**内容区默认透明**，漏出 body 层灰色（`--color-fill-2`）。**具体背景色由每个页面自己决定**，不要依赖 Layout 提供背景——新页面务必显式设置自己的背景：
-
-- **常规内容页**（列表页、表单页、详情页等，页面本身是一整块内容）：页面根元素设白底 `background: var(--color-bg-1)`，铺满内容区。内容区的左上圆角 + overflow 会把白底裁出圆角，自动复现「白面板悬浮在灰底」的观感。
-- **仪表板 / 工作台类聚合页**（多个独立区块拼合）：页面根**保持透明**（露出灰底），页内每个区块用**白底卡片**承载（`a-card` 白底、**去边框** `:bordered="false"`）——灰底 + 无边框白卡是这类页的标准做法，靠底色差异而非边框线区隔区块。卡片建议用**大圆角** `var(--border-radius-large)` + **极轻阴影**（如 `box-shadow: 0 1px 4px rgba(0,0,0,0.05)`）增强区隔与层次；卡内强调图标可用「浅底色芯片」（强调色 10% 透明度做底、同色图标）提升设计感。
-- 灰底取 `--color-fill-2`（与 Layout body 一致），白底取 `--color-bg-1`，均用变量，不写死 hex。
-
-### 对话框宽度（全局准则，硬约束）
-
-对话框宽度**只有三个档位**，且**不允许超过 1000**：
-
-| 档位 | 用在什么场景 |
+| 规则 | 一句话结论 |
 |---|---|
-| **520** | 默认档。字段少的轻量录入、单个选择/输入、简单信息展示（`a-modal` 不传 `width` 就是 520） |
-| **720** | 字段较多需要 2 列栅格、或内容较长需要更多横向空间 |
-| **1000** | **仅当弹窗内含表格等宽组件时**（只读子表单表格、可编辑明细表格、宽数据列表）才允许使用 |
-
-- **不得写 712 / 800 / 960 / 1200 这类非档位值**，也**不得超过 1000**（更宽的内容说明它不该待在弹窗里 → 改用独立页面，见 [page-form.md](references/patterns/page-form.md)）。
-- **1000 档要能说出理由**：弹窗里没有表格就不要用 1000，降到 720 或 520。
-- **确认类弹窗固定 400**：删除确认、操作确认、风险提示等用 `Modal.confirm / warning / info / error / success`（simple 模式），规范宽度 **400px**，**不要传 `width`**。
-  - ⚠️ 脚手架已内置一条全局覆盖 `.arco-modal-simple { box-sizing: border-box }`（`src/styles/arco-overrides.less`）。原因：`.arco-modal` 是 **content-box**，simple 模式把 `padding: 24px 32px 32px` 加在**根节点**上，Arco 自带的 `width: 400px` 在 content-box 下实际渲染成 **464px**；改 border-box 后 400 才是真实视觉宽度。**复制脚手架时勿丢这个文件与 `main.ts` 里的引入。**
-- 窄屏仍要防溢出：固定宽度不能超过视口，窄屏改小宽度或 `fullscreen`。
-- **机检**：`npm run check:tokens`（含在 `npm run gate`）会扫 `<a-modal>` 的字面 `width`，非档位或 >1000 直接报错；`width="auto"`、`fullscreen`、绑定表达式跳过。
+| [表单承载容器决策路径](references/design.md#11-表单承载容器决策路径) | 新建/编辑场景先估完成时间：≤30s → 对话框，30s~3min → 抽屉，>3min → 表单页；再看特定场景是否覆盖 |
+| [对话框宽度档位](references/design.md#12-对话框宽度档位硬约束) | **硬约束**：只有 520 / 720 / 1000 三档且不超过 1000，1000 档仅当内含表格；确认类固定 400 不传 `width`。`npm run gate` 机检 |
+| [页面背景分层](references/design.md#13-页面背景分层) | Layout 内容区透明，背景由页面自己设：常规页白底 `--color-bg-1`；仪表板类页面根透明 + 无边框白卡 |
+| [按钮组规范](references/design.md#21-按钮组规范) | 靠左按钮组重要性从左至右、靠右从右至左；超过 3 个折叠进 dropdown；**同组最多 1 个 `type="primary"`** |
+| [控件密度](references/design.md#22-控件密度) | 按区域分档，不是全局一律 small：列表页操作栏/搜索/分页 `small`、**表格 `medium`**、表单页控件用**默认尺寸** |
+| [状态不只靠颜色传达](references/design.md#23-状态不只靠颜色传达) | 状态必须「颜色 + 文字」双通道（表格状态列用 `a-badge :status :text`）；纯图标按钮有可访问名 |
+| [单组件选型速查](references/design.md#24-单组件选型速查) | 10 个高频组件的一句话误用排除；完整边界见 `component-selection/` |
+| [主题取值铁律](references/design.md#31-主题取值铁律) | 颜色只用语义 token / 调色板变量，绝不硬编码 hex；主色青绿 `#00aaa6`（`--primary-6`），不是 Arco 默认蓝 |
+| [响应式适配](references/design.md#32-响应式适配) | 每个页面都必须适配，兼容到约 1024；栅格用断点不写死 `:span`，卡片网格用 `auto-fill` 不写死列数 |
 
 ## Skill 索引
 
 需要完整属性、事件、插槽、示例和使用要点时，加载对应参考文件。
+
+### 设计规则（Pangea 专属，先读）
+
+| 主题 | 文件 | 适用场景 |
+|---|---|---|
+| **全局设计规则** | [design.md](references/design.md) | **跨页型/跨组件生效的规则唯一事实源**：表单承载容器决策路径（对话框/抽屉/表单页）、对话框宽度档位、页面背景分层、按钮组排列与主次、单组件选型速查、主题取值铁律、响应式适配 |
 
 ### 主题（Pangea 专属，先读）
 

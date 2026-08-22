@@ -44,7 +44,7 @@ user-invocable: false
 
 **检查**：
 - 颜色**只用语义 token / 调色板变量**（`var(--color-*)`、`rgb(var(--x-n))`），**无裸 hex/rgb**（图表 canvas 例外，见 SKILL「图表」）。
-- **对话框宽度落在档位上**：520 / 720 / 1000（1000 仅当弹窗内含表格等宽组件），确认类弹窗 400 且不传 `width`；详见 SKILL「对话框宽度」。
+- **对话框宽度落在档位上**：520 / 720 / 1000（1000 仅当弹窗内含表格等宽组件），确认类弹窗 400 且不传 `width`；详见 [design.md 1.2](../design.md#12-对话框宽度档位硬约束)。
 - 圆角**只用** `var(--border-radius-small/medium/large)`，不写死 px。
 - 间距为 **4 的倍数**档位；字号落 `12/13/14/16/20/24`；字重落 `400/500/600/700`。
 - **无自造组件**、不引入其它 UI 库。
@@ -65,7 +65,7 @@ user-invocable: false
 
 ## G4 · 响应式适配
 
-**检查**（见 [responsive-design.md](../patterns/responsive-design.md) 与 SKILL「响应式适配」）：
+**检查**（见 [responsive-design.md](../patterns/responsive-design.md) 与 [design.md 3.2](../design.md#32-响应式适配)）：
 - 表单多列栅格用 Arco Grid 断点（`:xs/:sm/:lg`），**不写死 `:span`**；整行字段 `:span="24"`。
 - 卡片/磁贴网格用 CSS `repeat(auto-fill|auto-fit, minmax(...))`，不写死列数。
 - 表格窄屏可用（`:scroll={x}` 或隐列）。
@@ -75,7 +75,7 @@ user-invocable: false
 
 ## G5 · 背景分层
 
-**检查**（见 SKILL「页面背景」）：
+**检查**（见 [design.md 1.3](../design.md#13-页面背景分层)）：
 - Layout 内容区默认透明，**背景由页面自己设**——不依赖 Layout 提供背景。
 - 常规内容页（列表/表单/详情）页面根设白底 `var(--color-bg-1)`。
 - 仪表板/工作台类聚合页页面根保持透明（漏出 body 灰底），区块用**白底无边框卡片**（`:bordered="false"`）区隔，可加大圆角 + 极轻阴影。

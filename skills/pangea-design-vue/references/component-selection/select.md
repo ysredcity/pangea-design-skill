@@ -11,7 +11,6 @@ meta:
   variants: [单选, 多选, 可搜索, 远程加载, 选项分组]
   composeWith: [a-option, a-optgroup, a-input-group]
   composeBoundary: [下拉箭头用 Arco 默认不替换, 提供 allow-clear 清除]
-  controls: { size: small }
   pitfalls: [远程搜索加防抖, 大数据量用虚拟列表]
   tags: [表单, 选择]
 ---

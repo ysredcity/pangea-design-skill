@@ -11,7 +11,6 @@ meta:
   variants: [info/success/warning/error 四类型, 可关闭, 带标题+描述]
   composeWith: [表单顶部, 页面提示区]
   composeBoundary: [用于页内内联提示不用于瞬时反馈]
-  controls: {}
   pitfalls: [不要用 Alert 做瞬时操作反馈(那是 Message)]
   tags: [反馈, 提示]
 ---

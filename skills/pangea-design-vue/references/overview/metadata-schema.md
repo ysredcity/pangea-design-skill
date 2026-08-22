@@ -29,7 +29,6 @@ patterns 文档 frontmatter 已有 skill 自身使用的键（`name`、`descript
 | `variants` | string[] | 否 | 全部 | 可选变体（如「基础卡片 / 带高级筛选」） |
 | `composeWith` | string[] | 否 | 全部 | 常配合使用的组件（`a-card`、`a-pagination`…） |
 | `composeBoundary` | string[] | 荐 | 全部 | 组合 / 嵌套边界与禁忌（如「卡片统一 a-card 不自造」） |
-| `controls` | object | 否 | 全部 | 控件规格约定（如 `{ size: small }`） |
 | `pitfalls` | string[] | 荐 | 全部 | 常见错误 / 反例 |
 | `previewRoute` | string | 否 | 全部 | 脚手架/官网可预览的路由（如 `/card-list`），组件可留空 |
 | `source` | string | 否 | 全部 | 对应脚手架示例文件（如 `src/pages/CardList/index.vue`） |
@@ -59,7 +58,6 @@ meta:
   variants: [基础卡片, 带高级筛选面板]
   composeWith: [a-card, a-pagination, a-input-group, a-tabs]
   composeBoundary: [卡片统一用 a-card 不自造, 网格用 auto-fill 不写死列数]
-  controls: { size: small }
   pitfalls: [卡片操作图标用 icon-hover 文本按钮而非裸 Icon, 高级筛选面板栅格用 auto-fit 收敛]
   previewRoute: /card-list
   source: src/pages/CardList/index.vue
@@ -85,7 +83,6 @@ meta:
   variants: [基础表格, 行选择, 可编辑子表格, 撑满高度]
   composeWith: [a-pagination, a-badge, a-input-group]
   composeBoundary: [分页独立于表格、total 与真实数据联动, 状态列用 a-badge 不只靠颜色]
-  controls: { size: small }
   pitfalls: [插槽 record 为 any 用 helper 查表避免 TS7053]
   tags: [数据展示, 列表]
 ---

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-08-19T12:44:09.954Z",
+  "generatedAt": "2026-08-22T12:27:52.208Z",
   "counts": {
     "pageTemplates": 9,
     "components": 10,
@@ -60,13 +60,6 @@
         "记录表最后一列承载意见+附件链接",
         "两个对话框复用同一套 pg-approval-grid 样式"
       ],
-      "controls": {
-        "size": "default",
-        "headerButtons": "small",
-        "table": "medium",
-        "circulateModal": "520",
-        "originModal": "720"
-      },
       "pitfalls": [
         "页面根设白底导致白卡失去区隔",
         "处理区用 a-descriptions 难放 textarea+按钮",
@@ -123,9 +116,6 @@
         "卡片统一用 a-card 不自造",
         "网格用 auto-fill 不写死列数"
       ],
-      "controls": {
-        "size": "small"
-      },
       "pitfalls": [
         "卡片操作图标用 icon-hover 文本按钮而非裸 Icon",
         "高级筛选面板栅格用 auto-fit 收敛"
@@ -183,10 +173,6 @@
         "栅格断点看视口不看容器宽度需显式传 cols",
         "空值统一占位"
       ],
-      "controls": {
-        "size": "default",
-        "table": "medium"
-      },
       "pitfalls": [
         "详情页里放录入控件",
         "抽屉内沿用3列过挤",
@@ -242,9 +228,6 @@
         "整行字段 span=24",
         "头部按钮默认尺寸"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "返回按钮用 text 类型",
         "帮助文档用 text 按钮+IconFile",
@@ -295,9 +278,6 @@
         "栅格响应式",
         "窄屏(≤992px)隐藏锚点"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "a-anchor 默认改写 location.hash 会顶掉 hash 路由导致点锚点变空白页（必须 change-hash=false）",
         "隐藏 collapse header 边框线",
@@ -355,9 +335,6 @@
         "body 设 max-height 内联滚动保证底部按钮可见",
         "用 on-before-ok 控制校验后关闭"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "写 712/800/960 这类非档位宽度",
         "弹窗里没表格却用 1000 档",
@@ -407,9 +384,6 @@
         "分页 total 与真实数据联动",
         "状态列用 a-badge 不只靠颜色"
       ],
-      "controls": {
-        "size": "small"
-      },
       "pitfalls": [
         "表格高度撑满父容器需 scroll y 100%",
         "分页总数左对齐翻页器右对齐"
@@ -465,9 +439,6 @@
         "每步只校验本步字段",
         "末步为只读复核不放录入"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "用 v-if 会丢失已填数据与校验",
         "一次校验全表单会误报后续步骤",
@@ -527,12 +498,6 @@
         "树选中项是右侧数据的唯一来源",
         "子表创建依赖当前主数据"
       ],
-      "controls": {
-        "size": "small",
-        "table": "medium",
-        "tree": "medium",
-        "leftPanel": "260"
-      },
       "pitfalls": [
         "切主数据后忘记复位分页与清空勾选",
         "未选主数据时直接显示空表格让用户困惑",
@@ -578,7 +543,6 @@
       "composeBoundary": [
         "用于页内内联提示不用于瞬时反馈"
       ],
-      "controls": {},
       "pitfalls": [
         "不要用 Alert 做瞬时操作反馈(那是 Message)"
       ],
@@ -614,7 +578,6 @@
         "状态不只靠颜色需带文字",
         "表格状态列用 status+text"
       ],
-      "controls": {},
       "pitfalls": [
         "独立计数徽标注意垂直居中"
       ],
@@ -653,7 +616,6 @@
         "灰底仪表板上用无边框白卡(:bordered=false)+大圆角+极轻阴影",
         "圆角用 var(--border-radius-large)"
       ],
-      "controls": {},
       "pitfalls": [
         "卡片网格用 CSS auto-fill/minmax 不写死列数"
       ],
@@ -694,9 +656,6 @@
         "整行字段 span=24",
         "提交与校验二选一不混用"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "声明式 @submit-success 与命令式 validate() 二选一",
         "校验规则写在 rules"
@@ -732,7 +691,6 @@
         "全局 Layout 已封装侧边菜单+layout-menu.less 样式",
         "新增页面在 menuItems 追加而非重写 Layout"
       ],
-      "controls": {},
       "pitfalls": [
         "选中态样式已定制(白底+primary-7+medium)",
         "激活时 hover 保持白色"
@@ -774,9 +732,6 @@
         "on-before-ok 返回 Promise 控制校验后关闭",
         "窄屏宽不超视口"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "写 712/800/960 这类非档位宽度",
         "弹窗里没表格却用 1000 档",
@@ -819,9 +774,6 @@
         "筛选后复位 current=1",
         "列表页布局总数左对齐翻页器右对齐"
       ],
-      "controls": {
-        "size": "small"
-      },
       "pitfalls": [
         "服务端分页 total 取接口返回",
         "客户端取数据长度"
@@ -861,9 +813,6 @@
         "下拉箭头用 Arco 默认不替换",
         "提供 allow-clear 清除"
       ],
-      "controls": {
-        "size": "small"
-      },
       "pitfalls": [
         "远程搜索加防抖",
         "大数据量用虚拟列表"
@@ -904,9 +853,6 @@
         "状态列用 a-badge 不只靠颜色",
         "操作列用 a-link/text 按钮"
       ],
-      "controls": {
-        "size": "small"
-      },
       "pitfalls": [
         "插槽 record 为 any 用接受 string 的 helper 查表避免 TS7053",
         "撑满高度需 scroll y 100% + 容器 flex"
@@ -944,9 +890,6 @@
         "页内内容切换不做页面跳转",
         "胶囊型默认右对齐需按需覆盖为左对齐"
       ],
-      "controls": {
-        "size": "default"
-      },
       "pitfalls": [
         "胶囊 tabs 默认 justify-content flex-end 右对齐",
         "需覆盖为 flex-start 改左对齐"
@@ -1024,11 +967,6 @@
         "size 为展示用字符串不在组件内格式化",
         "操作列 fixed right 需配 scroll"
       ],
-      "controls": {
-        "size": "default",
-        "table": "medium",
-        "hint": "12px"
-      },
       "pitfalls": [
         "非 MSC 场景误用",
         "表格插槽 record 是 any 直接索引会 TS7053",

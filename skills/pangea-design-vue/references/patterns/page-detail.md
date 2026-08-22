@@ -13,7 +13,6 @@ meta:
   variants: [独立页面, a-drawer 抽屉, a-modal 对话框]
   composeWith: [a-collapse, a-grid, a-table, a-drawer, a-modal, a-tooltip, a-button]
   composeBoundary: [内容组件不含页头由容器提供, embedded 模式去掉外层padding, 栅格断点看视口不看容器宽度需显式传 cols, 空值统一占位]
-  controls: { size: default, table: medium }
   pitfalls: [详情页里放录入控件, 抽屉内沿用3列过挤, 空值留白无占位, 附件图标自造SVG]
   previewRoute: /detail
   source: src/pages/DetailPage/index.vue

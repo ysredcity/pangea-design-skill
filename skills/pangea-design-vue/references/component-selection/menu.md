@@ -11,7 +11,6 @@ meta:
   variants: [垂直(侧边), 水平(顶部), 含子菜单]
   composeWith: [a-sub-menu, a-menu-item]
   composeBoundary: [全局 Layout 已封装侧边菜单+layout-menu.less 样式, 新增页面在 menuItems 追加而非重写 Layout]
-  controls: {}
   pitfalls: [选中态样式已定制(白底+primary-7+medium), 激活时 hover 保持白色]
   tags: [导航]
 ---

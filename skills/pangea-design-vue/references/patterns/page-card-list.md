@@ -13,7 +13,6 @@ meta:
   variants: [基础卡片, 带高级筛选面板]
   composeWith: [a-card, a-pagination, a-input-group, a-tabs]
   composeBoundary: [卡片统一用 a-card 不自造, 网格用 auto-fill 不写死列数]
-  controls: { size: small }
   pitfalls: [卡片操作图标用 icon-hover 文本按钮而非裸 Icon, 高级筛选面板栅格用 auto-fit 收敛]
   previewRoute: /card-list
   source: src/pages/CardList/index.vue

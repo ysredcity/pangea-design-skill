@@ -11,7 +11,6 @@ meta:
   variants: [line(默认), card, capsule(胶囊), rounded, text]
   composeWith: [a-tab-pane, a-badge]
   composeBoundary: [页内内容切换不做页面跳转, 胶囊型默认右对齐需按需覆盖为左对齐]
-  controls: { size: default }
   pitfalls: [胶囊 tabs 默认 justify-content flex-end 右对齐, 需覆盖为 flex-start 改左对齐]
   tags: [数据展示, 切换]
 ---

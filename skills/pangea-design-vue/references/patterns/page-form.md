@@ -13,7 +13,6 @@ meta:
   variants: [纯表单, 带子表单]
   composeWith: [a-form, a-grid, a-input, a-select, a-switch, a-date-picker, a-radio-group, a-table]
   composeBoundary: [栅格用响应式断点 xs/sm/lg 不写死 span, 整行字段 span=24, 头部按钮默认尺寸]
-  controls: { size: default }
   pitfalls: [返回按钮用 text 类型, 帮助文档用 text 按钮+IconFile, 提交与校验二选一]
   previewRoute: /contract-form
   source: src/pages/ContractForm/index.vue

@@ -13,7 +13,6 @@ meta:
   variants: [基础列表, 带状态列(a-badge)]
   composeWith: [a-table, a-pagination, a-input-group, a-badge]
   composeBoundary: [控件统一 small, 分页 total 与真实数据联动, 状态列用 a-badge 不只靠颜色]
-  controls: { size: small }
   pitfalls: [表格高度撑满父容器需 scroll y 100%, 分页总数左对齐翻页器右对齐]
   previewRoute: /
   source: src/pages/Example/index.vue

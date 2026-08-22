@@ -13,7 +13,6 @@ meta:
   variants: [已选主数据（展示子表）, 未选主数据（空状态引导）, 树搜索过滤]
   composeWith: [a-tree, a-table, a-pagination, a-input, a-dropdown, a-button, a-empty, a-link]
   composeBoundary: [左树固定260px右侧自适应, 左右各自内部滚动页面不整体滚, 树选中项是右侧数据的唯一来源, 子表创建依赖当前主数据]
-  controls: { size: small, table: medium, tree: medium, leftPanel: 260 }
   pitfalls: [切主数据后忘记复位分页与清空勾选, 未选主数据时直接显示空表格让用户困惑, 子表创建没绑定当前主数据产生挂空记录, 删除主数据未提示会级联删除子数据, 树节点操作常驻显示干扰浏览]
   previewRoute: /tree-table
   source: src/pages/TreeTable/index.vue
@@ -73,7 +72,7 @@ meta:
 - 工具条：`+` 图标按钮 + 搜索框（`a-input size="small"`，placeholder「搜索」）
 - **新增入口收敛到 `+` 的下拉菜单**（`a-dropdown position="bl"`），两项：「新增根级」始终可用、「新增子级」`:disabled="!selectedNode"`（没选节点就不知道挂在谁下面）。不要把「新增子级」同时放到节点菜单里重复一份。
 - ⚠️ **纯图标按钮被 flex 压扁的坑**：只给 `#icon` 插槽时 Arco 会自动加 `.arco-btn-only-icon`（主题里 `small` = 28×28 正方形），但按钮作为工具条 flex 的子项会被撑满的搜索框挤到收缩（实测 28 → 23.9px，看着就"宽高不一致"）。修法是给它 `flex-shrink: 0`；`shape="square"` 在本主题**没有任何 CSS 规则**，加了不解决问题。
-- 树：`a-tree` + **`block-node`**（整行可点，选中态才是整行浅底 + 主色文字，与设计稿一致；不加的话只有文字块高亮）
+- 树：`a-tree` + `size="medium"`（与右侧表格同档，见 [design.md 2.2](../design.md#22-控件密度)）+ **`block-node`**（整行可点，选中态才是整行浅底 + 主色文字，与设计稿一致；不加的话只有文字块高亮）
 - **树搜索是前端过滤 + 保留命中节点的父链**（只留命中节点会让层级断裂）：
   ```ts
   const walk = (nodes) => nodes.flatMap((n) => {

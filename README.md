@@ -31,10 +31,12 @@ pangea-design-skill/
     └── pangea-design-vue/
         ├── SKILL.md              # skill 入口：约定 + 主题铁律 + 完整索引
         ├── references/
+        │   ├── design.md                     # 全局设计规则（跨页型/跨组件，唯一事实源）
         │   ├── theme/design-tokens.md      # Pangea 全部设计 token（核心）
-        │   ├── overview/                    # 工程结构 / 主题接入 / 安装 / 架构 / 配置 / i18n
-        │   ├── components/  (72 篇)         # 组件 API（照搬上游）
-        │   ├── patterns/                     # 组合模式 + 页面模板
+        │   ├── overview/                    # 工程结构 / 主题接入 / 安装 / 架构 / 配置 / i18n / 门禁
+        │   ├── components/  (74 篇)         # 组件 API（照搬上游，零漂移镜像）
+        │   ├── component-selection/ (10 篇) # 单组件选型元数据（frontmatter 喂 catalog.json）
+        │   ├── patterns/                     # 组合模式 + 9 个页面模板
         │   └── components-business/          # 产品专属业务组件（按产品隔离，默认不用）
         │       └── msc/                      # MSC · 全球营销云中台
         └── templates/
@@ -68,6 +70,7 @@ cd my-pangea-app && npm install && npm run dev
 - 在线预览（官网 showcase）：https://pangea-design-skill.pages.dev/
 - 贡献与维护规则：[CONTRIBUTING.md](./CONTRIBUTING.md)
 - 变更记录：[CHANGELOG.md](./CHANGELOG.md)
+- 全局设计规则：[skills/pangea-design-vue/references/design.md](./skills/pangea-design-vue/references/design.md)
 - 设计 token：[skills/pangea-design-vue/references/theme/design-tokens.md](./skills/pangea-design-vue/references/theme/design-tokens.md)
 - 工程结构与生成层级：[skills/pangea-design-vue/references/overview/project-structure.md](./skills/pangea-design-vue/references/overview/project-structure.md)
 

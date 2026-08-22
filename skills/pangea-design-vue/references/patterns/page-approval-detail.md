@@ -13,7 +13,6 @@ meta:
   variants: [可处理（显示处理区）, 只读查看（actionable=false 隐藏处理区）, 全屏沉浸（模拟邮件/待办入口）, 六种操作各自的处理区行序（通过/转办/沟通/驳回/不通过/加签）]
   composeWith: [a-tabs, a-checkbox, a-table, a-radio-group, a-textarea, a-upload, a-tag, a-avatar, a-link, a-modal, a-select, a-dropdown, a-tooltip, a-alert]
   composeBoundary: [页面用灰底白卡不设白底, 业务详情复用 DetailContent 需 embedded, 处理区为左label右内容边框网格, 记录表最后一列承载意见+附件链接, 两个对话框复用同一套 pg-approval-grid 样式]
-  controls: { size: default, headerButtons: small, table: medium, circulateModal: 520, originModal: 720 }
   pitfalls: [页面根设白底导致白卡失去区隔, 处理区用 a-descriptions 难放 textarea+按钮, 审批记录表格列宽未固定导致意见列被压缩, 快速审批悬浮标在窄屏挡内容, 全屏只靠 z-index 盖不住Layout需Teleport到body, tab下边框自己再加一条会与Arco的::before重复, 处理区不同操作行的顺序不同不能用固定超集+v-if显隐, 处理意见行在v-for内模板ref会变数组须用函数ref, 传阅对象未选中时确定必须禁用]
   previewRoute: /approval-detail
   source: src/pages/ApprovalDetail/index.vue

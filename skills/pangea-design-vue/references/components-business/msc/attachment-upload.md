@@ -17,7 +17,6 @@ meta:
   variants: [默认态（空列表）, 上传后（含成功/失败行）, 仅查看（readOnly）]
   composeWith: [a-upload, a-table, a-badge, a-link, a-button]
   composeBoundary: [组件只呈现+抛事件不实现真实上传下载, fileList 由宿主受控, size 为展示用字符串不在组件内格式化, 操作列 fixed right 需配 scroll]
-  controls: { size: default, table: medium, hint: 12px }
   pitfalls: [非 MSC 场景误用, 表格插槽 record 是 any 直接索引会 TS7053, 上传失败行不该出现下载/预览, 仅查看态忘了去掉删除与上传入口, 无成功文件时批量下载要禁用]
   source: src/components/msc/MscAttachmentUpload.vue
   figma: 5926:53694

@@ -13,7 +13,6 @@ meta:
   variants: [折叠分组+锚点]
   composeWith: [a-collapse, a-anchor, a-form, a-grid, a-table]
   composeBoundary: [a-anchor 绑定 scroll-container, a-anchor 必须 change-hash=false（hash 路由）, 分组间 16px 间距, 栅格响应式, 窄屏(≤992px)隐藏锚点]
-  controls: { size: default }
   pitfalls: [a-anchor 默认改写 location.hash 会顶掉 hash 路由导致点锚点变空白页（必须 change-hash=false）, 隐藏 collapse header 边框线, content 去左右 padding, caret 图标 left:0]
   previewRoute: /grouped-form
   source: src/pages/GroupedForm/index.vue

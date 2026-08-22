@@ -1,7 +1,7 @@
 # 项目上下文台账（PROJECT_CONTEXT）
 
 > **这是本项目的单一事实源（Single Source of Truth）。** 每次新会话开始时先读它；完成里程碑、做出重要决策、或新增/移动文件后**及时更新它**。
-> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-19。
+> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-20。
 
 ---
 
@@ -67,6 +67,7 @@ pangea-design-skill/
 └── skills/pangea-design-vue/
     ├── SKILL.md                  # skill 入口
     ├── references/
+    │   ├── design.md                        # 全局设计规则唯一事实源（跨页型/跨组件；无 meta，不进 catalog）
     │   ├── theme/design-tokens.md          # 全部设计 token（核心）
     │   ├── overview/requirement-intake.md   # 需求规格化（生成前第一步：输入→界面架构需求文档）
     │   ├── overview/project-structure.md   # 工程结构 + 生成层级
@@ -380,3 +381,96 @@ pangea-design-skill/
   - **删前逐条核对过台账已覆盖**（避免删掉只存在一处的信息）：`pack-skill.sh` 的 index/zip 缺陷在台账 317–318 行、Arco Steps 布尔 `small` 的坑在 259 行、妙搭白屏与 `file://` 实测在 198 行、MSC 表头底色 `rgb(242,243,245)` 与对话框宽度实测均在。**这一步是必须的**——CHANGELOG 里有些内容当初只写在了那儿。
   - 保留在 CHANGELOG 的「修复」都指向**已发布版本**的缺陷（工作台点不动、锚点跳空白、两阶段门被流程清单破坏、degit 出网、私有 registry 澄清、妙搭白屏、生成页面空白），这些属于本版交付内容。
   - website 同步后双 gate 通过（website 渲染的是 `src/generated/CHANGELOG.md`，需 `npm run sync` 才更新）。
+
+---
+
+## 2026-08-20 · 新增 `references/design.md`：全局设计规则唯一事实源
+
+**起因**：用户要补两条**非工程性**的设计约定（表单承载容器决策路径、按钮组规范），问该放哪个文档；并追问了三轮架构问题。结论是 skill 里**缺一层**——设计规则此前没有归口，只能内联在 `SKILL.md`。
+
+**四轮论证的结论（含我被纠正的两处）**：
+
+1. **现状盘点**：设计规则散在三处 —— `SKILL.md`「关键约定」内联约 47 行（主题取值铁律 / 响应式 / 页面背景 / 对话框宽度）、`component-selection/`（10 篇 × ~27 行）、`patterns/page-*.md`。`theme/` 下只有 `design-tokens.md`，是**取值表不是规则**。
+2. **我第一轮说错了**：说"搬走 `component-selection` 正文会破坏 catalog 体系"。**实际 `build-catalog.mjs` 只解析 frontmatter 的 `meta:` 块（正则取 `^---...---` 再找 `meta:` 行），正文一个字都不读** —— 正文本来就是自由的。用户质疑得对。
+3. **`component-selection/` 里混了三类**：A 组件独有坑（tabs 胶囊右对齐、table TS7053、select 防抖）→ 留；B 对象视角邻域决策（选项 2–3 个改 radio 等）→ 留，因为它与 design.md 的**问题形状不同**（design.md 是「场景→结论」，它是「对象→邻域」，agent 命中时机不同，已在写 `<a-select>` 的 agent 不会去翻决策路径文档）；C 全局规则副本 → 搬。
+4. **C 类重复实测（比初判严重）**：对话框宽度档位在 `SKILL.md` + `modal.md` **两份完整正文**（连 content-box 464px 那段都重复）；背景分层在 `SKILL.md` + `card.md`，而 **`card.md` 自己写了"详见 SKILL『页面背景（全局准则）』"却又重述了一遍**，自认副本；栅格断点在 `SKILL.md` + `form.md` + `responsive-design.md`；`size="small"` 在 `table.md` + `pagination.md`；不只靠颜色在 `badge.md` + `table.md` + `quality-gates.md`。（`patterns/page-*.md` 里的 `size="small"`、`:xs=` 是**示例代码**里的自然出现，非竞争性规则陈述，不算重复、不动。）
+5. **为什么不能塞进 `components/` 同名文件**（用户第三问）：`components/` 是**零漂移上游镜像** —— 上游 skill 在本机 `/Users/yangshuo/Code/arco-design-skill`，74 篇对 74 篇，**逐篇 diff 全部字节一致、0 篇有差异**。掺入本地内容会毁掉「Arco 升级时 `diff -r` 找 API 变化」的干净信号。且这条路已走过一次：`patterns/form-patterns.md`、`table-patterns.md` 加了本地补充，导致 `CONTRIBUTING.md` 第 16 行必须写专门豁免"上游同步时保留这些小节"，现分别对上游 diff 74 / 116 行 —— 每掺一处就多欠一条**人工保留义务**。另外 `components/` 74 篇**全部没有 `meta:`**，合并还得给上游文档加 frontmatter，镜像彻底破。
+6. **为什么不把 `component-selection/` 全塞进 design.md**（用户第四问，逐条量化过代价）：`build-catalog.mjs` 第 20 行 `SELECTION_DIR` + 第 113 行 `collect(SELECTION_DIR)` → 删文件则 `components: []`；连带**官网当场坏两处** —— `website/src/pages/Home/index.vue` 第 37 行统计卡「组件选型」显示 0，`website/src/pages/Components/Detail.vue` 第 16 行 `catalog.components.find()` 永远 undefined → **所有组件详情页的「选型要点」卡片整块消失**（whenToUse / whenNotToUse / variants / composeBoundary / pitfalls 五字段）。`registry.ts` 是解耦的（自维护展示列表），所以列表页不空、只有详情页卡片没了。另外 10 个 `meta:` 块合并后只能留一个 frontmatter，结构化字段要么退化成散文、要么在一个文件里堆 10 个 meta（更难维护、零收益）。**结论：能做但要付三笔改造（改生成器 + 改官网取数 + 放弃按字段过滤），收益只是少一个目录 → 不做。**
+
+**最终方案（分层，不合并）**：`design.md` 持有跨对象规则**正文**；`component-selection/` 保留 frontmatter + 对象邻域一行 + 独有坑；单一入口靠 design.md 里的「2.2 单组件选型速查」表（10 个组件一句话结论 + 链接）达成，catalog 与官网零改动。
+
+**本轮已落地（纯新增 + 一处瘦身，未动 `components/` 与 `component-selection/`）**：
+- 新建 `references/design.md`（153 行）：三分组结构 —— **一、容器与布局**（1.1 表单容器决策路径【新】/ 1.2 对话框宽度档位【迁】/ 1.3 页面背景分层【迁】）、**二、组件与交互**（2.1 按钮组规范【新】/ 2.2 单组件选型速查【新】）、**三、取值与适配**（3.1 主题取值铁律【迁】/ 3.2 响应式适配【迁】）。顶部有收录标准表 + 速查目录。
+- 1.1 补了原始需求没有的**第三步「落到模板」**映射；并**记录一处缺口：抽屉表单无固化模板**（现用 `a-drawer` + 参照 `page-form.md`，非模态用 `:mask="false"`）——可作为后续模板候选。
+- `SKILL.md`：47 行正文 → 14 行「全局设计规则」结论表（每行链到 design.md 锚点），503 → 477 行；索引新增「设计规则（Pangea 专属，先读）」节，排在「主题」之前。
+- `CONTRIBUTING.md`：原则 4「定制」清单补 `design.md` / `component-selection/` / `components-business/`；新增**原则 8「设计规则只写一处」**；新增**三-F 节**（作用范围→写到哪的归属表 + 6 条操作要求，含"不给 design.md 加 meta"和"单分组超 150 行才拆 `design/` 目录"）。注意 A–E 已被占用，新节编号为 **F**。
+- 验证：`build-catalog.mjs` 重跑仍 9/10/1，`design.md` 未被扫入；15 个锚点全可达，design.md 与 SKILL.md 零死链。官网 `sync-from-skill.mjs` 只同步 catalog / CHANGELOG / 模板页 / 业务组件，**不同步 reference 文档，故无需 sync**。
+
+**待办（下一步，用户已同意分两步）**：清理 C 类重复 —— 删 `modal.md` 宽度档位正文、`card.md` 背景分层正文、`form.md` 栅格断点正文、`table.md` + `pagination.md` 的 `size="small"` 陈述、`badge.md` + `table.md` 的不只靠颜色陈述，各换成一行指针链到 `design.md` 锚点。**只删正文，`meta:` frontmatter 一律不动**（否则 catalog 和官网选型卡片受影响）。
+
+**CHANGELOG 未动**：按 CONTRIBUTING 第七节，这属于使用者可见的新能力，但当前无新版本号 → 留到下次发版时归入该版本的 `Added`，避免在 CHANGELOG 里记版本内过程。
+
+### 2026-08-22 · 第二步：清除 C 类重复（6 个选型文档正文 → 指针）
+
+**执行前发现两条规则在 design.md 里没有落点**（上一步只迁了 SKILL.md 那四段），直接删会造成规则丢失 → 先补进 design.md 再删：
+
+- **新增 2.2 控件密度**。查证后发现**「控件一律 `size="small"`」这个说法本身是错的**，真实约定按区域分档（事实源＝脚手架实现）：浏览类页面的操作栏按钮 / 搜索 / 树内搜索框 `small`、**表格自身 `size="medium"`**（`Example/index.vue` 第 145 行、TreeTable、GroupedForm、StepForm、ApprovalProcess 全是 medium）、分页器 `small`（Example 174 / TreeTable 311 / CardList 220）、**表单页控件与操作栏按钮用默认尺寸**（`page-form.md` 第 59/70 行明确「表单页字段是主体，不需要 small」）、表格单元格内联控件 `small`/`mini`。顺带把 Arco Steps 小尺寸要用布尔 `small`（写 `size="small"` 静默无效）这条坑也收进来了。
+- **新增 2.3 状态不只靠颜色传达**：颜色 + 文字双通道、图表系列要有图例区分、纯图标按钮要有可访问名、对比度 ≥ 4.5:1。规则正文在 design.md，**检查项仍在 quality-gates G7**（第 99 行），两者不重复。
+- 顺手把原 2.2 单组件选型速查挪到分组末尾（规则在前、索引在后），编号 2.2 → **2.4**，同步改了 design.md 速查目录与 SKILL.md 的锚点链接。
+
+**发现并修正一处事实错误**：`component-selection/table.md` 原正文写「控件 `size="small"`」，与脚手架 `a-table size="medium"` 矛盾。已改为「表格自身 `size="medium"`，同页操作栏 / 搜索 / 分页用 `small`」。
+
+**⚠️ 遗留待定（需用户决策，我没动）**：`table.md` / `select.md` / `pagination.md` / `card-list` 的 frontmatter 都写着 `controls: { size: small }`。`metadata-schema.md` 第 32 行只说 `controls` 是「控件规格约定（如 `{ size: small }`）」，**没定义它指组件自身还是该场景下的周边控件**。对 table 而言按前者解读就是错的（实际 medium）。因为 frontmatter 喂 catalog + 官网选型卡片，属于数据变更，**本轮按既定原则未改**。要改需同时想清 `controls` 的语义定义。
+
+**6 个文件的替换（正文 → 一行结论 + 锚点指针，frontmatter 一律未动）**：
+- `modal.md`：删掉宽度四档明细 + 确认类 400 + content-box 464 解释 + 独立机检行（-10 行），压成一行结论 + 链 1.2；「别用它」补链 1.1 完整容器决策路径。
+- `card.md`：删掉背景分层明细与「详见 SKILL『页面背景（全局准则）』」，改链 1.3 + 3.2。
+- `form.md`：栅格断点改链 3.2，并补一句表单控件用默认尺寸链 2.2。
+- `table.md`：不只靠颜色改链 2.3；尺寸表述修正后链 2.2。
+- `pagination.md`：分页器 small 链 2.2。
+- `badge.md`：双通道规则链 2.3。
+
+**验证**：frontmatter **零改动**（git diff 逐行确认）；`build-catalog.mjs` 重跑 9/10/1，catalog 唯一变化是 `generatedAt` 时间戳、内容字节相同；design.md 17 个锚点，跨 SKILL.md + 10 篇选型文档 + design.md 自身共 **32 处锚点引用全部可达、零死链**；`grep` 确认组件文档正文已无 C 类内容（仅 `card.md` frontmatter 的 `composeBoundary` 仍含「极轻阴影」等字样，那是机读元数据，**故意保留**）。
+
+**净效果**：SKILL.md 503 → 478 行；design.md 178 行（三分组 7 条规则 + 速查表）；6 个选型文档 -58/+26 行。设计规则从「散在 SKILL.md + 6 个组件文档」收敛为「design.md 持有正文，其余只留指针」。
+
+### 2026-08-22 · 移除元数据字段 `controls`（连带修正上一条的遗留待定）
+
+**结论：删掉，不设替代字段。** 上一条记的「⚠️ 遗留待定」到此关闭。
+
+**核查过消费场景（这是决定删的依据）**：`build-catalog.mjs` 只是**原样透传**进 catalog.json；官网 `Components/Detail.vue` 只渲染 `whenToUse` / `whenNotToUse` / `variants` / `composeBoundary` / `pitfalls` **五个字段，不含 `controls`**；`check-tokens.mjs`、`quality-gates.md` 都不读；**`SKILL.md` 从未提及 `controls`**（agent 根本没被引导去读）；`metadata-schema.md` 标为非必填。→ **纯只写数据，零消费者。**
+
+**删的四条理由**：
+1. 零消费者，改错也没人发现。
+2. **20 条里 4 条有问题（20%）**：`component-selection/table.md` 写 `{size: small}` 而脚手架所有表格是 `medium`（错）；`patterns/page-simple-list.md` 声明 `{size: small}` 但**同一文件第 216 行代码就是 `size="medium"`**（自相矛盾）；`select.md` 写死 `small` 但表单页 17 个 select 全是默认尺寸（不准）；模板层与组件层对 `size` 的语义理解不同（模板层 = 场景基调 + 元素例外键，组件层 = 组件自身尺寸），而 schema 从未定义过该选哪种 —— **这是根因**。
+3. 违反本轮刚立的 `CONTRIBUTING` 原则 8 / F.1「设计规则只写一处」：`controls` 就是把尺寸规则复制进 20 个 frontmatter，与刚清掉的 C 类重复是同一反模式。
+4. 信息已有三层更精确的落点：**规则**在 design.md 2.2 控件密度（区域分档矩阵）、**具体元素值**在各模板正文、**实现**在脚手架代码。逐条核对过 `controls` 里的每个值，正文/代码版本都比 frontmatter 更详细 —— 例：`circulateModal: 520` / `originModal: 720` 在 `page-approval-detail.md` 第 165/173 行，连「不要用 800——不在 520/720/1000 档位」的理由都写了；`leftPanel: 260` 在 `page-tree-table.md` 第 72 行还带窄屏降级（≤1100 收 220、≤768 上下堆叠）。
+
+**删之前补了唯一的信息缺口**：`tree: medium` 是 `controls` 独有、正文没写的（脚手架 `TreeTable/index.vue` 第 219 行有）。已补进 `page-tree-table.md` 第 76 行树的说明，并链到 design.md 2.2。
+
+**改动**：删 20 处 frontmatter 的 `controls` 行（9 个 `patterns/page-*.md` + 10 个 `component-selection/*.md` + `components-business/msc/attachment-upload.md`）；`metadata-schema.md` 删字段定义 1 行 + 两处示例行。用脚本限定在「首个 `---` 到第二个 `---`」范围内匹配 `^\s{2}controls:`，避免误删正文。`docs/plan-gates-metadata-website.md` 第 95 行**故意不动**（历史规划文档，属记录）。
+
+**不设替代字段的理由**：尺寸应由 design.md 规则 + 机检保证。真要机检就**直接扫代码里的 `<a-table size>` 是否为 medium**，而不是拿 frontmatter 去比对 —— 后者只会再造一份需要人工同步的副本，重演这次的矛盾。
+
+**验证**：catalog 重跑 9/10/1，20 条**全部不含 controls**，剩余字段 20 个（composeBoundary / whenToUse / pitfalls / tags / previewRoute / source / figma / triggers / replaces / status …）；20 个文件 frontmatter 的 `---` 配对与 `meta:` / `id:` 全部完好；官网 sync 后 10 个组件的 5 个渲染字段齐备、`controls` 残留 0；design.md 33 处锚点引用全可达、零死链；website `npm run gate` 通过（check-tokens + vue-tsc + build 20.92s）。
+
+### 2026-08-22 · 扫尾 + 定版 1.4.1
+
+**扫出 4 处失效指向**（把 SKILL.md 四段规则搬到 design.md 后留下的悬空引用，是本轮最容易漏的一类）：`quality-gates.md` 第 47 行「详见 SKILL『对话框宽度』」、第 68 行「SKILL『响应式适配』」、第 78 行「SKILL『页面背景』」、`project-structure.md` 第 202 行「详见 SKILL.md『页面背景（全局准则）』」→ 全部改为 design.md 对应锚点。
+→ **教训：以后迁移 SKILL.md 章节，必须 `grep -rn "SKILL「\|SKILL.md「"` 扫一遍反向引用。**
+
+**保留不动的两处**：`quality-gates.md` 第 46 行、`project-structure.md` 第 99 行指向 SKILL「图表（VChart）」——该节仍在 SKILL.md 第 144 行，引用有效。
+
+**README.md 同步**：结构树补 `design.md` 与 `component-selection/ (10 篇)`，`components/` 篇数 **72 → 74**（早就过期了），`patterns/` 注明 9 个页面模板；「相关文档」列表加一行全局设计规则。
+
+**已确认官网没有第三份规则副本**：`website/src/pages/Guide/`、`Foundations/` 里搜 520/720/背景分层/按钮组/auto-fill，只命中 `Foundations/index.vue` 第 424 行的官网自身 CSS，不是规则复制。
+
+**CHANGELOG 定版 [1.4.1] - 2026-08-22**，按第七节口径只写使用者视角：Added（design.md 本身 + 容器决策路径 + 按钮组 + 控件密度分档 + 状态双通道 + 选型速查表）、Fixed（纠正「表格用 small」的错误结论）、Changed（设计规则收敛到一处 + 移除 `controls` 字段并说明 catalog 不再输出）。**版本内的返工与论证过程全部留在本台账**，CHANGELOG 里没写。
+
+**`controls` 全仓残留仅 4 个文件，均属预期**：本台账、`CHANGELOG.md`（记录其移除）、`website/src/generated/CHANGELOG.md`（同步副本）、`docs/plan-gates-metadata-website.md`（历史规划文档，故意不动）。
+
+**最终验证**：design.md 17 个锚点 / **50 处引用全部可达**；`references/` + `SKILL.md` **零死链**；catalog 9/10/1 且 `controls` 残留 0；website sync 后官网更新日志页已含 1.4.1；`npm run gate` 通过（check-tokens + vue-tsc + build 22.49s）。
+
+**未做（待用户决定）**：**尚未打包**。`pack-skill.sh` 取 CHANGELOG 首个 `## [x.y.z]` 作版本号，现在会打成 1.4.1，需要发版时执行。
+
+**已打包 v1.4.1**：`releases/pangea-design-vue_1.4.1.zip`，**412K / 150 个文件**（1.4.0 是 408K / 149）。脚本提示「skill 存在未提交改动，按工作区当前状态打包」——预期行为。校验：声明 150 = 实际 150；与 1.4.0 逐文件 diff **只多 `references/design.md` 一个**（其余都是文件内改动，不影响清单）；包内 design.md 的 9 个章节（7 条规则 + 分组）齐全；包内 `patterns/page-*` / `component-selection/` / `attachment-upload.md` **无 `controls:` 残留**；CHANGELOG 不随包分发（既有设计）。

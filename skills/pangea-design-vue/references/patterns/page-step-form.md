@@ -13,7 +13,6 @@ meta:
   variants: [三步(信息→明细附件→确认), 步数可增减]
   composeWith: [a-steps, a-collapse, a-form, a-grid, a-table, a-upload, a-descriptions]
   composeBoundary: [步骤条放页头不随内容滚动, 分步用 v-show 保留已填状态, 每步只校验本步字段, 末步为只读复核不放录入]
-  controls: { size: default }
   pitfalls: [用 v-if 会丢失已填数据与校验, 一次校验全表单会误报后续步骤, 步骤条不要放进滚动区]
   previewRoute: /step-form
   source: src/pages/StepForm/index.vue

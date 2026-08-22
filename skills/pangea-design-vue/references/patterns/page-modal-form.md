@@ -13,7 +13,6 @@ meta:
   variants: [1列(字段极少), 2列, 3列(字段较多)]
   composeWith: [a-modal, a-form, a-grid, a-input, a-select, a-switch, a-textarea]
   composeBoundary: [宽度只有 520/720/1000 三档不超过 1000, 本模板用 720, 1000 档仅当弹窗内含表格, 列数≤3, body 设 max-height 内联滚动保证底部按钮可见, 用 on-before-ok 控制校验后关闭]
-  controls: { size: default }
   pitfalls: [写 712/800/960 这类非档位宽度, 弹窗里没表格却用 1000 档, 栅格用响应式断点不写死 span, 窄屏宽度不超视口]
   previewRoute: /
   source: src/pages/Example/ContractModal.vue

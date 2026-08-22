@@ -14,7 +14,8 @@
 4. **区分「照搬」与「定制」**：
    - **照搬（verbatim）**：组件文档、模式文档、`architecture.md`、`config-provider.md`、`internationalization.md`（纯开发用法，无主题内容）。
      - 例外：`patterns/form-patterns.md`、`patterns/table-patterns.md` 末尾带有明确标注的「本地补充」小节（提交/校验二选一、分页 total 联动等通用最佳实践），非上游内容。上游同步这两个文件时，保留这些本地补充小节。
-   - **定制（Pangea 专属）**：`SKILL.md`、`references/theme/design-tokens.md`、`references/overview/theming.md`、`references/overview/getting-started.md`、`references/overview/project-structure.md`、`templates/project-starter/`（工程脚手架）。
+   - **定制（Pangea 专属）**：`SKILL.md`、`references/design.md`、`references/theme/design-tokens.md`、`references/component-selection/`、`references/components-business/`、`references/overview/theming.md`、`references/overview/getting-started.md`、`references/overview/project-structure.md`、`templates/project-starter/`（工程脚手架）。
+8. **设计规则只写一处（`references/design.md`）。** 判断标准：一条规则在**2 个以上页型或组件**上生效 → 正文进 `design.md`，其它文件只留一行指针 + 链接，不复制正文。**严禁把设计规则写进 `references/components/`**（那是上游镜像，见原则 1）。归属细则见「三-F. 新增/修改设计规则」。
 5. **双受众目的不变**：产物是一个 Vue 工程，同时服务 PM 出高保真 demo（mock 数据）与开发基于 PRD 产出 UI（真实接口）；两者结构/组件/主题一致，仅数据来源不同。改动不得破坏这一双受众定位。
 6. **生成层级不可乱**：具体页面是全局 Layout 下的路由子页面；全局 Layout 是稳定骨架（后续团队标准化提供），不得在生成页面时重写/替换。
 7. **纯前端边界**：产出始终是完整的 Vue 纯前端工程，范围仅限前端（页面/路由/组件/前端状态/mock 或调用既有接口），**不产出、不涉及后端代码或服务**。demo 用前端 mock；开发对接既有后端接口但不实现后端。
@@ -94,6 +95,27 @@ Pangea 是**面向企业的通用设计系统**；部分产品在它之上延展
 - 可运行性依赖三个易漏点，勿破坏：① `less` 为必需 devDep；② `main.ts` 显式 `import '@arco-themes/vue-pangea-3-linear/theme.css'`（运行时 CSS 变量）；③ `src/vite-env.d.ts` 提供 `*.vue` / `vite/client` / 图标包的类型声明。
 - 脚手架内的 `src/layouts/GlobalLayout.vue` 是**占位版**：团队后续会提供标准化全局 Layout 来替换。替换时同步更新脚手架、`project-structure.md` 与 `CHANGELOG.md`，并保持「页面是 Layout 路由子页面」的层级约定不变。
 - 图标包为**命名导出**（无默认 install 插件），文档示例用命名导入；升级图标包时留意图标名增删。
+
+### F. 新增/修改设计规则
+
+设计规则 = 非工程性的视觉与交互约定（容器选择、排列顺序、宽度档位、背景分层、密度等）。先按下表定位，**只写一处**：
+
+| 规则的作用范围 | 写到哪 |
+|---|---|
+| 跨 **2 个以上**页型或组件生效 | **`references/design.md`**（唯一事实源，正文写这里） |
+| 只对**一个组件**成立（适用边界、变体、该组件独有的坑） | `references/component-selection/<组件>.md` |
+| 只对**一个页型**成立（区块结构、示例代码） | `references/patterns/page-*.md` |
+| 只对**某个产品**成立 | `references/components-business/<产品>/`（见 C） |
+| 组件 API（属性/事件/插槽） | ❌ **不要写**——`references/components/` 是上游 Arco 镜像，见原则 1 |
+
+操作要求：
+
+1. **正文只在一处。** 其它文件需要提到这条规则时，只写一句结论 + 链到 `design.md` 的锚点，**不复制正文**。判断方法：这段话改了以后，还有别的文件需要跟着改吗？需要 → 说明复制了，删掉换链接。
+2. **`SKILL.md` 只留结论。** `SKILL.md`「全局设计规则」表里加一行一句话结论 + 锚点链接，细则不进 `SKILL.md`（它是入口文件，不是规则仓库）。
+3. **`design.md` 内部分组**：一、容器与布局 / 二、组件与交互 / 三、取值与适配。新规则挂到对应组下，并在文件顶部「速查」目录补一行。
+4. **能机检的就加机检**：规则含具体数值（宽度档位、间距档位、色值）时，尽量在 `templates/project-starter/scripts/check-tokens.mjs` 加一条检查，并在规则末尾注明「机检：`npm run gate`」。
+5. **不动 catalog 结构**：`design.md` **不加 `meta:` frontmatter 块**。`build-catalog.mjs` 只扫 `patterns/`、`component-selection/`、`components-business/`，`design.md` 不参与 catalog；官网 `Components/Detail.vue` 依赖 `catalog.components`（来自 `component-selection/` 的 10 篇 frontmatter），删除或合并那 10 篇会让官网组件详情页的「选型要点」卡片整块消失。
+6. **`design.md` 单文件上限**：某一分组正文超过约 150 行时，拆成 `references/design/<分组>.md`，`design.md` 退化为索引。现在内容量小，先保持单文件。
 
 ---
 
