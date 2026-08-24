@@ -58,6 +58,11 @@ const routes: RouteRecordRaw[] = [
         meta: { title: '简单列表页' },
       },
       {
+        path: 'templates/filter-list',
+        component: () => import('@/generated/templates/pages/FilterList/index.vue'),
+        meta: { title: '基础列表页' },
+      },
+      {
         path: 'templates/card-list',
         component: () => import('@/generated/templates/pages/CardList/index.vue'),
         meta: { title: '卡片列表页' },

@@ -53,6 +53,7 @@
    | 页型 | 模板文档 |
    |---|---|
    | 简单列表页 | [page-simple-list.md](../patterns/page-simple-list.md) |
+   | 基础列表页 | [page-filter-list.md](../patterns/page-filter-list.md) |
    | 卡片列表页 | [page-card-list.md](../patterns/page-card-list.md) |
    | 基础表单页 | [page-form.md](../patterns/page-form.md) |
    | 分组表单页 | [page-grouped-form.md](../patterns/page-grouped-form.md) |

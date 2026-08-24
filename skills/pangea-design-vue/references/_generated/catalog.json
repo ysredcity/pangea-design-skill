@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-08-22T12:27:52.208Z",
+  "generatedAt": "2026-08-24T12:31:34.512Z",
   "counts": {
-    "pageTemplates": 9,
+    "pageTemplates": 10,
     "components": 10,
     "businessComponents": 1
   },
@@ -189,6 +189,61 @@
         "附件"
       ],
       "doc": "references/patterns/page-detail.md"
+    },
+    {
+      "id": "page-filter-list",
+      "kind": "page-template",
+      "title": "基础列表页",
+      "status": "stable",
+      "whenToUse": [
+        "表格列表且筛选条件较多",
+        "需要多字段同时查询",
+        "需要保存/复用筛选方案",
+        "基础 CRUD 列表但单字段搜索不够用"
+      ],
+      "whenNotToUse": [
+        "只需单关键词或单字段筛选→简单列表页",
+        "图文卡片呈现→卡片列表页",
+        "主子表结构→左树右表列表页"
+      ],
+      "keyStructure": [
+        "页头(标题+筛选方案+搜索+展开钮)",
+        "高级筛选面板(可选展开/多字段栅格)",
+        "按钮组",
+        "表格(行选择+撑满高度)",
+        "分页"
+      ],
+      "variants": [
+        "高级筛选面板收起(仅简单搜索)",
+        "高级筛选面板展开(多字段查询)"
+      ],
+      "composeWith": [
+        "a-table",
+        "a-pagination",
+        "a-input-group",
+        "a-select",
+        "a-badge"
+      ],
+      "composeBoundary": [
+        "筛选行/按钮组沿用卡片列表页的页头形态",
+        "表格/分页沿用简单列表页的形态",
+        "控件统一 size=small",
+        "高级筛选面板栅格用 auto-fit 收敛",
+        "状态列用 a-badge 不只靠颜色"
+      ],
+      "pitfalls": [
+        "条件很少时不要硬套高级筛选面板改用简单列表页",
+        "高级筛选查询后忘记复位分页到第1页",
+        "筛选方案与高级筛选表单值不同步"
+      ],
+      "previewRoute": "/filter-list",
+      "source": "src/pages/FilterList/index.vue",
+      "tags": [
+        "列表",
+        "表格",
+        "筛选"
+      ],
+      "doc": "references/patterns/page-filter-list.md"
     },
     {
       "id": "page-form",

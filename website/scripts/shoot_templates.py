@@ -52,6 +52,7 @@ THUMB_RATIO = (16, 10)  # 与卡片 aspect-ratio 一致，先按比例裁再缩�
 #        毫无区分度；曾因此把探活时打开的首页当成「简单列表页」拍了下来。
 TARGETS = [
     {"id": "page-simple-list", "route": "/templates/simple-list", "kind": "content", "ready": ".pg-simple-list"},
+    {"id": "page-filter-list", "route": "/templates/filter-list", "kind": "content", "ready": ".pg-filter-list"},
     {"id": "page-card-list", "route": "/templates/card-list", "kind": "content", "ready": ".pg-card-list"},
     # 左树右表默认未选主数据、右侧是空状态引导 → 先点一个树节点，缩略图才体现「左树+右表」
     {"id": "page-tree-table", "route": "/templates/tree-table", "kind": "content",

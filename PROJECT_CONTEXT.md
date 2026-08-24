@@ -474,3 +474,27 @@ pangea-design-skill/
 **未做（待用户决定）**：**尚未打包**。`pack-skill.sh` 取 CHANGELOG 首个 `## [x.y.z]` 作版本号，现在会打成 1.4.1，需要发版时执行。
 
 **已打包 v1.4.1**：`releases/pangea-design-vue_1.4.1.zip`，**412K / 150 个文件**（1.4.0 是 408K / 149）。脚本提示「skill 存在未提交改动，按工作区当前状态打包」——预期行为。校验：声明 150 = 实际 150；与 1.4.0 逐文件 diff **只多 `references/design.md` 一个**（其余都是文件内改动，不影响清单）；包内 design.md 的 9 个章节（7 条规则 + 分组）齐全；包内 `patterns/page-*` / `component-selection/` / `attachment-upload.md` **无 `controls:` 残留**；CHANGELOG 不随包分发（既有设计）。
+
+### 2026-08-22 · 新增第 10 个页面模板：基础列表页（page-filter-list）
+
+**需求**：用户要一个新页型——表格列表页，但筛选能力比简单列表页强（多字段同时查询 + 筛选方案），页头区域直接复用卡片列表页的形态（筛选方案+搜索+可展开高级筛选面板+按钮组），下方列表载体换成表格（同简单列表页）。**与简单列表页的定位差异只在筛选复杂度，不在数据呈现**。
+
+**命名**：id 定为 `page-filter-list`，中文标题「基础列表页」（用户原话）。之所以不叫「高级列表页」——`page-simple-list.md` 里此前留了一条待补充的「高级列表页（多条件筛选）」占位，本次新模板正是它的实现，但用户明确说的是「基础列表页」，采用用户命名，并顺手清掉了 3 处「高级列表页/待补充」的陈旧占位引用。
+
+**三个模板的关系**（已在新文档里画出）：页头形态是共享轴（筛选方案+搜索+展开钮+高级筛选面板+按钮组），下方分叉——表格载体上再分单字段（简单列表页）与多字段（基础列表页）；卡片载体是卡片列表页。判断表：只需单关键词/单字段→简单列表页；需要多字段同时查询或筛选方案→本模板；数据更适合卡片呈现→卡片列表页。
+
+**改动清单**（8 类文件，均已验证）：
+1. **脚手架页面**：`templates/project-starter/src/pages/FilterList/index.vue`（新建）——页头/筛选/高级筛选面板抄自 `CardList/index.vue`，表格/分页抄自 `Example/index.vue`（class 前缀统一改 `pg-filter-list__`）。
+2. **路由与菜单**：脚手架 `src/router/index.ts` 新增 `filter-list` 子路由；`GlobalLayout.vue` 的「列表页」模块菜单里加一项，排在简单列表页之后、卡片列表页之前。
+3. **模板文档**：`references/patterns/page-filter-list.md`（新建，含完整 frontmatter meta、页面结构图、三模板关系图、判断表、设计规范、Vue 代码要点、使用要点、对比表）。
+4. **文档互链**：`SKILL.md` 决策树 + 索引表新增一行；`requirement-intake.md` 的页型→模板对照表新增一行；`page-card-list.md` / `page-simple-list.md` / `page-tree-table.md` 的「与其他模板区别」对比表补充引用（表单类模板的对比表未动——那些表只用简单列表页做列表类基线参照，不需要每个都列全部列表模板）。
+5. **catalog**：重跑 `build-catalog.mjs`，`pageTemplates` 9→10。**踩了生成器一个坑**：`keyStructure` 里写了 `高级筛选面板(可选展开,多字段栅格)`，圆括号内的逗号被 `splitTopLevel`（只识别 `[]{}` 嵌套，不识别 `()`）误当顶层分隔符切开，变成两个数组项。修法是把括号内的逗号换成 `/`（其余模板文档都是这么避开的，如 `page-approval-detail.md` 的"流程处理/流程图占位/传阅记录"），**没有改生成器**——这是已知限制，只需写 meta 时避开。
+6. **官网**：`sync-from-skill.mjs` 的 `EXAMPLE_PAGES` 加 `FilterList`；`website/src/router/index.ts` 加 `templates/filter-list` 路由；`Templates/index.vue` 的 `ROUTES` 映射与「列表页」分组 `ids` 加一条。
+7. **缩略图**：`shoot_templates.py` 的 `TARGETS` 加一条（`ready: ".pg-filter-list"`）；起了本地 dev server（port 5188）跑 `npm run shoot:templates`，**11/11 张全部成功**（包括重拍其余 10 个旧模板，因为脚本是全量跑的），新图 `page-filter-list.jpg` 20KB，已提交入库。
+8. **SKILL.md 顺手清理**：末尾「后续补充」段的「更多页面模板：高级列表页……」这行早就过期（详情页/表单页/仪表盘其实都做完了），改成准确的当前缺口（仅仪表盘未固化为标准模板）。
+
+**CHANGELOG 定版 [1.4.2] - 2026-08-22**：只写「新增基础列表页模板 + 与简单列表页的定位差异」两条，过程细节（命名讨论、生成器坑、抄袭来源）都留在本条台账。
+
+**验证**：脚手架 `vue-tsc --noEmit` 通过、`npm run build` 通过（9.98s）；catalog 重跑 10/10/1，`page-filter-list` 的 `keyStructure` 修正后不再被误切；design.md 锚点引用 27 处全部可达，md/json 死链 0；website `npm run gate` 通过（check-tokens + vue-tsc + build 26.38s）；截图脚本 11/11 成功。
+
+**未做（不在本轮范围）**：筛选方案的保存/回填逻辑只有 TODO 占位（文档已明确说明"骨架未实现具体存取逻辑，接入时按业务补"），这是设计模板的正常边界，不是缺陷。

@@ -86,6 +86,7 @@ Pangea 在开源组件库 `@arco-design/web-vue`（Arco Design Vue）之上，�
   │
   ├─ 是否命中现有页面模板？（见 references/patterns/ 的页面模板）
   │    ├─ 基础表格列表、单关键词/单条件搜索      → 套用「简单列表页」page-simple-list.md
+  │    ├─ 表格列表但需多字段同时筛选/筛选方案    → 套用「基础列表页」page-filter-list.md
   │    ├─ 数据以卡片形式呈现（图文/资源/应用墙）  → 套用「卡片列表页」page-card-list.md
   │    ├─ **主子表结构**（先选主数据再看其子数据） → 套用「左树右表列表页」page-tree-table.md
   │    │    （判断：新建子数据必须指定父级=归属→用它；层级只是筛选维度→简单列表页加筛选项）
@@ -344,7 +345,8 @@ app.mount('#app');
 
 | 主题 | 文件 | 适用场景 |
 |---|---|---|
-| 简单列表页 | [page-simple-list.md](references/patterns/page-simple-list.md) | 基础表格列表页：标题 + 操作栏（按钮组+简单搜索）+ 表格（行选择）+ 分页；无复杂查询条件 |
+| 简单列表页 | [page-simple-list.md](references/patterns/page-simple-list.md) | 基础表格列表页：标题 + 操作栏（按钮组+简单搜索）+ 表格（行选择）+ 分页；无复杂查询条件，每次只能单字段查询 |
+| 基础列表页 | [page-filter-list.md](references/patterns/page-filter-list.md) | 筛选能力更强的表格列表页：复用卡片列表页的页头（筛选方案+搜索+展开的高级筛选面板+按钮组）+ 简单列表页的表格/分页；支持多字段同时查询与筛选方案 |
 | 卡片列表页 | [page-card-list.md](references/patterns/page-card-list.md) | 以卡片呈现数据列表（图文/资源/应用墙）：标题 + 操作栏（按钮组+搜索/筛选）+ 卡片网格（a-card 自适应换行）+ 分页；数据比表格更适合卡片时使用 |
 | 左树右表列表页 | [page-tree-table.md](references/patterns/page-tree-table.md) | **主子表结构**：左树选中主表主数据 → 右侧表格展示其子表数据，主子各自增删改查；左树 260px（新增+搜索+a-tree）+ 右侧（操作栏+表格+分页），未选主数据时右侧给空状态引导 |
 | 对话框表单 | [page-modal-form.md](references/patterns/page-modal-form.md) | 字段少、轻量的弹窗内录入/编辑：a-modal + 2 列栅格垂直表单 + 取消/确定；不跳转独立页面 |
@@ -472,7 +474,7 @@ cp -R <skill 目录>/templates/project-starter <目标目录> && cd <目标目�
 
 以下内容将在后续迭代中加入本 skill（当前尚未提供）：
 
-- **定制业务组件**：公司自研、对 Arco Vue 二次封装的业务组件（属性/事件/插槽/示例）。
-- **更多页面模板**：高级列表页（多条件筛选）、详情页、表单页、仪表盘等。
+- **定制业务组件**：公司自研、对 Arco Vue 二次封装的业务组件（属性/事件/插槽/示例），已支持产品见 [产品专属业务组件](#产品专属业务组件默认不用命中产品才用)（当前仅 MSC）。
+- **更多页面模板**：仪表盘固化模板（当前仪表板页仅作组装参考，未固化为标准模板）。
 
 在这些内容补充之前，业务组件与页面请基于上述标准 Arco Vue 组件 + Pangea 主题 token 组合实现。

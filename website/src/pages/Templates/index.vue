@@ -35,6 +35,7 @@ const ROUTES: Record<string, string> = {
   'page-tree-table': '/templates/tree-table',
   // 对话框表单没有独立页面：在简单列表页点「创建」弹出（缩略图只截对话框本体）
   'page-modal-form': '/templates/simple-list',
+  'page-filter-list': '/templates/filter-list',
   'page-form': '/templates/basic-form',
   'page-grouped-form': '/templates/grouped-form',
   'page-step-form': '/templates/step-form',
@@ -52,7 +53,7 @@ const GROUPS: { key: string; title: string; desc: string; ids: string[] }[] = [
     key: 'list',
     title: '列表页',
     desc: '数据的浏览、检索与批量操作入口',
-    ids: ['page-simple-list', 'page-card-list', 'page-tree-table'],
+    ids: ['page-simple-list', 'page-filter-list', 'page-card-list', 'page-tree-table'],
   },
   {
     key: 'form',

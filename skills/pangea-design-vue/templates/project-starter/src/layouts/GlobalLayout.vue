@@ -55,6 +55,7 @@ const modules = ref<ModuleDef[]>([
     title: '列表页',
     menu: [
       { key: '/', title: '简单列表页' },
+      { key: '/filter-list', title: '基础列表页' },
       { key: '/card-list', title: '卡片列表页' },
       { key: '/tree-table', title: '左树右表列表页' },
     ],

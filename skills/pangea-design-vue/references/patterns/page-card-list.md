@@ -469,7 +469,8 @@ function handleCreate() {
 
 | 场景 | 用什么模板 |
 |---|---|
-| 表格形式的基础列表 | [简单列表页](page-simple-list.md) |
+| 表格形式的基础列表，单字段搜索 | [简单列表页](page-simple-list.md) |
+| 表格形式，但需多字段筛选/筛选方案（页头与本模板同形态） | [基础列表页](page-filter-list.md) |
 | **卡片形式呈现的数据列表** | **本模板（卡片列表页）** |
 | 弹窗内轻量录入 | [对话框表单](page-modal-form.md) |
 | 独立页面表单 | [基础表单页](page-form.md) / [分组表单页](page-grouped-form.md) |
