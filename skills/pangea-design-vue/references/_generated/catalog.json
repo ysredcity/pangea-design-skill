@@ -1,8 +1,9 @@
 {
-  "generatedAt": "2026-08-24T12:31:34.512Z",
+  "generatedAt": "2026-09-01T01:18:10.328Z",
   "counts": {
     "pageTemplates": 10,
     "components": 10,
+    "sharedComponents": 1,
     "businessComponents": 1
   },
   "pageTemplates": [
@@ -100,25 +101,25 @@
         "操作栏(按钮组+搜索/筛选)",
         "卡片网格(a-card)",
         "分页",
-        "高级筛选面板(可选)"
+        "筛选面板(可选)"
       ],
       "variants": [
         "基础卡片",
-        "带高级筛选面板"
+        "带筛选面板"
       ],
       "composeWith": [
         "a-card",
         "a-pagination",
-        "a-input-group",
-        "a-tabs"
+        "filter-bar"
       ],
       "composeBoundary": [
         "卡片统一用 a-card 不自造",
-        "网格用 auto-fill 不写死列数"
+        "网格用 auto-fill 不写死列数",
+        "页头筛选区用共享组件 FilterBar 不重新实现"
       ],
       "pitfalls": [
         "卡片操作图标用 icon-hover 文本按钮而非裸 Icon",
-        "高级筛选面板栅格用 auto-fit 收敛"
+        "筛选面板栅格用 auto-fit 收敛"
       ],
       "previewRoute": "/card-list",
       "source": "src/pages/CardList/index.vue",
@@ -208,33 +209,31 @@
       ],
       "keyStructure": [
         "页头(标题+筛选方案+搜索+展开钮)",
-        "高级筛选面板(可选展开/多字段栅格)",
+        "筛选面板(可选展开/多字段栅格)",
         "按钮组",
         "表格(行选择+撑满高度)",
         "分页"
       ],
       "variants": [
-        "高级筛选面板收起(仅简单搜索)",
-        "高级筛选面板展开(多字段查询)"
+        "筛选面板收起",
+        "筛选面板展开(多字段查询)"
       ],
       "composeWith": [
         "a-table",
         "a-pagination",
-        "a-input-group",
-        "a-select",
-        "a-badge"
+        "a-badge",
+        "filter-bar"
       ],
       "composeBoundary": [
-        "筛选行/按钮组沿用卡片列表页的页头形态",
+        "页头筛选区用共享组件 FilterBar 不重新实现",
         "表格/分页沿用简单列表页的形态",
         "控件统一 size=small",
-        "高级筛选面板栅格用 auto-fit 收敛",
         "状态列用 a-badge 不只靠颜色"
       ],
       "pitfalls": [
-        "条件很少时不要硬套高级筛选面板改用简单列表页",
-        "高级筛选查询后忘记复位分页到第1页",
-        "筛选方案与高级筛选表单值不同步"
+        "条件很少时不要硬套筛选面板改用简单列表页",
+        "筛选面板查询后忘记复位分页到第1页",
+        "筛选方案与筛选面板表单值不同步"
       ],
       "previewRoute": "/filter-list",
       "source": "src/pages/FilterList/index.vue",
@@ -431,13 +430,14 @@
       "composeWith": [
         "a-table",
         "a-pagination",
-        "a-input-group",
-        "a-badge"
+        "a-badge",
+        "filter-bar"
       ],
       "composeBoundary": [
         "控件统一 small",
         "分页 total 与真实数据联动",
-        "状态列用 a-badge 不只靠颜色"
+        "状态列用 a-badge 不只靠颜色",
+        "搜索框用共享组件 FilterBar 不重新实现"
       ],
       "pitfalls": [
         "表格高度撑满父容器需 scroll y 100%",
@@ -545,7 +545,8 @@
         "a-dropdown",
         "a-button",
         "a-empty",
-        "a-link"
+        "a-link",
+        "filter-bar"
       ],
       "composeBoundary": [
         "左树固定260px右侧自适应",
@@ -954,6 +955,58 @@
         "切换"
       ],
       "doc": "references/component-selection/tabs.md"
+    }
+  ],
+  "sharedComponents": [
+    {
+      "id": "filter-bar",
+      "kind": "shared-component",
+      "title": "复合筛选器 FilterBar",
+      "status": "stable",
+      "whenToUse": [
+        "任何列表类页面模板的搜索/筛选区都应引用本组件",
+        "只需筛选方案/搜索框/筛选面板中的任意组合",
+        "标题位置需要放置动态内容而非纯文字"
+      ],
+      "whenNotToUse": [
+        "页头结构与本组件差异较大→不要硬套"
+      ],
+      "keyStructure": [
+        "标题slot",
+        "筛选方案下拉(开关)",
+        "搜索框(开关，内含可选字段下拉)",
+        "筛选面板展开按钮+面板(开关)"
+      ],
+      "variants": [
+        "三个开关全开(基础列表页)",
+        "只留搜索框",
+        "标题为纯文本",
+        "标题为radio-button切换视图"
+      ],
+      "composeWith": [
+        "a-select",
+        "a-input-group",
+        "a-button",
+        "a-radio-group"
+      ],
+      "composeBoundary": [
+        "组件只管筛选行与面板本身",
+        "外层header的padding/分割线由页面容器决定",
+        "筛选面板表单值的存取逻辑由页面实现"
+      ],
+      "pitfalls": [
+        "显隐只能走三个开关不能靠options/fields长度自动判断否则异步数据未到位时会误判",
+        "三个开关默认全开不需要的要显式传false",
+        "筛选面板查询后要记得复位分页",
+        "不推荐关掉搜索框只留筛选面板因为面板默认折叠会导致进页面看不到任何筛选条件"
+      ],
+      "source": "src/components/FilterBar.vue",
+      "tags": [
+        "列表",
+        "筛选",
+        "共享组件"
+      ],
+      "doc": "references/components-shared/filter-bar.md"
     }
   ],
   "businessProducts": [

@@ -17,6 +17,7 @@
 import { computed, reactive, ref, watch } from 'vue';
 import { Message, Modal } from '@arco-design/web-vue';
 import { IconPlus, IconFile, IconMore, IconList } from '@arco-iconbox/vue-pangea-mobile';
+import FilterBar from '@/components/FilterBar.vue';
 
 const pageTitle = '左树右表列表页';
 
@@ -250,27 +251,24 @@ size="medium"
         </div>
 
         <template v-else>
+          <!-- 子表只需单字段搜索，不需要筛选方案/筛选面板 —— FilterBar 只保留搜索框 -->
           <div class="pg-tree-table__filter">
             <a-space :size="8">
-              <!-- 子数据必须挂在某条主数据下，所以「创建」依赖左侧选中项 -->
+              <!-- 子数据必须挂在某条主数据下，所以「创建」依赖左侧选中项；不属于 FilterBar，页面自己渲染 -->
               <a-button type="primary" size="small" @click="handleCreateChild">创建</a-button>
               <a-button size="small">导入</a-button>
               <a-button size="small">导出</a-button>
               <a-button size="small">打印</a-button>
             </a-space>
 
-            <a-input-group style="width: 324px">
-              <a-select v-model="searchField" size="small" :style="{ width: '80px' }">
-                <a-option v-for="f in searchFields" :key="f.value" :value="f.value" :label="f.label" />
-              </a-select>
-              <a-input
-                v-model="searchKeyword"
-                size="small"
-                placeholder="请输入搜索内容"
-                allow-clear
-                @press-enter="onSearch"
-              />
-            </a-input-group>
+            <FilterBar
+              v-model:search-field="searchField"
+              v-model:search-keyword="searchKeyword"
+              :show-filter-plan="false"
+              :show-advanced-panel="false"
+              :search-fields="searchFields"
+              @search="onSearch"
+            />
           </div>
 
           <div class="pg-tree-table__table-wrap">

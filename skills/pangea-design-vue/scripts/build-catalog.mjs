@@ -20,6 +20,8 @@ const PATTERNS_DIR = join(SKILL_ROOT, 'references', 'patterns');
 const SELECTION_DIR = join(SKILL_ROOT, 'references', 'component-selection');
 // 产品专属业务组件：按产品分子目录（components-business/<产品>/<组件>.md），需递归扫
 const BUSINESS_DIR = join(SKILL_ROOT, 'references', 'components-business');
+// 通用共享组件：多个页面模板共用的可复用 UI 片段（非 Arco 原生、非产品业务组件）
+const SHARED_DIR = join(SKILL_ROOT, 'references', 'components-shared');
 const OUT_DIR = join(SKILL_ROOT, 'references', '_generated');
 const OUT_FILE = join(OUT_DIR, 'catalog.json');
 
@@ -110,9 +112,16 @@ function collect(dir, recursive = false) {
   return out;
 }
 
-const all = [...collect(PATTERNS_DIR), ...collect(SELECTION_DIR), ...collect(BUSINESS_DIR, true)];
+const all = [
+  ...collect(PATTERNS_DIR),
+  ...collect(SELECTION_DIR),
+  ...collect(BUSINESS_DIR, true),
+  ...collect(SHARED_DIR),
+];
 const pageTemplates = all.filter((m) => m.kind === 'page-template');
 const components = all.filter((m) => m.kind === 'component');
+// 通用共享组件：本 skill 提炼的可复用 UI 片段，任何产品都能用（不含产品业务假设）
+const sharedComponents = all.filter((m) => m.kind === 'shared-component');
 // 产品专属业务组件单独成组，并按产品聚合，便于 agent「先判断产品线、再取组件」
 const businessComponents = all.filter((m) => m.kind === 'business-component');
 const businessProducts = [];
@@ -130,10 +139,13 @@ const catalog = {
   counts: {
     pageTemplates: pageTemplates.length,
     components: components.length,
+    sharedComponents: sharedComponents.length,
     businessComponents: businessComponents.length,
   },
   pageTemplates,
   components,
+  /** 本 skill 提炼的可复用 UI 片段，任何产品都能用 */
+  sharedComponents,
   /** ⛔ 业务组件默认不用：仅当需求命中对应产品的 triggers 时才允许使用 */
   businessProducts,
   businessComponents,
@@ -143,5 +155,6 @@ if (!existsSync(OUT_DIR)) mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(OUT_FILE, JSON.stringify(catalog, null, 2) + '\n', 'utf8');
 console.log(
   `catalog.json 生成完成：页面模板 ${pageTemplates.length} 个 / 组件 ${components.length} 个 / ` +
+    `共享组件 ${sharedComponents.length} 个 / ` +
     `业务组件 ${businessComponents.length} 个（${businessProducts.length} 个产品）→ ${relative(SKILL_ROOT, OUT_FILE)}`
 );

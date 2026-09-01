@@ -11,7 +11,7 @@ meta:
   whenNotToUse: [单表列表→简单列表页, 卡片化呈现→卡片列表页, 层级只用于筛选而非归属→简单列表页加筛选项]
   keyStructure: [页头(标题+帮助文档), 左树面板260px(新增下拉+搜索+a-tree), 右侧子表区(操作栏+表格+分页), 首屏不预选+未选主数据时右侧空状态]
   variants: [已选主数据（展示子表）, 未选主数据（空状态引导）, 树搜索过滤]
-  composeWith: [a-tree, a-table, a-pagination, a-input, a-dropdown, a-button, a-empty, a-link]
+  composeWith: [a-tree, a-table, a-pagination, a-input, a-dropdown, a-button, a-empty, a-link, filter-bar]
   composeBoundary: [左树固定260px右侧自适应, 左右各自内部滚动页面不整体滚, 树选中项是右侧数据的唯一来源, 子表创建依赖当前主数据]
   pitfalls: [切主数据后忘记复位分页与清空勾选, 未选主数据时直接显示空表格让用户困惑, 子表创建没绑定当前主数据产生挂空记录, 删除主数据未提示会级联删除子数据, 树节点操作常驻显示干扰浏览]
   previewRoute: /tree-table
@@ -33,7 +33,7 @@ meta:
 ┌──────────────────────────────────────────────────────────────────────┐
 │ 左树右表列表页                                        📄 帮助文档      │ ← 页头（白底 + 底部分隔线）
 ├───────────────┬──────────────────────────────────────────────────────┤
-│ [+] [搜索   ] │ [创建][导入][导出][打印]        [名称∨][请输入搜索内容] │ ← 左:主表工具条 / 右:子表操作栏
+│ [+] [搜索   ] │ [创建][导入][导出][打印]      [名称∨][搜索](FilterBar) │ ← 左:主表工具条 / 右:子表操作栏
 │               ├──────────────────────────────────────────────────────┤
 │ ▾ 华东大区 ⋯  │ ☐ 成员名称    │ 工号     │ 岗位 │ 操作              │ ← 子表表格
 │   上海分公司  │ ☐ 上海…成员1  │ EMP11001 │ 销售 │ 查看 更多         │
@@ -97,7 +97,7 @@ meta:
 
 ### 右侧子表区
 沿用[简单列表页](page-simple-list.md)的形态，不要另造一套：
-- 操作栏：左 `创建`(primary) + `导入` / `导出` / `打印`（都 `size="small"`）；右 `a-input-group`（字段选择 80px + 关键词输入，整体 324px）
+- 操作栏：左 `创建`(primary) + `导入` / `导出` / `打印`（都 `size="small"`，不属于 `FilterBar`）；右侧搜索用共享组件 [FilterBar](../components-shared/filter-bar.md)，只保留搜索框（`show-filter-plan`/`show-advanced-panel` 均传 `false`）
 - 表格：`a-table` + `:bordered="{ wrapper: true }"` + `size="medium"` + `:pagination="false"` + 行选择 checkbox + `:scroll="{ y: '100%' }"`
 - 操作列宽 `148`，内容为 `查看` + `更多`（`a-dropdown` 挂 编辑 / 删除）
 - 分页：左「共 N 条」（`margin-right: auto` 顶开）+ 右 `a-pagination size="small" show-jumper show-page-size`
@@ -115,6 +115,7 @@ meta:
 import { computed, reactive, ref, watch } from 'vue';
 import { Message, Modal } from '@arco-design/web-vue';
 import { IconPlus, IconFile, IconMore, IconList } from '@arco-iconbox/vue-pangea-mobile';
+import FilterBar from '@/components/FilterBar.vue';
 
 const treeData = ref([/* 主表树，TODO 换接口 */]);
 const treeKeyword = ref('');
@@ -194,7 +195,24 @@ watch(selectedNodeKeys, () => {
           </a-empty>
         </div>
         <template v-else>
-          <!-- 操作栏 / 表格 / 分页：同简单列表页 -->
+          <!-- 子表只需单字段搜索，不需要筛选方案/筛选面板 —— FilterBar 只保留搜索框 -->
+          <div class="pg-tree-table__filter">
+            <a-space :size="8">
+              <a-button type="primary" size="small" @click="handleCreateChild">创建</a-button>
+              <a-button size="small">导入</a-button>
+              <a-button size="small">导出</a-button>
+              <a-button size="small">打印</a-button>
+            </a-space>
+            <FilterBar
+              v-model:search-field="searchField"
+              v-model:search-keyword="searchKeyword"
+              :show-filter-plan="false"
+              :show-advanced-panel="false"
+              :search-fields="searchFields"
+              @search="onSearch"
+            />
+          </div>
+          <!-- 表格 / 分页：同简单列表页 -->
         </template>
       </section>
     </div>

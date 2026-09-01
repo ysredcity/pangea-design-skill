@@ -1,7 +1,7 @@
 # 项目上下文台账（PROJECT_CONTEXT）
 
 > **这是本项目的单一事实源（Single Source of Truth）。** 每次新会话开始时先读它；完成里程碑、做出重要决策、或新增/移动文件后**及时更新它**。
-> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-20。
+> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-29。
 
 ---
 
@@ -498,3 +498,75 @@ pangea-design-skill/
 **验证**：脚手架 `vue-tsc --noEmit` 通过、`npm run build` 通过（9.98s）；catalog 重跑 10/10/1，`page-filter-list` 的 `keyStructure` 修正后不再被误切；design.md 锚点引用 27 处全部可达，md/json 死链 0；website `npm run gate` 通过（check-tokens + vue-tsc + build 26.38s）；截图脚本 11/11 成功。
 
 **未做（不在本轮范围）**：筛选方案的保存/回填逻辑只有 TODO 占位（文档已明确说明"骨架未实现具体存取逻辑，接入时按业务补"），这是设计模板的正常边界，不是缺陷。
+
+## 2026-08-29 · 新增通用共享组件层 `components-shared/`，首个组件 FilterBar（复合筛选器）
+
+**起因**：用户发现[基础列表页](skills/pangea-design-vue/references/patterns/page-filter-list.md)与[卡片列表页](skills/pangea-design-vue/references/patterns/page-card-list.md)的页头都用了同一套「筛选方案 + 搜索 + 可展开高级筛选面板」复合筛选器（两个模板文档里各贴了一份几乎相同的完整 Vue 实现），随着后续迭代容易逐渐漂移，要求抽成通用组件；同时页面标题经常要与筛选器同行出现，标题位置未必是纯文字（可能是 tabs 等），要求做成插槽。
+
+**新建了第三层组件目录**：此前只有两层——`references/components/`（Arco 原生镜像）与 `references/components-business/`（产品专属业务组件，默认不用）。这次新加 `references/components-shared/`：本 skill 自己提炼的可复用 UI 片段，**不含任何产品业务假设**、被 2 个以上页面模板共用。判断新组件归属：带具体产品业务假设 → business；否则只是多模板共用的纯 UI 结构 → shared。
+
+**FilterBar 组件设计**：
+- 源码 `templates/project-starter/src/components/FilterBar.vue`（无子目录、无产品前缀，与 `components-business/<产品>/` 的命名规则区分开）。
+- Props 全部走 `v-model` 风格（`filterPlan`/`searchField`/`searchKeyword`/`advancedForm`/`advancedVisible`），组件内部不持有状态，页面完全受控。
+- `show-filter-plan`/`show-search-field` 是**显式**开关（默认 true），**不能靠 options 数组长度自动判断显隐**——筛选方案候选项常是运行时异步拉取的，选项还没到位时用长度判断会误判成"不需要"。
+- `advanced-fields` 为空/不传时自动不渲染展开按钮与高级筛选面板，天然支持"仅简单搜索"这种更轻量的用法。
+- `#title` 默认插槽承载标题区域（可放纯文字 `<h2>`、也可放 `a-tabs` 等动态元素）；`#actions` 插槽承载操作按钮组。组件自身只画筛选行+高级筛选面板+actions 插槽这一块，**外层 header 的 padding/底部分割线仍由页面自己的容器决定**（不同页面页头留白可能不同，不适合在组件里写死）。
+
+**两个页面同步改造**：`CardList/index.vue`、`FilterList/index.vue` 均改为 `import FilterBar from '@/components/FilterBar.vue'`，删除了原先各自实现的筛选方案下拉/搜索输入组/高级筛选面板模板与对应的 scoped 样式（`__filter`/`__filter-right`/`__filter-panel`/`__adv-*` 全部移除，只保留 `__title` 样式因为标题渲染逻辑还在页面侧）。两个页面的高级筛选相关状态（`advancedVisible`/`advancedFields`/`advancedForm`/`onAdvancedQuery`/`onAdvancedReset`/`onAdvancedSave`）保持不变，只是把渲染委托给 FilterBar。
+
+**文档同步**：
+- 新建 `references/components-shared/README.md`（本层定位、与另两层的边界表、新增组件的维护流程）+ `filter-bar.md`（含 `meta` frontmatter，`kind: shared-component`，完整 API/用法/使用要点）。
+- `page-card-list.md`/`page-filter-list.md` 的设计规范与代码模板章节都改为"引用 FilterBar"而非重复贴完整实现；frontmatter 的 `composeWith`/`composeBoundary` 加了 `filter-bar` 交叉引用。
+- `SKILL.md` 新增「通用共享组件」小节（在「产品专属业务组件」之前）+ 「组件选型元数据」小节补充共享组件条目与 catalog 的 `sharedComponents` 字段。
+- `metadata-schema.md` 的 `kind` 字段枚举从 `page-template | component` 扩为 `page-template | component | shared-component | business-component`，并补充每个 kind 对应哪层文档目录。
+- `project-structure.md` 文件地图加了 `src/components/FilterBar.vue` 一行。
+
+**生成器改动**：`build-catalog.mjs` 新增 `SHARED_DIR`（`references/components-shared/`）扫描，输出新增 `sharedComponents` 数组与 `counts.sharedComponents`。重跑后：页面模板 10 / 组件 10 / **共享组件 1** / 业务组件 1（1 个产品）。
+
+**website 同步**：`sync-from-skill.mjs` 原先只同步 `LazyChart.vue` 一个组件，这次改为同时同步 `LazyChart.vue` + `FilterBar.vue`（同一批处理逻辑）；`EXAMPLE_PAGES`（`CardList`/`FilterList`）同步时的导入改写逻辑从"只处理 Dashboard 的 LazyChart 导入"扩展为"通用替换 `@/components/LazyChart.vue` 与 `@/components/FilterBar.vue` 两条路径"，改写后验证过官网快照里 `CardList/index.vue` 的导入正确变成 `../../components/FilterBar.vue`。
+
+**验证**：脚手架 `vue-tsc --noEmit` 与 `vite build` 均通过，FilterBar 被 Vite 正确拆分为独立 chunk（约 6.6KB，说明按需加载没被破坏）；website `npm run gate`（check-tokens + vue-tsc + build）通过，FilterBar 同样独立分包（约 4KB）。两处构建产物 `dist/` 已清理，未提交。
+
+**未做**：FilterBar 目前只有 1 个消费方场景（列表页页头），暂未评估是否有第三个页面会用到同一形态；筛选方案的保存/回填逻辑仍是页面侧 TODO（组件本身不管这部分业务逻辑，符合设计边界）。
+
+**CHANGELOG 未动**：按 CONTRIBUTING 第七节口径，这是内部组件抽取/重构，产出的页面行为和视觉对使用者不变（两个模板页面渲染结果一致），不构成"使用者需要知道的新能力"；如果后续把 FilterBar 作为可独立使用的能力对外强调（比如用户直接问"能不能用这个筛选器"），再考虑在下个版本的 CHANGELOG 里提及。
+
+## 2026-08-29 · 修正 FilterBar 组件边界：移除 `#actions` 插槽
+
+**问题**：用户在官网组件详情页看到「交互示例」实际渲染的是通用兜底示例（主要按钮/次要按钮），并进一步指出 FilterBar 本不该包含操作按钮组这个插槽——设计稿里筛选器（标题+筛选方案+搜索+展开钮+高级筛选面板）与下方按钮组（创建/导入/导出/打印）是**并列**的两块，按钮组不属于筛选器职责。
+
+**顺带修的一个 bug**：官网组件详情页 `Detail.vue` 的专属 demo 查找逻辑只把 id 首字母大写（`filter-bar` → `Filter-bar`），找不到对应的 `demos/FilterBar.vue`，静默回退到内联的通用兜底示例（`else` 分支的"主要按钮/次要按钮"），才让用户误以为交互示例展示的不是这个组件。改成按 `-` 分段各自首字母大写再拼接（`toPascalCase`），验证过所有既有单词 id（button/tag/tree/tooltip/steps/dropdown/form）不受影响。
+
+**FilterBar 组件边界修正**：
+- 移除 `#actions` 插槽与对应的 `.pg-filter-bar__actions` 样式；组件说明改为「只负责筛选行 + 高级筛选面板，不含操作按钮组——按钮组是页面自己的内容，与筛选器并列」。
+- `CardList/index.vue`、`FilterList/index.vue` 的按钮组移出 `<FilterBar>`，改为在 header 容器内与 `<FilterBar>` 并列的 `<a-space>`。
+- 文档同步：`filter-bar.md`（frontmatter description/meta 及正文的插槽表、组件结构图、用法示例、使用要点全部去掉 `#actions`）、`page-card-list.md`、`page-filter-list.md`（设计规范与代码模板章节同步改为"按钮组不属于 FilterBar，页面自己渲染"）、`SKILL.md`「通用共享组件」小节措辞同步。
+- 官网 `Components/demos/FilterBar.vue` 的三个 demo 也同步去掉 `#actions` 用法，改为在 `<FilterBar>` 外层用独立的 `<a-space>` 演示按钮组与筛选器的并列关系。
+
+**验证**：重跑 `build-catalog.mjs`（页面模板10/组件10/共享组件1/业务组件1，`filter-bar` 的 `keyStructure`/`pitfalls` 已去掉"操作按钮组slot"字样）+ website `sync-from-skill.mjs`；脚手架 `vue-tsc --noEmit` + `vite build` 通过；website `npm run gate`（check-tokens+vue-tsc+build）通过；dev server HMR 正常热更新，两处构建产物已清理。
+
+## 2026-09-01 · FilterBar 三开关化 + 全部 4 个列表模板统一收敛到 FilterBar
+
+**背景**：用户先要求把「筛选方案 + 搜索 + 高级筛选面板」这套显隐逻辑改成三个独立开关（`showFilterPlan`/`showSearch`/`showAdvancedPanel`，均默认全开，不再靠 `advancedFields` 是否为空隐式判断），并明确指出「不推荐关掉搜索框只留筛选面板」这种组合（面板默认折叠，进页面看不到任何筛选条件），website demo 里删掉了这个组合。随后用户要求检查「简单列表页」「左树右表」两个模板的筛选区是不是也该用 FilterBar——发现这两个之前一直是手写的 `a-input-group`（宽 324px，与 FilterBar 收窄后的 256px 不一致），要求统一收敛，宽度不一致问题可忽略（改用组件后自动消失）。
+
+**结果**：**4 个列表类页面模板的搜索/筛选区现在全部统一引用 FilterBar**，不再有任何页面自己实现这套 UI：
+
+| 模板 | 用法 |
+|---|---|
+| 简单列表页 `Example` | 只开搜索框：`:show-filter-plan="false" :show-advanced-panel="false"` |
+| 左树右表 `TreeTable`（右侧子表操作栏） | 同上，只开搜索框 |
+| 卡片列表页 `CardList` | 三个开关全开 |
+| 基础列表页 `FilterList` | 三个开关全开 |
+
+**FilterBar 组件改动**：
+- 移除隐式的 `hasFilterPlan`/`hasAdvanced`（靠 options/fields 长度判断），改为三个显式 boolean prop，直接控制模板里对应区块的 `v-if`。
+- 搜索框宽度从 324px 收窄到 256px（前置字段下拉 80px + 剩余归输入框，输入框只做短关键词查询，长条件走筛选面板）。
+- `showSearchField`（搜索框内部要不要带字段下拉）保留，属于搜索框内部的细分选项，不算三大开关之一。
+
+**标题插槽的动态元素约定**：官网 demo 之前用 `a-tabs type="capsule"` 演示"标题放动态元素"，用户反馈下面多了一段空白且没居左。排查后发现是 `a-tabs` 本身的问题（nav 占满整行+渲染空内容面板），不是 FilterBar 的锅。改用 `a-radio-group type="button"` 后间距和居左都正常（radio-group 本身是 `inline-flex`）。顺手把这条经验写成设计规则：新增 **design.md 2.5 「行内视图切换用 radio-button，且一律居左」**，并在组件选型速查表的 Tabs 行补充了这条边界（tabs 管"切换成块内容"，radio-button 管"切换同一块内容的数据范围"）。
+
+**文档同步范围**：`filter-bar.md`（开关表、常见组合示例、pitfalls、结构图、frontmatter meta 全部更新为三开关口径，且明确标注"不推荐只留筛选面板"）、`page-simple-list.md`、`page-tree-table.md`、`page-card-list.md`、`page-filter-list.md`（composeWith 加 `filter-bar`）、`SKILL.md`（FilterBar 说明改为"4 个列表类模板全部统一由它实现"）、`design.md`（新增 2.5）。
+
+**website demo 变化**：`Components/demos/FilterBar.vue` 从 4 个 demo 精简为 3 个：①三个开关全开、②只留搜索框、③标题为动态元素（radio-button）。同时之前排查到一个无关但顺手修的 bug：`Detail.vue` 查找专属 demo 文件时用错了大小写转换规则（只大写首字母，`filter-bar`→`Filter-bar` 找不到文件），改成按 `-` 分段各自首字母大写再拼接。
+
+**验证**：脚手架 `vue-tsc --noEmit` + `vite build` 通过（FilterBar 现在被 4 个页面共用，仍是独立 chunk）；website `npm run gate`（check-tokens+vue-tsc+build）通过；`build-catalog.mjs` 重跑确认 `sharedComponents` 计数不变（仍是 1，FilterBar 本身没变多）；website sync 重跑确认 `Example`/`TreeTable` 同步后的导入路径正确改写为相对路径。两处构建产物已清理，改动未提交。

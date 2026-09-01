@@ -13,15 +13,27 @@ import { findComponent } from './registry';
 
 const route = useRoute();
 const id = computed(() => String(route.params.id || ''));
-const meta = computed(() => catalog.components.find((c) => c.id === id.value));
+// 选型元数据：先查 Arco 原生组件选型（catalog.components），没有再查通用共享组件（catalog.sharedComponents）
+const meta = computed(
+  () =>
+    catalog.components.find((c) => c.id === id.value) ||
+    (catalog.sharedComponents || []).find((c: { id: string }) => c.id === id.value),
+);
 const entry = computed(() => findComponent(id.value));
 const title = computed(() => entry.value?.title || meta.value?.title || id.value);
 
 // 专属 demo 文件（demos/<Id>.vue）优先；没有则回退到下方内联示例
 const demoModules = import.meta.glob('./demos/*.vue');
+// id 是 kebab-case（如 filter-bar），demo 文件名是 PascalCase（FilterBar.vue）——
+// 按 '-' 切分后逐段首字母大写再拼接，不能只大写整串的第一个字符（那样 filter-bar → Filter-bar，找不到文件）。
+function toPascalCase(kebab: string): string {
+  return kebab
+    .split('-')
+    .map((seg) => seg.charAt(0).toUpperCase() + seg.slice(1))
+    .join('');
+}
 const demoComp = computed(() => {
-  const cap = id.value.charAt(0).toUpperCase() + id.value.slice(1);
-  const loader = demoModules[`./demos/${cap}.vue`];
+  const loader = demoModules[`./demos/${toPascalCase(id.value)}.vue`];
   return loader ? defineAsyncComponent(loader as never) : null;
 });
 

@@ -6,7 +6,7 @@
  * 页头/筛选区复用卡片列表页的形态，列表载体换成表格（同简单列表页）。
  */
 import { ref, reactive } from 'vue';
-import { IconUp, IconDown, IconSave, IconUndo } from '@arco-iconbox/vue-pangea-mobile';
+import FilterBar from '../../components/FilterBar.vue';
 
 // ====== 页面标题 ======
 const pageTitle = '基础列表页';
@@ -111,75 +111,26 @@ function handleCreate() {
 
 <template>
   <div class="pg-filter-list">
-    <!-- page-header：与卡片列表页同形态（筛选方案 + 搜索 + 展开钮 + 高级筛选面板 + 按钮组） -->
+    <!-- page-header：复合筛选器与卡片列表页同用 FilterBar，标题区域走 #title 插槽；
+         操作按钮组不属于 FilterBar 职责，页面自己在下方渲染 -->
     <div class="pg-filter-list__header">
-      <div class="pg-filter-list__filter">
-        <h2 class="pg-filter-list__title">{{ pageTitle }}</h2>
-        <div class="pg-filter-list__filter-right">
-          <a-select
-            v-model="filterPlan"
-            placeholder="筛选方案"
-            size="small"
-            allow-clear
-            :style="{ width: '128px' }"
-          />
-          <a-input-group style="width: 324px">
-            <a-select v-model="searchField" size="small" :style="{ width: '80px' }">
-              <a-option
-                v-for="f in searchFields"
-                :key="f.value"
-                :value="f.value"
-                :label="f.label"
-              />
-            </a-select>
-            <a-input
-              v-model="searchKeyword"
-              size="small"
-              placeholder="请输入搜索内容"
-              allow-clear
-              @press-enter="onSearch"
-            />
-          </a-input-group>
-
-          <!-- 展开/折叠高级筛选面板 -->
-          <a-button
-            size="small"
-            class="pg-filter-list__adv-toggle"
-            @click="advancedVisible = !advancedVisible"
-          >
-            <template #icon>
-              <IconUp v-if="advancedVisible" />
-              <IconDown v-else />
-            </template>
-          </a-button>
-        </div>
-      </div>
-
-      <!-- 高级筛选面板：展开时显示更多筛选条件，支持多字段同时查询 -->
-      <div v-show="advancedVisible" class="pg-filter-list__filter-panel">
-        <div
-          v-for="f in advancedFields"
-          :key="f.field"
-          class="pg-filter-list__adv-item"
-        >
-          <span class="pg-filter-list__adv-label">{{ f.label }}</span>
-          <a-input
-            v-model="advancedForm[f.field]"
-            size="small"
-            placeholder="请输入"
-            allow-clear
-          />
-        </div>
-        <div class="pg-filter-list__adv-actions">
-          <a-button size="small" @click="onAdvancedSave">
-            <template #icon><IconSave /></template>
-          </a-button>
-          <a-button size="small" @click="onAdvancedReset">
-            <template #icon><IconUndo /></template>
-          </a-button>
-          <a-button type="primary" size="small" @click="onAdvancedQuery">查询</a-button>
-        </div>
-      </div>
+      <FilterBar
+        v-model:filter-plan="filterPlan"
+        v-model:search-field="searchField"
+        v-model:search-keyword="searchKeyword"
+        v-model:advanced-form="advancedForm"
+        v-model:advanced-visible="advancedVisible"
+        :search-fields="searchFields"
+        :advanced-fields="advancedFields"
+        @search="onSearch"
+        @advanced-query="onAdvancedQuery"
+        @advanced-reset="onAdvancedReset"
+        @advanced-save="onAdvancedSave"
+      >
+        <template #title>
+          <h2 class="pg-filter-list__title">{{ pageTitle }}</h2>
+        </template>
+      </FilterBar>
 
       <a-space :size="8">
         <a-button type="primary" size="small" @click="handleCreate">创建</a-button>
@@ -261,61 +212,13 @@ function handleCreate() {
   flex-shrink: 0;
 }
 
-.pg-filter-list__filter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
+/* 标题样式：放进 FilterBar 的 #title 插槽里 */
 .pg-filter-list__title {
   font-size: 18px;
   font-weight: 600;
   color: var(--color-text-1);
   margin: 0;
   line-height: 28px;
-}
-
-.pg-filter-list__filter-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 高级筛选面板：灰底 + 边框，响应式栅格，字段 label + input；右下角保存/重置/查询 */
-.pg-filter-list__filter-panel {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px 24px;
-  padding: 16px;
-  background: var(--color-fill-1);
-  border: 1px solid var(--color-border-3);
-  border-radius: var(--border-radius-medium);
-}
-
-.pg-filter-list__adv-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pg-filter-list__adv-label {
-  flex-shrink: 0;
-  min-width: 40px;
-  text-align: right;
-  font-size: 14px;
-  color: var(--color-text-2);
-}
-
-.pg-filter-list__adv-item :deep(.arco-input-wrapper) {
-  flex: 1;
-}
-
-.pg-filter-list__adv-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 8px;
 }
 
 .pg-filter-list__body {

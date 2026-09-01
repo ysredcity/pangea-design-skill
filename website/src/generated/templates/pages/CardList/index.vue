@@ -10,21 +10,22 @@ import {
   IconThumbUp,
   IconShareInternal,
   IconMore,
-  IconUp,
-  IconDown,
-  IconSave,
-  IconUndo,
 } from '@arco-iconbox/vue-pangea-mobile';
+import FilterBar from '../../components/FilterBar.vue';
 
 const pageTitle = '卡片列表页';
 
-// ====== 搜索 / 筛选 ======
+// ====== 搜索 / 筛选（交由 FilterBar 展示，页面只持有数据） ======
 const searchField = ref('name');
 const searchKeyword = ref('');
 const filterPlan = ref();
+const searchFields = [
+  { value: 'name', label: '名称' },
+  { value: 'code', label: '编码' },
+];
 
 // ====== 高级筛选面板（展开/折叠） ======
-// 当筛选条件较多时，点右上角按钮展开更多筛选项。字段按业务替换。
+// 当筛选条件较多时，点展开按钮展开更多筛选项。字段按业务替换。
 const advancedVisible = ref(false);
 const advancedFields = [
   { field: 'f1', label: 'Label' },
@@ -98,71 +99,26 @@ function handleCreate() {
 
 <template>
   <div class="pg-card-list">
-    <!-- page-header -->
+    <!-- page-header：复合筛选器统一用 FilterBar，标题区域走 #title 插槽；
+         操作按钮组不属于 FilterBar 职责，页面自己在下方渲染 -->
     <div class="pg-card-list__header">
-      <div class="pg-card-list__filter">
-        <h2 class="pg-card-list__title">{{ pageTitle }}</h2>
-        <div class="pg-card-list__filter-right">
-          <a-select
-            v-model="filterPlan"
-            placeholder="筛选方案"
-            size="small"
-            allow-clear
-            :style="{ width: '128px' }"
-          />
-          <a-input-group style="width: 324px">
-            <a-select v-model="searchField" size="small" :style="{ width: '80px' }">
-              <a-option value="name" label="名称" />
-              <a-option value="code" label="编码" />
-            </a-select>
-            <a-input
-              v-model="searchKeyword"
-              size="small"
-              placeholder="请输入搜索内容"
-              allow-clear
-              @press-enter="onSearch"
-            />
-          </a-input-group>
-
-          <!-- 展开/折叠高级筛选面板 -->
-          <a-button
-            size="small"
-            class="pg-card-list__adv-toggle"
-            @click="advancedVisible = !advancedVisible"
-          >
-            <template #icon>
-              <IconUp v-if="advancedVisible" />
-              <IconDown v-else />
-            </template>
-          </a-button>
-        </div>
-      </div>
-
-      <!-- 高级筛选面板：展开时显示更多筛选条件 -->
-      <div v-show="advancedVisible" class="pg-card-list__filter-panel">
-        <div
-          v-for="f in advancedFields"
-          :key="f.field"
-          class="pg-card-list__adv-item"
-        >
-          <span class="pg-card-list__adv-label">{{ f.label }}</span>
-          <a-input
-            v-model="advancedForm[f.field]"
-            size="small"
-            placeholder="请输入"
-            allow-clear
-          />
-        </div>
-        <div class="pg-card-list__adv-actions">
-          <a-button size="small" @click="onAdvancedSave">
-            <template #icon><IconSave /></template>
-          </a-button>
-          <a-button size="small" @click="onAdvancedReset">
-            <template #icon><IconUndo /></template>
-          </a-button>
-          <a-button type="primary" size="small" @click="onAdvancedQuery">查询</a-button>
-        </div>
-      </div>
+      <FilterBar
+        v-model:filter-plan="filterPlan"
+        v-model:search-field="searchField"
+        v-model:search-keyword="searchKeyword"
+        v-model:advanced-form="advancedForm"
+        v-model:advanced-visible="advancedVisible"
+        :search-fields="searchFields"
+        :advanced-fields="advancedFields"
+        @search="onSearch"
+        @advanced-query="onAdvancedQuery"
+        @advanced-reset="onAdvancedReset"
+        @advanced-save="onAdvancedSave"
+      >
+        <template #title>
+          <h2 class="pg-card-list__title">{{ pageTitle }}</h2>
+        </template>
+      </FilterBar>
 
       <a-space :size="8">
         <a-button type="primary" size="small" @click="handleCreate">创建</a-button>
@@ -248,63 +204,13 @@ function handleCreate() {
   flex-shrink: 0;
 }
 
-.pg-card-list__filter {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
+/* 标题样式：放进 FilterBar 的 #title 插槽里 */
 .pg-card-list__title {
   font-size: 18px;
   font-weight: 600;
   color: var(--color-text-1);
   margin: 0;
   line-height: 28px;
-}
-
-.pg-card-list__filter-right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* 高级筛选面板：灰底 + 边框，3 列栅格，字段 label + input；右下角保存/重置/查询 */
-.pg-card-list__filter-panel {
-  display: grid;
-  /* 响应式：列随宽度自适应收敛，窄屏自动减列 */
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px 24px;
-  padding: 16px;
-  background: var(--color-fill-1);
-  border: 1px solid var(--color-border-3);
-  border-radius: var(--border-radius-medium);
-}
-
-.pg-card-list__adv-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.pg-card-list__adv-label {
-  flex-shrink: 0;
-  min-width: 40px;
-  text-align: right;
-  font-size: 14px;
-  color: var(--color-text-2);
-}
-
-.pg-card-list__adv-item :deep(.arco-input-wrapper) {
-  flex: 1;
-}
-
-/* 动作组：独占整行、右对齐（窄屏收列时仍稳定落在最后一行右下） */
-.pg-card-list__adv-actions {
-  grid-column: 1 / -1;
-  display: flex;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 8px;
 }
 
 .pg-card-list__body {

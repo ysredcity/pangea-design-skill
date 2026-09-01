@@ -22,6 +22,12 @@ export const componentGroups: { group: string; items: Omit<ComponentEntry, 'grou
     ],
   },
   {
+    // 本 skill 提炼的可复用 UI 片段（非 Arco 原生组件），与上面的 Arco 组件区分成独立分组，
+    // 但仍挂在同一个「通用组件」侧边一级菜单下（分组标题只影响本文件排序，不渲染成菜单层级）。
+    group: '共享组件',
+    items: [{ id: 'filter-bar', title: '复合筛选器 FilterBar' }],
+  },
+  {
     group: '数据录入',
     items: [
       { id: 'form', title: '表单 Form' },

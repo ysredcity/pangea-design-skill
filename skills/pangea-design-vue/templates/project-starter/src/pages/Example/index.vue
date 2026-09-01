@@ -6,6 +6,7 @@
  */
 import { ref, reactive } from 'vue';
 import ContractModal from './ContractModal.vue';
+import FilterBar from '@/components/FilterBar.vue';
 
 // ====== 页面标题 ======
 const pageTitle = '简单列表页';
@@ -95,13 +96,14 @@ function onModalSuccess() {
 
 <template>
   <div class="pg-simple-list">
-    <!-- page-header -->
+    <!-- page-header：本模板只需单字段搜索，不需要筛选方案/筛选面板 ——
+         FilterBar 传 show-filter-plan/show-advanced-panel=false，仅保留搜索框 -->
     <div class="pg-simple-list__header">
       <h2 class="pg-simple-list__title">{{ pageTitle }}</h2>
 
       <!-- 操作栏 -->
       <div class="pg-simple-list__filter">
-        <!-- 左侧按钮组 -->
+        <!-- 左侧按钮组：不属于 FilterBar，页面自己渲染 -->
         <a-space :size="8">
           <a-button type="primary" size="small" @click="handleCreate">创建</a-button>
           <a-button size="small">导入</a-button>
@@ -109,24 +111,15 @@ function onModalSuccess() {
           <a-button size="small">打印</a-button>
         </a-space>
 
-        <!-- 右侧搜索 -->
-        <a-input-group style="width: 324px">
-          <a-select v-model="searchField" size="small" :style="{ width: '80px' }">
-            <a-option
-              v-for="f in searchFields"
-              :key="f.value"
-              :value="f.value"
-              :label="f.label"
-            />
-          </a-select>
-          <a-input
-            v-model="searchKeyword"
-            size="small"
-            placeholder="请输入搜索内容"
-            allow-clear
-            @press-enter="onSearch"
-          />
-        </a-input-group>
+        <!-- 右侧搜索：复用共享组件 FilterBar，只开启搜索框这一种筛选方式 -->
+        <FilterBar
+          v-model:search-field="searchField"
+          v-model:search-keyword="searchKeyword"
+          :show-filter-plan="false"
+          :show-advanced-panel="false"
+          :search-fields="searchFields"
+          @search="onSearch"
+        />
       </div>
     </div>
 

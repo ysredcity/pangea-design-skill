@@ -11,8 +11,8 @@ meta:
   whenNotToUse: [图文卡片呈现→卡片列表页, 需录入/编辑→表单页]
   keyStructure: [页标题, 操作栏(按钮组+简单搜索), 表格(行选择+撑满高度), 分页]
   variants: [基础列表, 带状态列(a-badge)]
-  composeWith: [a-table, a-pagination, a-input-group, a-badge]
-  composeBoundary: [控件统一 small, 分页 total 与真实数据联动, 状态列用 a-badge 不只靠颜色]
+  composeWith: [a-table, a-pagination, a-badge, filter-bar]
+  composeBoundary: [控件统一 small, 分页 total 与真实数据联动, 状态列用 a-badge 不只靠颜色, 搜索框用共享组件 FilterBar 不重新实现]
   pitfalls: [表格高度撑满父容器需 scroll y 100%, 分页总数左对齐翻页器右对齐]
   previewRoute: /
   source: src/pages/Example/index.vue
@@ -48,8 +48,8 @@ meta:
 
 ### 操作栏（filter）
 - 与标题间距：`12px`（gap）
-- 左侧按钮组：第一个为 `type="primary"`（主操作），其余为默认按钮，`gap: 8px`，**所有按钮 `size="small"`**
-- 右侧搜索：`<a-input-group>` 前缀为 `<a-select size="small">`（字段选择）+ `<a-input size="small">` placeholder "请输入搜索内容"，总宽约 `324px`
+- 左侧按钮组：第一个为 `type="primary"`（主操作），其余为默认按钮，`gap: 8px`，**所有按钮 `size="small"`**；不属于 `FilterBar`，页面自己渲染
+- 右侧搜索：用共享组件 [FilterBar](../components-shared/filter-bar.md)，只保留搜索框这一种筛选方式（`show-filter-plan`/`show-advanced-panel` 均传 `false`），不重新实现 `a-input-group`
 - 操作栏内部使用 `justify-content: space-between`
 
 ### 表格区域
@@ -80,6 +80,7 @@ meta:
  * 复制此模板到 src/pages/<PageName>/index.vue，修改列定义和数据即可。
  */
 import { ref, reactive } from 'vue';
+import FilterBar from '@/components/FilterBar.vue';
 
 // ====== 页面标题（按实际业务替换） ======
 const pageTitle = '简单列表页';
@@ -165,13 +166,14 @@ function handleCreate() {
 
 <template>
   <div class="pg-simple-list">
-    <!-- page-header -->
+    <!-- page-header：本模板只需单字段搜索，不需要筛选方案/筛选面板 ——
+         FilterBar 传 show-filter-plan/show-advanced-panel=false，仅保留搜索框 -->
     <div class="pg-simple-list__header">
       <h2 class="pg-simple-list__title">{{ pageTitle }}</h2>
 
       <!-- 操作栏 -->
       <div class="pg-simple-list__filter">
-        <!-- 左侧按钮组 -->
+        <!-- 左侧按钮组：不属于 FilterBar，页面自己渲染 -->
         <a-space :size="8">
           <a-button type="primary" size="small" @click="handleCreate">创建</a-button>
           <a-button size="small">导入</a-button>
@@ -179,24 +181,15 @@ function handleCreate() {
           <a-button size="small">打印</a-button>
         </a-space>
 
-        <!-- 右侧搜索 -->
-        <a-input-group style="width: 324px">
-          <a-select v-model="searchField" size="small" :style="{ width: '80px' }">
-            <a-option
-              v-for="f in searchFields"
-              :key="f.value"
-              :value="f.value"
-              :label="f.label"
-            />
-          </a-select>
-          <a-input
-            v-model="searchKeyword"
-            size="small"
-            placeholder="请输入搜索内容"
-            allow-clear
-            @press-enter="onSearch"
-          />
-        </a-input-group>
+        <!-- 右侧搜索：复用共享组件 FilterBar，只开启搜索框这一种筛选方式 -->
+        <FilterBar
+          v-model:search-field="searchField"
+          v-model:search-keyword="searchKeyword"
+          :show-filter-plan="false"
+          :show-advanced-panel="false"
+          :search-fields="searchFields"
+          @search="onSearch"
+        />
       </div>
     </div>
 
@@ -336,7 +329,7 @@ function handleCreate() {
 1. **复制到 `src/pages/<PageName>/index.vue`**，修改 `pageTitle`、`columns`、`searchFields`、`statusMap` 和数据加载逻辑。
 2. **控件尺寸全部 `size="small"`**：按钮、select、input 等操作栏控件统一使用小尺寸。
 3. **按钮组**：第一个按钮为主操作（`type="primary"`），其余为次要操作。按钮数量按业务实际调整，一般不超过 4 个。
-4. **搜索区域**：使用 `<a-input-group>` 组合前缀下拉 + 输入框。如果只需要纯关键词搜索（无字段选择），直接用 `<a-input-search size="small">` 替代。
+4. **搜索区域**：用共享组件 [FilterBar](../components-shared/filter-bar.md)（`@/components/FilterBar.vue`），传 `:show-filter-plan="false" :show-advanced-panel="false"` 只保留搜索框，不要重新实现 `a-input-group`。如果连字段下拉都不需要，再传 `:show-search-field="false"` 退化为纯关键词搜索。
 5. **表格行选择**：默认开启 checkbox，如不需要可移除 `:row-selection` 属性。
 6. **表格撑满高度**：table-wrap 容器 `flex: 1; min-height: 0`，配合 `:scroll="{ y: '100%' }"` 和 `:deep()` 样式让表格体内滚动。
 7. **状态列**：使用 `<a-badge :status :text>` 独立展示状态点+文字，定义 `statusMap` 映射业务状态到 badge 类型（success/processing/warning/danger/normal）。

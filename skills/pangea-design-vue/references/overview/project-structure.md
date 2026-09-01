@@ -184,6 +184,8 @@ project/
     │   └── layout-menu.less   # 侧边栏菜单自定义样式（覆盖 Arco Menu 默认）
     ├── styles/
     │   └── arco-overrides.less # 跨页面的**设计约束级**全局覆盖（当前：确认类对话框 400px 宽）
+    ├── components/
+    │   └── FilterBar.vue      # 通用共享组件：复合筛选器（筛选方案+搜索+高级筛选面板），标题为插槽
     └── pages/
         └── <PageName>/
             └── index.vue      # 具体页面（全局 Layout 下的子路由）

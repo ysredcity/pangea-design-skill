@@ -346,7 +346,7 @@ app.mount('#app');
 | 主题 | 文件 | 适用场景 |
 |---|---|---|
 | 简单列表页 | [page-simple-list.md](references/patterns/page-simple-list.md) | 基础表格列表页：标题 + 操作栏（按钮组+简单搜索）+ 表格（行选择）+ 分页；无复杂查询条件，每次只能单字段查询 |
-| 基础列表页 | [page-filter-list.md](references/patterns/page-filter-list.md) | 筛选能力更强的表格列表页：复用卡片列表页的页头（筛选方案+搜索+展开的高级筛选面板+按钮组）+ 简单列表页的表格/分页；支持多字段同时查询与筛选方案 |
+| 基础列表页 | [page-filter-list.md](references/patterns/page-filter-list.md) | 筛选能力更强的表格列表页：共享组件 FilterBar 页头（筛选方案+搜索框+可展开筛选面板）+ 按钮组 + 简单列表页的表格/分页；支持多字段同时查询与筛选方案 |
 | 卡片列表页 | [page-card-list.md](references/patterns/page-card-list.md) | 以卡片呈现数据列表（图文/资源/应用墙）：标题 + 操作栏（按钮组+搜索/筛选）+ 卡片网格（a-card 自适应换行）+ 分页；数据比表格更适合卡片时使用 |
 | 左树右表列表页 | [page-tree-table.md](references/patterns/page-tree-table.md) | **主子表结构**：左树选中主表主数据 → 右侧表格展示其子表数据，主子各自增删改查；左树 260px（新增+搜索+a-tree）+ 右侧（操作栏+表格+分页），未选主数据时右侧给空状态引导 |
 | 对话框表单 | [page-modal-form.md](references/patterns/page-modal-form.md) | 字段少、轻量的弹窗内录入/编辑：a-modal + 2 列栅格垂直表单 + 取消/确定；不跳转独立页面 |
@@ -361,14 +361,23 @@ app.mount('#app');
 | 受控值 | [controlled-uncontrolled.md](references/patterns/controlled-uncontrolled.md) | `v-model`、`default-*`、受控/非受控状态 |
 | 响应式设计 | [responsive-design.md](references/patterns/responsive-design.md) | 栅格断点、响应式表单、自适应仪表盘 |
 
+### 通用共享组件
+
+多个页面模板共用、不含任何产品业务假设的可复用 UI 片段（非 Arco 原生组件、非产品业务组件），统一放在 [references/components-shared/](references/components-shared/README.md)：
+
+- **FilterBar 复合筛选器** → [文档](references/components-shared/filter-bar.md)：筛选方案 / 搜索框 / 可展开筛选面板三种筛选方式，**各有独立开关**（`show-filter-plan`、`show-search`、`show-advanced-panel`，默认全开）按场景启停；**不含操作按钮组**，与其并列由页面自己渲染；标题区域为 `#title` 插槽（可放纯文字、`a-radio-group type="button"` 等）。已用于[简单列表页](references/patterns/page-simple-list.md)、[卡片列表页](references/patterns/page-card-list.md)、[基础列表页](references/patterns/page-filter-list.md)、[左树右表列表页](references/patterns/page-tree-table.md)（4 个列表类模板的搜索/筛选区**全部**统一由它实现）。源码 `src/components/FilterBar.vue`。
+
+新增页面若需要同样的复合筛选器页头，直接复用该组件，不要重新实现一套。
+
 ### 组件选型元数据
 
 选组件/模板时可查各自的**「适用任务 / 变体 / 组合边界 / 常见坑」**结构化元数据：
 
 - 页面模板：各 `references/patterns/page-*.md` 顶部 frontmatter 的 `meta`。
 - 常用组件：[references/component-selection/](references/component-selection/)（Table / Form / Modal / Card / Tabs / Select / Badge / Menu / Pagination / Alert）。
+- **通用共享组件**：[references/components-shared/](references/components-shared/README.md)（当前：FilterBar）。
 - **产品专属业务组件（默认不用）**：[references/components-business/](references/components-business/README.md)——按产品隔离，仅在需求命中该产品触发词时使用；catalog 里对应 `businessProducts` / `businessComponents`。
-- **机读汇总**：`references/_generated/catalog.json`（由 `scripts/build-catalog.mjs` 从上述 frontmatter 生成）——快速选型/过滤时读它，含 `pageTemplates` / `components` / `businessProducts` / `businessComponents`。**改元数据后需重跑生成器**。字段规范见 [metadata-schema.md](references/overview/metadata-schema.md)。
+- **机读汇总**：`references/_generated/catalog.json`（由 `scripts/build-catalog.mjs` 从上述 frontmatter 生成）——快速选型/过滤时读它，含 `pageTemplates` / `components` / `sharedComponents` / `businessProducts` / `businessComponents`。**改元数据后需重跑生成器**。字段规范见 [metadata-schema.md](references/overview/metadata-schema.md)。
 
 ## PM Demo 模式（产品经理多轮迭代）
 

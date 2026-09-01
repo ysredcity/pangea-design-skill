@@ -143,13 +143,23 @@ user-invocable: false
 | Form 表单 | 结构化字段录入 + 校验用它；**提交与校验二选一**，声明式与命令式不混用 | [form.md](component-selection/form.md) |
 | Modal 对话框 | 轻量确认与不跳转的临时任务用它；字段极多的长流程改表单页，侧向持久面板改抽屉。宽度见 [1.2](#12-对话框宽度档位硬约束)，容器选择见 [1.1](#11-表单承载容器决策路径) | [modal.md](component-selection/modal.md) |
 | Select 选择器 | 有限选项单选/多选用它；**选项 2–3 个改 `a-radio-group`**，布尔改 `a-switch`，层级数据改 `a-tree-select` | [select.md](component-selection/select.md) |
-| Tabs 标签页 | 同一区域切换多组内容用它；页面级导航用菜单/路由，步骤流程用 `a-steps` | [tabs.md](component-selection/tabs.md) |
+| Tabs 标签页 | 同一区域切换多组**成块内容**用它；页面级导航用菜单/路由，步骤流程用 `a-steps`，**工具栏内切换数据视图用 `a-radio-group type="button"`**（见 [2.5](#25-行内视图切换用-radio-button且一律居左)） | [tabs.md](component-selection/tabs.md) |
 | Menu 菜单 | 侧边/顶部导航用它；**全局 Layout 已封装侧边菜单，新增页面只在 `menuItems` 追加，不要重写 Layout** | [menu.md](component-selection/menu.md) |
 | Badge 徽标 | 状态点 + 文字、未读计数用它，表格状态列首选；分类标注改 `a-tag`。**状态不只靠颜色传达，必须带文字** | [badge.md](component-selection/badge.md) |
 | Alert 警告提示 | 页内**持久**提示用它；操作后**瞬时**反馈用 `Message`，需确认用 `Modal`/`Popconfirm`，全局富内容用 `Notification` | [alert.md](component-selection/alert.md) |
 | Pagination 分页 | 列表/表格分页用它；`total` 与真实数据联动**不写死**，筛选后复位 `current=1` | [pagination.md](component-selection/pagination.md) |
 
 **产品专属业务组件优先级更高**：需求命中某产品触发词时，该场景优先用 [components-business/](components-business/README.md) 下的业务组件；未命中一律用上表通用组件。
+
+## 2.5 行内视图切换用 radio-button，且一律居左
+
+页头/工具栏里切换**同一块内容的数据范围**（全部 / 待我审批 / 已处理这类平级视图）：
+
+- 用 `<a-radio-group type="button">`，**不要用 `a-tabs`**。tabs 的 nav 会占满整行、且下方还会渲染一块空的内容面板，在工具栏里会撑出一段多余间距、看起来也不居左。
+- **radio-button 组一律居左**，不居中、不右对齐——即使它所在的容器允许居中。
+- 与 tabs 的分工：`a-tabs` 用于「同一区域切换多组**成块内容**」（切换后下方整块内容替换，如审批详情页的流程处理/传阅记录/流程图）；radio-button 用于「同一块内容切换**数据范围/视图**」，下方结构不变只换数据。
+
+落地参考：[FilterBar](components-shared/filter-bar.md) 的 `#title` 插槽放 radio-button 切换视图。
 
 ---
 

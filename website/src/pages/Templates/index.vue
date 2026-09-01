@@ -5,6 +5,8 @@
  * 数据取自同步的 catalog.pageTemplates；缩略图取 src/assets/template-shots/<id>.jpg
  * （由 `npm run shoot:templates` 生成并提交入库，见 scripts/shoot_templates.py）。
  * 点「预览」进入的是从 skill 脚手架同步过来的真实示例页（dogfood）。
+ * 例外：对话框表单没有独立页面形态（靠列表页「创建」触发），指向一个专门的
+ * 中转页 ModalFormPreview.vue，点按钮直接打开真实弹窗，不必先摸到列表页的按钮。
  *
  * 卡片**严格等高**：不靠内容自然撑开（catalog 的 whenToUse 26–50 字、variants 0–85 字，
  * 长短不一），而是把每个区块的行数写死 ——
@@ -33,8 +35,8 @@ const ROUTES: Record<string, string> = {
   'page-simple-list': '/templates/simple-list',
   'page-card-list': '/templates/card-list',
   'page-tree-table': '/templates/tree-table',
-  // 对话框表单没有独立页面：在简单列表页点「创建」弹出（缩略图只截对话框本体）
-  'page-modal-form': '/templates/simple-list',
+  // 对话框表单没有独立页面形态：给一个中转页，点按钮直接打开真实弹窗（缩略图只截对话框本体）
+  'page-modal-form': '/templates/modal-form',
   'page-filter-list': '/templates/filter-list',
   'page-form': '/templates/basic-form',
   'page-grouped-form': '/templates/grouped-form',

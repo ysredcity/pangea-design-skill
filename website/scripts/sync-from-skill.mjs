@@ -11,8 +11,12 @@
  *   - CHANGELOG.md                                  → src/generated/CHANGELOG.md（更新日志页）
  *   - templates/project-starter/src/components/LazyChart.vue
  *                                                   → src/generated/templates/components/LazyChart.vue
+ *   - templates/project-starter/src/components/FilterBar.vue
+ *                                                   → src/generated/templates/components/FilterBar.vue
+ *     （通用共享组件：复合筛选器，被 CardList/FilterList 示例页 import，也用于官网组件预览页）
  *   - templates/project-starter/src/pages/{示例页}  → src/generated/templates/pages/{示例页}
- *     （Dashboard 的 `@/components/LazyChart.vue` 导入改写为相对路径，指向同步过来的 LazyChart）
+ *     （Dashboard 的 `@/components/LazyChart.vue` 导入改写为相对路径，指向同步过来的 LazyChart；
+ *      CardList/FilterList 的 `@/components/FilterBar.vue` 导入同理改写为相对路径）
  *   - templates/project-starter/src/components/{产品}  → src/generated/business/{产品}
  *     （产品专属业务组件，如 msc/MscAttachmentUpload.vue；官网「MSC 组件」模块的预览页直接 import 快照）
  *
@@ -98,17 +102,20 @@ const log = (msg) => {
   }
 }
 
-// 3) LazyChart.vue → templates/components/
+// 3) LazyChart.vue / FilterBar.vue → templates/components/
 {
-  const src = join(STARTER, 'src', 'components', 'LazyChart.vue');
-  if (existsSync(src)) {
-    mkdirSync(join(TPL_DIR, 'components'), { recursive: true });
-    writeFileSync(join(TPL_DIR, 'components', 'LazyChart.vue'), readFileSync(src, 'utf8'), 'utf8');
-    log('templates/components/LazyChart.vue');
+  const names = ['LazyChart.vue', 'FilterBar.vue'];
+  for (const name of names) {
+    const src = join(STARTER, 'src', 'components', name);
+    if (existsSync(src)) {
+      mkdirSync(join(TPL_DIR, 'components'), { recursive: true });
+      writeFileSync(join(TPL_DIR, 'components', name), readFileSync(src, 'utf8'), 'utf8');
+      log(`templates/components/${name}`);
+    }
   }
 }
 
-// 4) 示例页 → templates/pages/（Dashboard 改写 LazyChart 导入为相对路径）
+// 4) 示例页 → templates/pages/（Dashboard 改写 LazyChart 导入、CardList/FilterList 改写 FilterBar 导入为相对路径）
 for (const name of EXAMPLE_PAGES) {
   const src = join(STARTER, 'src', 'pages', name);
   if (!existsSync(src)) {
@@ -117,14 +124,10 @@ for (const name of EXAMPLE_PAGES) {
     continue;
   }
   copyDir(src, join(TPL_DIR, 'pages', name), (path, content) => {
-    // Dashboard 用 '@/components/LazyChart.vue'；website 里 LazyChart 在 generated/templates/components/
-    if (path.replace(/\\/g, '/').includes('/Dashboard/')) {
-      return content.replace(
-        "@/components/LazyChart.vue",
-        "../../components/LazyChart.vue"
-      );
-    }
-    return content;
+    // 页面组件用 '@/components/Xxx.vue'；website 里同步组件在 generated/templates/components/
+    return content
+      .replace("@/components/LazyChart.vue", "../../components/LazyChart.vue")
+      .replace("@/components/FilterBar.vue", "../../components/FilterBar.vue");
   });
   log(`templates/pages/${name}`);
 }

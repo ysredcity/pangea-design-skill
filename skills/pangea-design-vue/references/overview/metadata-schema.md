@@ -19,8 +19,8 @@ patterns 文档 frontmatter 已有 skill 自身使用的键（`name`、`descript
 
 | 字段 | 类型 | 必填 | 适用 kind | 说明 |
 |---|---|---|---|---|
-| `id` | string | 是 | 全部 | 全局唯一，kebab-case（如 `page-card-list`、`table`） |
-| `kind` | `page-template` \| `component` | 是 | 全部 | 元数据类别 |
+| `id` | string | 是 | 全部 | 全局唯一，kebab-case（如 `page-card-list`、`table`、`filter-bar`） |
+| `kind` | `page-template` \| `component` \| `shared-component` \| `business-component` | 是 | 全部 | 元数据类别。`component` = Arco 原生组件选型（[component-selection/](../component-selection/)）；`shared-component` = 本 skill 提炼的可复用 UI 片段，不含产品业务假设（[components-shared/](../components-shared/)）；`business-component` = 产品专属业务组件，默认不用（[components-business/](../components-business/)） |
 | `title` | string | 是 | 全部 | 中文名（如「卡片列表页」） |
 | `status` | `stable` \| `draft` | 否 | 全部 | 默认 `stable` |
 | `whenToUse` | string[] | 是 | 全部 | 适用任务 / 场景（正向） |
@@ -94,7 +94,7 @@ meta:
 
 ## 生成产物：`references/_generated/catalog.json`
 
-- **生成器**：`scripts/build-catalog.mjs`（已实现，零依赖）——扫描 `references/patterns/*.md` 与 `references/component-selection/*.md` 的 frontmatter `meta`，按 `kind` 归组输出。运行：在 `skills/pangea-design-vue/` 下 `node scripts/build-catalog.mjs`。
+- **生成器**：`scripts/build-catalog.mjs`（已实现，零依赖）——扫描 `references/patterns/*.md`、`references/component-selection/*.md`、`references/components-shared/*.md`、`references/components-business/**/*.md` 的 frontmatter `meta`，按 `kind` 归组输出。运行：在 `skills/pangea-design-vue/` 下 `node scripts/build-catalog.mjs`。
 - **消费方**：① AI「页面生成决策树」快速选型；② 官网组件/模板目录（通过同步脚本快照到 website，见 `docs/plan-gates-metadata-website.md`）。
 - **形态**（约定）：
 
@@ -119,7 +119,19 @@ meta:
       "whenToUse": ["规整多列结构化数据", "..."],
       "doc": "references/component-selection/table.md"
     }
-  ]
+  ],
+  "sharedComponents": [
+    {
+      "id": "filter-bar",
+      "kind": "shared-component",
+      "title": "复合筛选器 FilterBar",
+      "whenToUse": ["列表页页头需要筛选方案+搜索+可选高级筛选面板", "..."],
+      "source": "src/components/FilterBar.vue",
+      "doc": "references/components-shared/filter-bar.md"
+    }
+  ],
+  "businessProducts": [ ],
+  "businessComponents": [ ]
 }
 ```
 

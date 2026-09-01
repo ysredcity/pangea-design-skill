@@ -51,6 +51,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/pages/Templates/index.vue'),
         meta: { title: '页面模板' },
       },
+      {
+        // 对话框表单没有独立页面形态（靠列表页「创建」触发），给一个中转页直接打开真实弹窗
+        path: 'templates/modal-form',
+        component: () => import('@/pages/Templates/ModalFormPreview.vue'),
+        meta: { title: '对话框表单' },
+      },
       // 页面模板预览：渲染从 skill 脚手架同步过来的真实示例页
       {
         path: 'templates/simple-list',
