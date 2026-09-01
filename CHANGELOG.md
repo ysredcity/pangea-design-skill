@@ -33,12 +33,12 @@
 ### Added
 
 - **通用共享组件层 `references/components-shared/`**：介于「Arco 原生组件」与「产品专属业务组件」之间的第三层——本 skill 自己提炼、不含产品业务假设、被多个页面模板共用的可复用 UI 片段。
-- **FilterBar 复合筛选器**（[文档](skills/pangea-design-vue/references/components-shared/filter-bar.md) · 脚手架 `src/components/FilterBar.vue`）：封装「筛选方案下拉 + 搜索框 + 可展开的筛选面板」，三种筛选方式**各有独立开关**（`show-filter-plan` / `show-search` / `show-advanced-panel`，默认全开），按场景启停；标题区域为插槽，可放纯文字或 `a-radio-group` 等元素。
+- **FilterBar 复合筛选器**（[文档](skills/pangea-design-vue/references/components-shared/filter-bar.md) · 脚手架 `src/components/FilterBar.vue`）：封装「筛选方案下拉 + 搜索框（300px，前置字段下拉与输入框圆角拼接一体）+ 可展开的筛选面板」，三种筛选方式**各有独立开关**（`show-filter-plan` / `show-search` / `show-advanced-panel`，默认全开），按场景启停；标题区域为插槽，可放纯文字或 `a-radio-group` 等元素。
 - **设计规则新增 2.5「行内视图切换用 radio-button，且一律居左」**（`design.md`）：工具栏内切换同一块内容的数据范围用 `a-radio-group type="button"`，不用 `a-tabs`（tabs 用于切换成块内容）。
 
 ### Changed
 
-- **简单列表页 / 卡片列表页 / 基础列表页 / 左树右表列表页的搜索、筛选区统一改用 FilterBar**，不再各自实现：简单列表页与左树右表原是手写的 `a-input-group`（宽 324px），现改为 FilterBar 只开启搜索框（宽 256px）；卡片列表页与基础列表页开启全部三个筛选方式。已生成的工程若需要同步该形态，重新生成对应页面即可。
+- **简单列表页 / 卡片列表页 / 基础列表页 / 左树右表列表页的搜索、筛选区统一改用 FilterBar**，不再各自实现：简单列表页与左树右表原是手写的 `a-input-group`（宽 324px），现改为 FilterBar 只开启搜索框（宽 300px）；卡片列表页与基础列表页开启全部三个筛选方式。已生成的工程若需要同步该形态，重新生成对应页面即可。
 
 ---
 

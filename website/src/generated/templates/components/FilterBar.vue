@@ -227,7 +227,14 @@ function toggleAdvanced() {
 /* 搜索框整体宽度：带字段下拉时前置 select 占 80px，剩余归输入框。
    输入框只用于关键词短查询，不需要很宽——多字段/长条件走筛选面板。 */
 .pg-filter-bar__search-group {
-  width: 256px;
+  width: 300px;
+}
+
+/* 前置字段下拉与输入框拼接成一体：select 右侧两个圆角清零，与右边的 input 无缝相接。
+   实际带圆角的是内层 .arco-select-view-single（.arco-select-view 本身不带）。 */
+.pg-filter-bar__search-group :deep(.arco-select-view-single) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 /* 高级筛选面板：灰底 + 边框，响应式栅格，字段 label + input；右下角保存/重置/查询 */

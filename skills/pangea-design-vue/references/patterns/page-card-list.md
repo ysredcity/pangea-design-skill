@@ -55,7 +55,7 @@ meta:
 - 内边距 `16px 16px 12px`
 - **底部通栏分割线**：页头有一条 1px 下边框 `border-bottom: 1px solid var(--color-border-2)`（贴合设计稿，通栏、不内缩），与下方卡片区分隔
 - 标题放进 `FilterBar` 的 `#title` 插槽：`18px semibold`、`color-text-1`
-- 筛选方案下拉 + 搜索框（~256px）+ 展开/折叠按钮 + 筛选面板 —— 均由 `FilterBar` 提供，本模板只传数据与插槽内容，**不重新实现这套 UI**
+- 筛选方案下拉 + 搜索框（300px）+ 展开/折叠按钮 + 筛选面板 —— 均由 `FilterBar` 提供，本模板只传数据与插槽内容，**不重新实现这套 UI**
 - 操作按钮组**不属于 `FilterBar`**：创建（`type="primary"`）+ 导入/导出/打印（默认按钮），与 `FilterBar` 是 header 内的并列子元素，页面自己渲染
 
 ### 筛选面板（可选，条件多时用；由 FilterBar 内部实现）
