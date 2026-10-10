@@ -26,6 +26,21 @@
 
 ---
 
+## [1.4.4] - 2026-10-10
+
+> 全局设计规则拆成两层：技术栈无关的规则正文 **`design-core.md`**，以及它在 Arco 中的写法 **`design.md`**。规则内容不变，用法不变。另新增独立的通用版 skill **`pangea-design-universal`**（0.1.0）。
+
+### Added
+
+- **`references/design-core.md`**（[文档](skills/pangea-design-vue/references/design-core.md)）：颜色、排版、间距、圆角、控件密度、布局等规则正文（C1–C10），只用通用术语和 Pangea 变量名表述。
+- **通用版 skill `pangea-design-universal`**（[目录](skills/pangea-design-universal/)）：不限技术栈、不带页面模板，提供由主题包生成的 `tokens.css` / `tokens.json`、组件规格、交互要求、品牌与图标（Lucide）规则、Tailwind v4 / v3、shadcn/ui、Element Plus、Ant Design 适配文件，以及取值 lint。取值与本 skill 同源（主题包 v1.0.11）。
+
+### Changed
+
+- **`references/design.md` 改为「Arco 写法」**：每节先链到 `design-core.md` 中对应规则，再写 Arco 的落地方式；原有标题与锚点全部保留，已有的 `design.md#…` 链接继续有效。模板映射、`.arco-modal-simple` 修正、`check:tokens` 等 Vue 专属内容仍在这里。
+
+---
+
 ## [1.4.3] - 2026-09-01
 
 > 新增通用共享组件层：复合筛选器 **FilterBar**。4 个列表类页面模板的搜索/筛选区统一收敛到它。

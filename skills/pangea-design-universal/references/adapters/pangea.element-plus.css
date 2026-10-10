@@ -1,0 +1,189 @@
+/**
+ * Pangea × Element Plus 适配 —— 生成物，勿手改
+ * 来源：@arco-themes/vue-pangea-3-linear v1.0.11
+ * 前提：页面已引入 tokens.css（不放进 @layer）。用法见 references/adapters.md
+ */
+/* 在 element-plus 样式之后引入；不要再引入 element-plus 的 dark/css-vars.css，暗色由 tokens.css 切换。 */
+:root,
+:root.dark {
+  --el-color-primary: rgb(var(--primary-6));
+  --el-color-primary-light-3: rgb(var(--primary-5));
+  --el-color-primary-light-5: rgb(var(--primary-4));
+  --el-color-primary-light-7: rgb(var(--primary-3));
+  --el-color-primary-light-8: rgb(var(--primary-2));
+  --el-color-primary-light-9: rgb(var(--primary-1));
+  --el-color-primary-dark-2: rgb(var(--primary-7));
+  --el-color-success: rgb(var(--success-6));
+  --el-color-success-light-3: rgb(var(--success-5));
+  --el-color-success-light-5: rgb(var(--success-4));
+  --el-color-success-light-7: rgb(var(--success-3));
+  --el-color-success-light-8: rgb(var(--success-2));
+  --el-color-success-light-9: rgb(var(--success-1));
+  --el-color-success-dark-2: rgb(var(--success-7));
+  --el-color-warning: rgb(var(--warning-6));
+  --el-color-warning-light-3: rgb(var(--warning-5));
+  --el-color-warning-light-5: rgb(var(--warning-4));
+  --el-color-warning-light-7: rgb(var(--warning-3));
+  --el-color-warning-light-8: rgb(var(--warning-2));
+  --el-color-warning-light-9: rgb(var(--warning-1));
+  --el-color-warning-dark-2: rgb(var(--warning-7));
+  --el-color-danger: rgb(var(--danger-6));
+  --el-color-danger-light-3: rgb(var(--danger-5));
+  --el-color-danger-light-5: rgb(var(--danger-4));
+  --el-color-danger-light-7: rgb(var(--danger-3));
+  --el-color-danger-light-8: rgb(var(--danger-2));
+  --el-color-danger-light-9: rgb(var(--danger-1));
+  --el-color-danger-dark-2: rgb(var(--danger-7));
+  --el-color-error: rgb(var(--danger-6));
+  --el-color-error-light-3: rgb(var(--danger-5));
+  --el-color-error-light-5: rgb(var(--danger-4));
+  --el-color-error-light-7: rgb(var(--danger-3));
+  --el-color-error-light-8: rgb(var(--danger-2));
+  --el-color-error-light-9: rgb(var(--danger-1));
+  --el-color-error-dark-2: rgb(var(--danger-7));
+  --el-text-color-primary: var(--color-text-1);
+  --el-text-color-regular: var(--color-text-2);
+  --el-text-color-secondary: var(--color-text-3);
+  --el-text-color-placeholder: var(--color-text-3);
+  --el-text-color-disabled: var(--color-text-4);
+  --el-border-color: var(--color-border-3);
+  --el-border-color-light: var(--color-border-2);
+  --el-border-color-lighter: var(--color-border-2);
+  --el-border-color-extra-light: var(--color-border-1);
+  --el-border-color-dark: var(--color-border-4);
+  --el-border-color-darker: var(--color-border-4);
+  --el-fill-color: var(--color-fill-2);
+  --el-fill-color-light: var(--color-fill-1);
+  --el-fill-color-lighter: var(--color-fill-1);
+  --el-fill-color-extra-light: var(--color-fill-1);
+  --el-fill-color-dark: var(--color-fill-3);
+  --el-fill-color-darker: var(--color-fill-4);
+  --el-fill-color-blank: var(--color-bg-2);
+  --el-bg-color: var(--color-bg-2);
+  --el-bg-color-page: var(--color-fill-2);
+  --el-bg-color-overlay: var(--color-bg-popup);
+  --el-mask-color: var(--color-mask-bg);
+  --el-disabled-bg-color: var(--color-fill-2);
+  --el-disabled-text-color: var(--color-text-4);
+  --el-disabled-border-color: var(--color-fill-4);
+  --el-border-radius-small: var(--border-radius-small);
+  --el-border-radius-base: var(--border-radius-medium);
+  --el-font-family: var(--font-family);
+  --el-font-size-extra-small: var(--font-size-body-1);
+  --el-font-size-small: var(--font-size-body-2);
+  --el-font-size-base: var(--font-size-body-3);
+  --el-font-size-medium: var(--font-size-title-1);
+  --el-font-size-large: var(--font-size-title-1);
+  --el-font-size-extra-large: var(--font-size-title-2);
+  --el-component-size-small: var(--size-small);
+  --el-component-size: var(--size-default);
+  --el-component-size-large: var(--size-large);
+  --el-box-shadow-light: var(--shadow2-down);
+}
+
+/* Element Plus 把以下尺寸写死在组件里，全局变量改不到，单独对齐 Pangea 档位 */
+.el-button--small {
+  --el-button-size: var(--size-small);
+  padding: 0 var(--btn-size-small-padding-horizontal);
+  font-size: var(--btn-size-small-font-size);
+  border-radius: var(--border-radius-medium);
+}
+.el-button--large {
+  --el-button-size: var(--size-large);
+  padding: 0 var(--btn-size-large-padding-horizontal);
+}
+.el-input--small,
+.el-input--large {
+  font-size: var(--font-size-body-3);
+}
+.el-select--small .el-select__wrapper {
+  min-height: var(--size-small);
+  font-size: var(--font-size-body-3);
+}
+.el-select--large .el-select__wrapper {
+  min-height: var(--size-large);
+}
+/* 组件级变量：Element 把它们定义在组件自身的类上，:root 覆盖不到，需写在同一类上 */
+/* 输入类默认底色：Pangea 为 --color-bg-1（暗色比卡片底更深），Element 默认用 fill-color-blank */
+.el-input,
+.el-textarea {
+  --el-input-bg-color: var(--color-bg-1);
+}
+.el-select__wrapper {
+  background-color: var(--color-bg-1);
+}
+.el-table {
+  --el-table-header-bg-color: var(--color-neutral-2);
+  --el-table-header-text-color: var(--color-neutral-10);
+  --el-table-text-color: var(--color-text-1);
+  --el-table-row-hover-bg-color: var(--color-fill-1);
+  --el-table-border-color: var(--color-border-2);
+  --el-table-tr-bg-color: var(--color-bg-2);
+  --el-table-bg-color: var(--color-bg-2);
+}
+.el-table .el-table__cell {
+  padding: var(--table-size-medium-padding-vertical) 0;
+}
+.el-table .cell {
+  padding: 0 var(--table-size-medium-padding-horizontal);
+}
+.el-table th.el-table__cell {
+  font-weight: var(--font-weight-600);
+}
+.el-pagination {
+  --el-pagination-button-height: var(--size-small);
+  --el-pagination-button-width: var(--size-small);
+  --el-pagination-border-radius: var(--border-radius-medium);
+  --el-pagination-font-size: var(--font-size-body-3);
+  --el-pagination-button-color: var(--color-text-2);
+}
+.el-pager li {
+  border-radius: var(--border-radius-medium);
+}
+.el-pager li.is-active {
+  color: rgb(var(--primary-6));
+  background-color: var(--color-primary-light-1);
+  font-weight: var(--font-weight-400);
+}
+.el-dialog {
+  --el-dialog-border-radius: var(--border-radius-large);
+  --el-dialog-padding-primary: var(--modal-default-padding-horizontal);
+  --el-dialog-title-font-size: var(--font-size-title-1);
+  --el-dialog-bg-color: var(--color-bg-3);
+}
+.el-overlay {
+  --el-overlay-color-lighter: var(--color-mask-bg);
+}
+.el-message-box {
+  --el-messagebox-width: var(--modal-simple-size-width);
+  --el-messagebox-border-radius: var(--border-radius-large);
+}
+.el-message {
+  --el-message-bg-color: var(--color-bg-popup);
+  --el-message-border-color: var(--color-border-2);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow2-down);
+}
+.el-segmented {
+  --el-segmented-bg-color: var(--color-fill-2);
+  --el-segmented-color: var(--color-text-2);
+  --el-segmented-item-selected-bg-color: var(--color-bg-5);
+  --el-segmented-item-selected-color: rgb(var(--primary-6));
+  --el-segmented-item-hover-bg-color: transparent;
+  --el-segmented-item-hover-color: var(--color-text-1);
+}
+[data-theme='dark'] .el-segmented {
+  --el-segmented-item-selected-bg-color: var(--color-fill-3);
+}
+/* 默认（次）按钮：Pangea 为浅灰底，hover 变白底、文字加深（Element 默认 hover 变主色） */
+.el-button:not(.el-button--primary, .el-button--success, .el-button--warning, .el-button--danger, .el-button--info, .is-text, .is-link, .is-plain) {
+  --el-button-bg-color: var(--color-neutral-1);
+  --el-button-border-color: var(--color-border-3);
+  --el-button-text-color: var(--color-text-2);
+  --el-button-hover-bg-color: var(--color-bg-3);
+  --el-button-hover-border-color: var(--color-border-4);
+  --el-button-hover-text-color: var(--color-neutral-10);
+  --el-button-active-bg-color: var(--color-neutral-2);
+  --el-button-active-border-color: var(--color-border-4);
+  --el-button-active-text-color: var(--color-neutral-10);
+}

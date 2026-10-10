@@ -1,7 +1,7 @@
 # 项目上下文台账（PROJECT_CONTEXT）
 
 > **这是本项目的单一事实源（Single Source of Truth）。** 每次新会话开始时先读它；完成里程碑、做出重要决策、或新增/移动文件后**及时更新它**。
-> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-08-29。
+> 它是跨软件、跨电脑、防突发丢失的锚点——**提交并推送到 Git 后**即可在任何机器/工具上恢复上下文。维护协议见文末「■ 更新协议」。最后更新：2026-10-10。
 
 ---
 
@@ -100,6 +100,7 @@ pangea-design-skill/
 | Git 协作 | 只改文件，提交/推送由用户手动 |
 
 ## 6. 待办 / 下一步（Next）
+- [ ] **新增通用版 skill `skills/pangea-design-universal/`（技术栈无关，原拟名 pangea-design）**：方案见 `docs/plan-pangea-design-generic.md`，分 5 期。已定：与 hisense-design-md 的 `pangea-design` 合并、所有值与档位以本仓主题包为准（该仓主色 `#009689` 等不一致值作废）、放本仓 `skills/`、需求闸门降级为「仅多页需求先出结构说明」。图标按推荐执行（Lucide 功能性图标 + 品牌/AI 补充 SVG 包 + 对照表）。**进度：第 1–3 期完成**（token 生成、规则正文共享、SKILL.md、brand.md + Logo、lint-tokens、interaction.md 含 Vercel 通用条目、components.md 12 类组件）。不做页面结构原型。第 4 期完成（icons.md + Lucide 对照、Tailwind v4/v3、shadcn、Element Plus、antd 适配、pangea-ui.css，均浏览器实测）；品牌补充图标暂缓。下一步第 5 期（打包、跨栈验证、官网入口）。通用版保持独立：不涉及模板、不提及 Vue 版（共享正文同样中性）。
 - [ ] 补充**定制业务组件**文档（建议 `references/components-custom/`）。
 - [ ] 继续补充**更多页面模板**（详情页、仪表盘、高级列表页/多条件筛选等）。
 - [ ] （可选）为 `icon.md` 出一份 Pangea 专属图标使用文档（图标包 + iconBox），不动其他照搬文档。
@@ -570,3 +571,14 @@ pangea-design-skill/
 **website demo 变化**：`Components/demos/FilterBar.vue` 从 4 个 demo 精简为 3 个：①三个开关全开、②只留搜索框、③标题为动态元素（radio-button）。同时之前排查到一个无关但顺手修的 bug：`Detail.vue` 查找专属 demo 文件时用错了大小写转换规则（只大写首字母，`filter-bar`→`Filter-bar` 找不到文件），改成按 `-` 分段各自首字母大写再拼接。
 
 **验证**：脚手架 `vue-tsc --noEmit` + `vite build` 通过（FilterBar 现在被 4 个页面共用，仍是独立 chunk）；website `npm run gate`（check-tokens+vue-tsc+build）通过；`build-catalog.mjs` 重跑确认 `sharedComponents` 计数不变（仍是 1，FilterBar 本身没变多）；website sync 重跑确认 `Example`/`TreeTable` 同步后的导入路径正确改写为相对路径。两处构建产物已清理，改动未提交。
+
+## 2026-10-10 · 通用版 skill `pangea-design-universal` 方案定稿（初稿名 `pangea-design`，后按用户要求改名）
+
+用户要求新增一个技术栈无关、不强制布局框架与页面模板、但保证一致性/品牌性/交互体验的 skill。调研发现 hisense-design-md 已有同名 `pangea-design`（shadcn + Tailwind），且主色 `#009689` 与主题包运行时 `#00aaa6` 不一致。用户决定：合并、值与档位以本仓主题包为准、放本仓 `skills/`、需求闸门降为「仅多页需求出结构说明」。图标包实测：518 个、48 网格、描边转填充、仅 Vue 包，含 Lucide 没有的品牌（Hisense/General）与约 16 个 AI 图标；推荐 Lucide 承担功能性图标 + 品牌补充 SVG 包，待用户确认。注意主题包只有颜色与圆角是运行时 CSS 变量，字号/间距/阴影等需从 `tokens.less` 取。方案落 `docs/plan-pangea-design-generic.md`，未改 skill 与 website。
+- 同日完成第 1 期：`scripts/build-tokens.mjs` 从主题包（叠加 Arco 基础层）生成 `skills/pangea-design-universal/references/tokens.json|css`，真实运行时与无 Arco 空白页各 126 项语义色亮暗值逐项一致；规则正文抽到 `shared/design-core.md`（C1–C10），`scripts/sync-shared.mjs` 同步到两个 skill；Vue 版 `design.md` 改为 Arco 写法、保留全部锚点（49 链接无断链），SKILL/CONTRIBUTING/README/pack-skill 同步。通用版 SKILL.md 尚未编写，第 2 期待开始；brand.md 的签名元素需用户提供素材，不自行编造。
+- 同日改名为 `pangea-design-universal` 并完成第 2 期：SKILL.md（quick_validate 通过）、brand.md（依据飞书「标识」规范：标准版标识、海信绿 #00AAA6=primary-6 / 反白、不可变形 3.81:1、非联合项目不出现他牌标识、默认 favicon）、`assets/brand/` 官方 Logo/ico、`scripts/lint-tokens.mjs`（档位读 tokens.json，夹具正反例通过）。生成器补少量组件级 token。原生 HTML 亮暗演示通过；发现暗色 `--color-fill-*` 半透明需先铺 bg-1，已写入 C3。发现 Vue 模板页面标题 18px 不在主题字号档位，待用户决定。未打包、未提交。
+- 同日按用户指出调整独立性：通用版 SKILL.md 删除「什么时候用哪个 skill」与对 Vue 版、模板、外壳的引用；design-core.md 去掉 skill 名与仓库路径，生成注释改为中性；brand.md 头部 Logo 改为中性表述；tokens 产物去掉仓库脚本路径。18px 标题档判定为 Vue 模板自身问题，与通用版无关，不在通用版处理。
+- 同日完成第 3 期：用户确认不做页面结构原型；新增 interaction.md（I1–I12，吸收 Vercel Web Interface Guidelines 通用条目，冲突条目列为未采纳）与 components.md（12 类组件，取值来自官网实际计算样式 + 主题 CSS 核对，更正了 4 处凭印象写的值）；生成器补浮层/对话框等内边距变量；lint 新增 E5/W5/W6。
+- 同日完成第 4 期（暂不含品牌补充图标）：icons.md（Lucide，实测线宽与 Pangea 一致）；生成器新增 5 个适配文件 + adapters.md，Tailwind v4/v3、Element Plus、antd 6 实测与 Pangea 一致（antd 暗色主色为算法派生）；pangea-ui.css 与 Arco 实际渲染对照 152 项一致。对照发现 neutral 与 fill 暗色不同、次按钮 hover 应为 bg-3、主按钮文字为纯白等问题，已修正 components.md 与适配。
+- 同日完成第 5 期的打包与跨栈验证：`pack-skill.sh --skill universal` 生成 `releases/pangea-design-universal_0.1.0.zip`（21 文件）。原生 HTML / Vue + Element Plus / Tailwind v4 三份独立实现 lint 均 0 ERROR、视觉一致；据反馈补充分段控件、确认对话框、页头标题（暂定 20px/600，待确认）、状态点、加载指示等规格，lint 增加 HTML class 中 Tailwind 任意值检查，Tailwind 适配加暗色变体，Element 适配补组件级变量并把输入底色改为 bg-1。最后复核全部通过。待办：确认页面标题档位、website 通用版入口形式、是否为 Vue 侧 design-core 拆分补 CHANGELOG；品牌补充图标暂缓。未提交。
+- 同日用户确认三项均按建议：通用版页面标题定为 20px/600；website「说明文档」新增「通用版」页 `/universal`（website/src/pages/Universal/index.vue，路由 + 菜单），sync + gate 通过、1440/375 无溢出；CHANGELOG 新增 1.4.4（Vue 侧 design-core.md 拆分、design.md 改为 Arco 写法、新增通用版 0.1.0），README 目录说明更新，打包 `releases/pangea-design-vue_1.4.4.zip`（156 文件）。通用版第 5 期完成，仅品牌补充图标暂缓。未提交。

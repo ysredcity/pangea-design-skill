@@ -1,0 +1,28 @@
+/**
+ * Pangea × shadcn/ui 适配 —— 生成物，勿手改
+ * 来源：@arco-themes/vue-pangea-3-linear v1.0.11
+ * 前提：页面已引入 tokens.css（不放进 @layer）。用法见 references/adapters.md
+ */
+/* 放在 shadcn 生成的 :root / .dark 变量之后，覆盖其默认值。暗色同时加 class="dark" 与 data-theme="dark"。 */
+:root,
+:root.dark {
+  --background: var(--color-bg-1);
+  --foreground: var(--color-text-1);
+  --card: var(--color-bg-2);
+  --card-foreground: var(--color-text-1);
+  --popover: var(--color-bg-popup);
+  --popover-foreground: var(--color-text-1);
+  --primary: rgb(var(--primary-6));
+  --primary-foreground: var(--color-white);
+  --secondary: var(--color-fill-2);
+  --secondary-foreground: var(--color-text-1);
+  --muted: var(--color-fill-2);
+  --muted-foreground: var(--color-text-3);
+  --accent: var(--color-fill-2);
+  --accent-foreground: var(--color-text-1);
+  --destructive: rgb(var(--danger-6));
+  --border: var(--color-border-2);
+  --input: var(--color-border-3);
+  --ring: rgb(var(--primary-6));
+  --radius: var(--border-radius-medium);
+}

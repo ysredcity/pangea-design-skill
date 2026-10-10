@@ -27,11 +27,19 @@ pangea-design-skill/
 ├── README.md                     # 本文件
 ├── CONTRIBUTING.md               # 贡献与维护规则、事实源约定
 ├── CHANGELOG.md                  # 变更记录
+├── shared/design-core.md         # 两个 skill 共用的设计规则正文（scripts/sync-shared.mjs 同步）
+├── scripts/build-tokens.mjs      # 从主题包生成通用版 tokens.json / tokens.css
 └── skills/
+    ├── pangea-design-universal/  # 通用版 0.1.0：不限技术栈，只约束视觉语言、品牌与交互
+    │   ├── SKILL.md
+    │   ├── references/           # tokens（生成物）、design-core / components / interaction / brand / icons / adapters、adapters/
+    │   ├── assets/               # pangea-ui.css 参考样式；brand/ Logo 与 favicon 标准文件
+    │   └── scripts/lint-tokens.mjs  # 取值机检
     └── pangea-design-vue/
         ├── SKILL.md              # skill 入口：约定 + 主题铁律 + 完整索引
         ├── references/
-        │   ├── design.md                     # 全局设计规则（跨页型/跨组件，唯一事实源）
+        │   ├── design-core.md                # 全局设计规则正文（技术栈无关，同步自 shared/）
+        │   ├── design.md                     # 上述规则的 Arco 写法
         │   ├── theme/design-tokens.md      # Pangea 全部设计 token（核心）
         │   ├── overview/                    # 工程结构 / 主题接入 / 安装 / 架构 / 配置 / i18n / 门禁
         │   ├── components/  (74 篇)         # 组件 API（照搬上游，零漂移镜像）

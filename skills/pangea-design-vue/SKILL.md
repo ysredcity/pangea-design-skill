@@ -185,9 +185,9 @@ app.mount('#app');
 - **`<template>` 里不写 TypeScript 类型注解**：模板中的内联函数（`v-on`/`v-bind`/作用域插槽）不能带 `: Type` / `?: Type`——如 `@click="(e: MouseEvent) => ..."`、`:disabled-date="(current?: Date) => ..."` 都会让模板编译失败、页面渲染成**空白页**（Vite dev server 不拦，只在运行时暴露）。把函数抽到 `<script setup>`（`const onClick = (e: MouseEvent) => {...}`），模板只写 `@click="onClick"`。
 - **响应式派生用 `computed()`**：对 `ref`/`reactive` 数据做过滤 / 排序 / 派生，用 `import { computed } from 'vue'` 的 `computed`，不要用普通 `function` 调用一次赋值（那样不会随依赖更新）。详见 [质量门禁 G9](references/overview/quality-gates.md)。
 
-### 全局设计规则（正文见 design.md）
+### 全局设计规则（正文见 design-core.md，Arco 写法见 design.md）
 
-跨页型 / 跨组件生效的设计规则**统一收在 [references/design.md](references/design.md)**，本文件只留结论，细则不再重复：
+跨页型 / 跨组件生效的设计规则**正文在 [references/design-core.md](references/design-core.md)**（技术栈无关，与通用版 skill `pangea-design-universal` 共用同一份）；**在 Arco / 本脚手架里怎么写见 [references/design.md](references/design.md)**。两份一起读，本文件只留结论：
 
 | 规则 | 一句话结论 |
 |---|---|
@@ -209,7 +209,8 @@ app.mount('#app');
 
 | 主题 | 文件 | 适用场景 |
 |---|---|---|
-| **全局设计规则** | [design.md](references/design.md) | **跨页型/跨组件生效的规则唯一事实源**：表单承载容器决策路径（对话框/抽屉/表单页）、对话框宽度档位、页面背景分层、按钮组排列与主次、单组件选型速查、主题取值铁律、响应式适配 |
+| **全局设计规则（正文）** | [design-core.md](references/design-core.md) | **跨页型/跨组件规则的唯一正文**，技术栈无关、与通用版共用：表单承载容器决策路径、对话框宽度档位、页面背景分层、按钮组、控件密度、状态双通道、组件选型、视图切换、取值铁律、响应式 |
+| **全局设计规则（Arco 写法）** | [design.md](references/design.md) | 上述每条规则在 Arco 组件、脚手架与页面模板中的具体写法（`size` 对应、`a-modal` 宽度、`a-badge`、Grid 断点等） |
 
 ### 主题（Pangea 专属，先读）
 

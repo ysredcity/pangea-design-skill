@@ -36,6 +36,7 @@ import {
   IconGithub,
   IconFaceSmileFill,
   IconPuzzle,
+  IconLayers,
 } from '@arco-iconbox/vue-pangea-mobile';
 import { componentMenuItems } from '@/pages/Components/registry';
 import TemplatePreviewBack from '@/components/TemplatePreviewBack.vue';
@@ -65,7 +66,7 @@ interface ModuleDef {
 const componentChildren: MenuItem[] = componentMenuItems;
 
 // 官网分两个模块，通过顶部横向菜单切换：
-// - 说明文档：介绍 / 使用指南 / 更新日志
+// - 说明文档：介绍 / 使用指南 / 通用版 / 更新日志
 // - 设计系统：Design Tokens / 图标 / 页面模板 / 通用组件 / MSC 组件（后两者各自下挂二级菜单，默认折叠）
 //   其中「MSC 组件」是 MSC（全球营销云中台）的**产品专属业务组件**，与通用组件同级但分组独立；
 //   这些组件默认不用，只在需求命中 MSC 触发词时才使用。
@@ -76,6 +77,7 @@ const modules = ref<ModuleDef[]>([
     menu: [
       { key: '/', title: '介绍', icon: IconHome },
       { key: '/guide', title: '使用指南', icon: IconBook },
+      { key: '/universal', title: '通用版', icon: IconLayers },
       { key: '/changelog', title: '更新日志', icon: IconFile },
     ],
   },

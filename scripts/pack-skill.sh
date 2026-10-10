@@ -3,10 +3,13 @@
 # 把 skill 打成可上传平台（飞书 aily / 妙搭 等）的 zip。
 #
 # 用法：
-#   ./scripts/pack-skill.sh              # 版本号自动取 CHANGELOG.md 最新已发布版本
-#   ./scripts/pack-skill.sh 1.2.1        # 手动指定版本号
+#   ./scripts/pack-skill.sh                         # Vue 版，版本号取 CHANGELOG.md 最新已发布版本
+#   ./scripts/pack-skill.sh 1.2.1                   # Vue 版，手动指定版本号
+#   ./scripts/pack-skill.sh --skill universal       # 通用版，版本号取其 SKILL.md 的 metadata.version
+#   ./scripts/pack-skill.sh --skill universal 0.2.0 # 通用版，手动指定版本号
 #
-# 产物：releases/pangea-design-vue_<版本>.zip（releases/ 已 gitignore，不入库）
+# 产物：releases/<skill 名>_<版本>.zip（releases/ 已 gitignore，不入库）
+# 打包前先校验共享副本与 token 产物是否与源一致，不一致直接中止。
 #
 # ⚠️ 关键：打的是【工作区当前状态】，不是 git HEAD。
 #    新增但未提交的文件（如新写的 references 文档、.env）必须进包，
@@ -16,15 +19,26 @@
 
 set -euo pipefail
 
-SKILL_NAME="pangea-design-vue"
+SKILL_KEY="vue"
+if [[ "${1:-}" == "--skill" ]]; then
+  SKILL_KEY="${2:-}"
+  shift 2
+fi
+case "$SKILL_KEY" in
+  vue) SKILL_NAME="pangea-design-vue" ;;
+  universal) SKILL_NAME="pangea-design-universal" ;;
+  *) echo "✗ 未知的 --skill：$SKILL_KEY（可选 vue / universal）" >&2; exit 1 ;;
+esac
 
 # —— 定位仓库根，允许从任意目录调用 ——
 REPO_ROOT="$(git rev-parse --show-toplevel)"
 cd "$REPO_ROOT"
 
-# —— 版本号：参数优先，否则取 CHANGELOG 里第一个形如 ## [x.y.z] 的版本 ——
+# —— 版本号：参数优先；否则 Vue 版取 CHANGELOG 第一个 ## [x.y.z]，通用版取 SKILL.md 的 metadata.version ——
 if [[ $# -ge 1 ]]; then
   VERSION="$1"
+elif [[ "$SKILL_KEY" == "universal" ]]; then
+  VERSION="$(grep -m1 -E '^  version:' "skills/$SKILL_NAME/SKILL.md" | sed -E 's/^  version:[[:space:]]*//; s/["'"'"']//g')"
 else
   VERSION="$(grep -m1 -oE '^## \[[0-9]+\.[0-9]+\.[0-9]+\]' CHANGELOG.md | tr -d '#[] ')"
 fi
@@ -39,6 +53,13 @@ OUT="$OUT_DIR/${SKILL_NAME}_${VERSION}.zip"
 mkdir -p "$OUT_DIR"
 
 echo "▸ 打包 $SKILL_NAME v$VERSION"
+
+# —— 生成物一致性：共享规则副本（两个 skill 都有）、token 与适配文件（通用版）——
+node scripts/sync-shared.mjs --check >/dev/null || { echo "✗ 共享副本与 shared/ 不一致，先运行 node scripts/sync-shared.mjs" >&2; exit 1; }
+if [[ "$SKILL_KEY" == "universal" ]]; then
+  node scripts/build-tokens.mjs --check >/dev/null || { echo "✗ token 产物与主题包不一致，先运行 node scripts/build-tokens.mjs" >&2; exit 1; }
+fi
+echo "  ✓ 生成物与源一致"
 
 # —— 提示未提交改动（打包用工作区状态，属预期行为，仅告知）——
 if ! git diff --quiet -- "skills/$SKILL_NAME" || \
@@ -81,6 +102,25 @@ fi
 echo "▸ 自检包内容"
 FAILED=0
 
+if [[ "$SKILL_KEY" == "universal" ]]; then
+MUST_HAVE=(
+  "$SKILL_NAME/SKILL.md"
+  "$SKILL_NAME/references/tokens.css"
+  "$SKILL_NAME/references/tokens.json"
+  "$SKILL_NAME/references/design-core.md"
+  "$SKILL_NAME/references/components.md"
+  "$SKILL_NAME/references/interaction.md"
+  "$SKILL_NAME/references/brand.md"
+  "$SKILL_NAME/references/icons.md"
+  "$SKILL_NAME/references/adapters.md"
+  "$SKILL_NAME/references/adapters/pangea.tailwind-v4.css"
+  "$SKILL_NAME/references/adapters/pangea.antd-theme.json"
+  "$SKILL_NAME/assets/pangea-ui.css"
+  "$SKILL_NAME/assets/brand/hisense-logo.svg"
+  "$SKILL_NAME/assets/brand/favicon.ico"
+  "$SKILL_NAME/scripts/lint-tokens.mjs"
+)
+else
 MUST_HAVE=(
   "$SKILL_NAME/SKILL.md"
   "$SKILL_NAME/references/overview/project-structure.md"
@@ -94,6 +134,7 @@ MUST_HAVE=(
   "$SKILL_NAME/templates/project-starter/src/components/msc/MscAttachmentUpload.vue"
   # 最新加入的页面模板同理（新增未提交时最容易漏）
   "$SKILL_NAME/references/patterns/page-tree-table.md"
+  "$SKILL_NAME/references/design-core.md"
   "$SKILL_NAME/templates/project-starter/src/pages/TreeTable/index.vue"
   "$SKILL_NAME/templates/project-starter/package.json"
   "$SKILL_NAME/templates/project-starter/vite.config.ts"
@@ -102,6 +143,7 @@ MUST_HAVE=(
   "$SKILL_NAME/templates/project-starter/src/config/app.ts"
   "$SKILL_NAME/templates/project-starter/src/layouts/GlobalLayout.vue"
 )
+fi
 
 ENTRIES="$(unzip -Z1 "$OUT")"
 

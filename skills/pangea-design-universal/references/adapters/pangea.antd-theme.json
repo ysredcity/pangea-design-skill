@@ -1,0 +1,102 @@
+{
+  "$comment": "Pangea × Ant Design v5/v6 主题 —— 生成物，勿手改（主题包 v1.0.11）。 <ConfigProvider theme={{ token: light.token, components: light.components }}>；暗色：{ algorithm: theme.darkAlgorithm, token: dark.token, components: dark.components }。 Ant Design 只接受字面值，且由算法派生 hover / 暗色色阶，与 Pangea 色阶会有细微差异。",
+  "light": {
+    "token": {
+      "colorPrimary": "#00aaa6",
+      "colorPrimaryHover": "#22bbb3",
+      "colorPrimaryActive": "#009093",
+      "colorSuccess": "#00b42a",
+      "colorWarning": "#ff7d00",
+      "colorError": "#f53f3f",
+      "colorInfo": "#00aaa6",
+      "colorLink": "#00aaa6",
+      "colorText": "#1d2129",
+      "colorTextSecondary": "#4e5969",
+      "colorTextTertiary": "#86909c",
+      "colorTextQuaternary": "#c9cdd4",
+      "colorBorder": "#c9cdd4",
+      "colorBorderSecondary": "#e5e6eb",
+      "colorBgContainer": "#ffffff",
+      "colorBgElevated": "#ffffff",
+      "colorBgLayout": "#f2f3f5",
+      "colorBgMask": "rgba(29, 33, 41, 0.6)",
+      "borderRadius": 4,
+      "borderRadiusSM": 2,
+      "borderRadiusLG": 8,
+      "fontSize": 14,
+      "fontSizeSM": 12,
+      "fontSizeLG": 16,
+      "fontFamily": "Inter, -apple-system, BlinkMacSystemFont, PingFang SC, Hiragino Sans GB, noto sans, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif",
+      "fontFamilyCode": "Consolas, Menlo",
+      "controlHeight": 32,
+      "controlHeightSM": 28,
+      "controlHeightLG": 36,
+      "motionDurationFast": "0.1s",
+      "motionDurationMid": "0.2s",
+      "motionDurationSlow": "0.3s"
+    },
+    "components": {
+      "Button": {
+        "borderRadiusSM": 4,
+        "defaultBg": "#f7f8fa",
+        "defaultColor": "#4e5969",
+        "defaultBorderColor": "#c9cdd4",
+        "defaultHoverBg": "#ffffff",
+        "defaultHoverColor": "#1d2129",
+        "defaultHoverBorderColor": "#86909c",
+        "defaultActiveBg": "#f2f3f5",
+        "defaultActiveColor": "#1d2129",
+        "defaultActiveBorderColor": "#86909c"
+      }
+    }
+  },
+  "dark": {
+    "algorithm": "darkAlgorithm",
+    "token": {
+      "colorPrimary": "#25bbb3",
+      "colorSuccess": "#27c346",
+      "colorWarning": "#ff9626",
+      "colorError": "#f76965",
+      "colorInfo": "#25bbb3",
+      "colorLink": "#25bbb3",
+      "colorText": "rgba(255, 255, 255, 0.9)",
+      "colorTextSecondary": "rgba(255, 255, 255, 0.7)",
+      "colorTextTertiary": "rgba(255, 255, 255, 0.5)",
+      "colorTextQuaternary": "rgba(255, 255, 255, 0.3)",
+      "colorBorder": "#5f5f60",
+      "colorBorderSecondary": "#484849",
+      "colorBgContainer": "#232324",
+      "colorBgElevated": "#373739",
+      "colorBgLayout": "rgba(255, 255, 255, 0.08)",
+      "colorBgMask": "rgba(23, 23, 26, 0.6)",
+      "borderRadius": 4,
+      "borderRadiusSM": 2,
+      "borderRadiusLG": 8,
+      "fontSize": 14,
+      "fontSizeSM": 12,
+      "fontSizeLG": 16,
+      "fontFamily": "Inter, -apple-system, BlinkMacSystemFont, PingFang SC, Hiragino Sans GB, noto sans, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif",
+      "fontFamilyCode": "Consolas, Menlo",
+      "controlHeight": 32,
+      "controlHeightSM": 28,
+      "controlHeightLG": 36,
+      "motionDurationFast": "0.1s",
+      "motionDurationMid": "0.2s",
+      "motionDurationSlow": "0.3s"
+    },
+    "components": {
+      "Button": {
+        "borderRadiusSM": 4,
+        "defaultBg": "#17171a",
+        "defaultColor": "rgba(255, 255, 255, 0.7)",
+        "defaultBorderColor": "#5f5f60",
+        "defaultHoverBg": "#2a2a2b",
+        "defaultHoverColor": "#f6f6f6",
+        "defaultHoverBorderColor": "#929293",
+        "defaultActiveBg": "#2e2e30",
+        "defaultActiveColor": "#f6f6f6",
+        "defaultActiveBorderColor": "#929293"
+      }
+    }
+  }
+}
