@@ -102,7 +102,7 @@ description: "Pangea 高频组件规格（技术栈无关）：按钮、输入�
 
 | 项 | 取值 |
 |---|---|
-| 容器 | 底 `--color-fill-2`，圆角 `--border-radius-medium`，内边距 1.5px；总高随档位：default 32 / small 28 |
+| 容器 | 底 `--color-fill-2`，圆角 `--border-radius-medium`，内边距 1.5px（无对应变量，低于 2px 的细微值可直接写）；总高随档位：default 32 / small 28 |
 | 选项 | 高 = 总高 − 6px（default 26 / small 22），外边距 1.5px（相邻选项间距 3px），左右内边距 12px；未选中透明底、字 `--color-text-2` |
 | 选中项 | 底 `--color-bg-5`（暗色为 `--color-fill-3`），字 `primary-6`，圆角 `--border-radius-medium` |
 | 未选中 hover | 字 `--color-text-1`（底不变） |
@@ -110,7 +110,7 @@ description: "Pangea 高频组件规格（技术栈无关）：按钮、输入�
 
 ## 6. 标签 / 状态点
 
-**标签**（分类、属性）：高 24，字号 12px、字重 500，左右内边距 8px（`--spacing-4`），圆角 `--border-radius-medium`；默认底 `--color-fill-2`、字 `--color-text-1`。彩色标签用对应色板的 `1` 阶做底、`6` 阶做字（如底 `primary-1`、字 `primary-6`）。
+**标签**（分类、属性）：高 24，字号 12px、字重 500，左右内边距 8px（`--spacing-4`），圆角 `--border-radius-medium`；默认底 `--color-fill-2`、字 `--color-text-1`。彩色标签用对应色板的 `1` 阶做底、`6` 阶做字（如底 `primary-1`、字 `primary-6`）。标签、徽章、状态点旁的文字是组件规格取值，不按正文 4.5:1 要求加深；但不要用彩色标签承载需要阅读的长文字。
 
 **状态点**（状态、进度）：6×6 圆点 + 状态文字，间距 6px（`--spacing-3`），**必须带文字**（[C6](design-core.md#c6-状态不只靠颜色传达)）。颜色按语义：
 
@@ -161,10 +161,12 @@ description: "Pangea 高频组件规格（技术栈无关）：按钮、输入�
 | 头部 | 高 48px，左右内边距 20px，底部 1px `--color-border-2` 分隔线 |
 | 标题 | 16px（`--font-size-title-1`）、字重 500、`--color-text-1`，**左对齐** |
 | 内边距 | 左右 `--modal-default-padding-horizontal`（20px）；内容上下 `--modal-default-padding-content-vertical`（24px）；底部按钮区上下 `--modal-default-padding-footer-vertical`（16px） |
-| 确认类 | 宽 400（含内边距），内边距上 24 / 左右 32 / 下 32（`--modal-simple-padding-*`）；标题前放状态图标（提示 `primary-6`、警告 `warning-6`、危险 `danger-6`）；不显示右上角关闭；底部「取消 + 确认」，危险确认用危险主按钮并写具体动作；点遮罩不关闭（避免误操作），`Esc` 等同取消 |
+| 确认类 | 宽 400（含内边距），内边距上 24 / 左右 32 / 下 32（`--modal-simple-padding-*`），无头部分隔线与底部分隔线；标题行左对齐：状态图标 18px（提示 `primary-6`、警告 `warning-6`、危险 `danger-6`），图标与标题间距 10px，标题 16px / 500；说明文字 14px `--color-text-2`，与标题行左边对齐，距标题行 24px；底部按钮默认档、右对齐、间距 12px，距说明 32px；不显示右上角关闭；底部「取消 + 确认」，危险确认用危险主按钮并写具体动作；点遮罩不关闭（避免误操作），`Esc` 等同取消 |
 | 遮罩 | `--color-mask-bg` |
 | 底部按钮 | 右对齐，主按钮在最右（[C4](design-core.md#c4-按钮组规范)）；顶部 1px `--color-border-2` 分隔线 |
 | 内容过长 | 内容区设最大高度并内部滚动，标题与底部按钮始终可见 |
+
+**空状态**（数据区无数据 / 无结果，规则见 [I2](interaction.md#i2-数据区状态)）：在数据区内水平居中，上下内边距 10px；图标 48px、`rgb(var(--gray-5))`，距文字 4px；说明文字 14px `--color-text-3`；需要操作时在文字下方放一个按钮，与所在区域的控件同档（列表区一般 small 档次按钮，如「清除筛选」），距文字 16px。
 
 **抽屉**：从右侧滑出；内边距 16px（`--drawer-padding-*`）；需要边填边参考页面时用非模态（无遮罩）。
 

@@ -30,9 +30,9 @@ pangea-design-skill/
 ├── shared/design-core.md         # 两个 skill 共用的设计规则正文（scripts/sync-shared.mjs 同步）
 ├── scripts/build-tokens.mjs      # 从主题包生成通用版 tokens.json / tokens.css
 └── skills/
-    ├── pangea-design-universal/  # 通用版 0.1.0：不限技术栈，只约束视觉语言、品牌与交互
+    ├── pangea-design-universal/  # 通用版 0.2.0：不限技术栈，只约束视觉语言、品牌与交互
     │   ├── SKILL.md
-    │   ├── references/           # tokens（生成物）、design-core / components / interaction / brand / icons / adapters、adapters/
+    │   ├── references/           # tokens（生成物）、design-core / components / interaction / retrofit / brand / icons / adapters、adapters/
     │   ├── assets/               # pangea-ui.css 参考样式；brand/ Logo 与 favicon 标准文件
     │   └── scripts/lint-tokens.mjs  # 取值机检
     └── pangea-design-vue/

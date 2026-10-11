@@ -10,7 +10,7 @@ description: "Pangea 通用场景的图标规则：功能性图标统一使用 L
 1. **功能性图标统一使用 [Lucide](https://lucide.dev)**（ISC 许可，可商用）。同一产品内不混用多个图标库。
 2. **品牌标识**（Hisense Logo 等）只用 `assets/brand/` 中的标准文件，见 [brand.md](brand.md)；不要用 Lucide 或其它图形代替。
 3. **线宽保持 Lucide 默认的 2**，不开启 `absoluteStrokeWidth`。实测在 24px 下，Pangea 图标的线宽约 2px，与 Lucide 默认一致；两者都随尺寸等比缩放。
-4. **尺寸**：跟随文字时用 `1em`（与所在文字同高，如按钮内 14px）；单独出现时用 16 / 20 / 24px。不使用其它尺寸。
+4. **尺寸**：跟随文字时用 `1em`（与所在文字同高，如按钮内 14px）；单独出现时用 16 / 20 / 24px。不使用其它尺寸（例外：确认类对话框的状态图标 18px，与主题包一致）。图标放在 flex 容器里时，图标（或其包裹元素）加 `flex-shrink: 0`，避免被压小。
 5. **颜色**：`currentColor`，跟随文字颜色；需要强调时用语义色（如 `rgb(var(--primary-6))`、`rgb(var(--danger-6))`），不写死色值。
 6. **可点击图标**分两种：
    - **裸图标**（没有按钮外框，如表格行内的「更多」、卡片角落的操作）：点击区至少 24×24px（[I6](interaction.md#i6-点击区与指针)），hover 时出现**圆形**浅底 `--color-fill-2`；

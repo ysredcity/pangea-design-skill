@@ -1,8 +1,8 @@
 ---
 name: pangea-design-universal
-description: "Pangea 设计系统（海信）的视觉语言与交互约束，不限技术栈（React / 原生 HTML / Vue / 任意组件库 / 小程序等），也不限定页面布局，让界面在配色、字号、间距、圆角、Logo、状态表达和交互上与 Pangea 保持一致。当用户要「做个页面/组件/原型」「按 Pangea / 海信规范出界面」「统一颜色字号间距」「接入 Pangea 主题变量」「检查样式是否符合规范」时使用。"
+description: "Pangea 设计系统（海信）的视觉语言与交互约束，不限技术栈（React / 原生 HTML / Vue / 任意组件库 / 小程序等），也不限定页面布局，让界面在配色、字号、间距、圆角、Logo、状态表达和交互上与 Pangea 保持一致。当用户要「做个页面/组件/原型」「按 Pangea / 海信规范出界面」「把已有原型 / 页面改成 Pangea 风格」「统一颜色字号间距」「接入 Pangea 主题变量」「检查样式是否符合规范」时使用。"
 metadata:
-  version: 0.1.0
+  version: 0.2.0
   theme: "@arco-themes/vue-pangea-3-linear v1.0.11"
 ---
 
@@ -19,6 +19,18 @@ metadata:
 | **硬约束** | 颜色只用 Pangea 变量；字号 / 间距 / 圆角 / 阴影 / 动效 / 层级只用档位；Logo 规范；状态「颜色 + 文字」双通道；正文对比度 ≥ 4.5:1；同组最多 1 个主按钮；危险操作用 danger 且二次确认；对话框宽度档位；[interaction.md](references/interaction.md) 中标【硬】的条目（操作有反馈、数据区各状态、键盘可达、焦点可见、表单标签与错误位置、不禁粘贴、不禁缩放、支持减弱动效） | `lint-tokens.mjs` 报 ERROR 或自检不过 → **不交付** |
 | **推荐约束** | 控件密度分档、按钮组排序、表单容器选择、页面背景分层、组件选型、视图切换用分段控件、响应式断点 | 偏离时在交付说明里写明理由 |
 | **自由** | 技术栈、组件库、布局组合、导航形态 | 不检查 |
+
+## 改造已有界面
+
+对象是**已经存在的界面**（HTML 原型、Vue / React 工程等）时，先读 [references/retrofit.md](references/retrofit.md)，按它的流程做：
+
+1. 改源码不改产物；只拿到打包后的单文件时先要源码。
+2. 记下功能、文案、数据、结构基线，默认都不改。
+3. 用 `lint-tokens.mjs --inventory` / `--summary` 盘点原型自己的取值体系。
+4. 输出取值映射表（颜色按角色、尺寸就近取档），**用户确认后再动手**。
+5. 分三批执行：取值 → 组件状态 → 交互缺口；每批跑 lint、截图对比、核对保真。
+
+下面「动手前先读」的文档在改造中同样适用，作为改成什么样的依据。
 
 ## 动手前先读（按序）
 
@@ -97,9 +109,10 @@ metadata:
 | [references/design-core.md](references/design-core.md) | 设计规则正文 C1–C10 |
 | [references/components.md](references/components.md) | 组件规格 |
 | [references/interaction.md](references/interaction.md) | 交互规则 I1–I12 |
+| [references/retrofit.md](references/retrofit.md) | 改造已有界面：基线、盘点、映射表、分批执行 |
 | [references/brand.md](references/brand.md) | 品牌要素 |
 | [references/adapters.md](references/adapters.md) / [adapters/](references/adapters/) | 各技术栈接入方式与适配文件（生成物） |
 | [references/icons.md](references/icons.md) | 图标规则与 Lucide 对照 |
 | [assets/pangea-ui.css](assets/pangea-ui.css) | 可选参考样式（原生 HTML / 原型） |
 | [assets/brand/](assets/brand/) | Logo 与页签图标标准文件 |
-| [scripts/lint-tokens.mjs](scripts/lint-tokens.mjs) | 取值机检（零依赖，Node ≥ 18） |
+| [scripts/lint-tokens.mjs](scripts/lint-tokens.mjs) | 取值机检（零依赖，Node ≥ 18）；`--summary` 按值汇总，`--inventory` 列出代码自己的变量层；`pangea-lint-disable` / `pangea-lint-enable` 注释之间为已确认的豁免区 |
